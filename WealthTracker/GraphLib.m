@@ -1,0 +1,1269 @@
+//
+//  GraphLib.m
+//  WealthTracker
+//
+//  Created by Rick Medved on 7/16/15.
+//  Copyright (c) 2015 Rick Medved. All rights reserved.
+//
+
+#import "GraphLib.h"
+#import "NSDate+ATTDate.h"
+
+#define kDebugPieChart	0
+
+#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
+
+@implementation GraphLib
+
++(int)totalWidth {
+	int width = [[UIScreen mainScreen] bounds].size.width*2;
+	if (width<640)
+		width=640;
+	return width;
+}
+
++(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg {
+	GraphObject *obj = [[GraphObject alloc] init];
+	obj.name=name;
+	obj.amount=amout;
+	obj.rowId=rowId;
+	obj.reverseColorFlg=reverseColorFlg;
+	return obj;
+}
+
++(void)drawYellowBGForContext:(CGContextRef)context topLeft:(CGPoint)topLeft botRight:(CGPoint)botRight {
+	UIBezierPath *aPath3 = [UIBezierPath bezierPath];
+	[aPath3 moveToPoint:CGPointMake(topLeft.x, topLeft.y)];
+	[aPath3 addLineToPoint:CGPointMake(botRight.x, topLeft.y)];
+	[aPath3 addLineToPoint:CGPointMake(botRight.x, botRight.y)];
+	[aPath3 addLineToPoint:CGPointMake(topLeft.x, botRight.y)];
+	[aPath3 moveToPoint:CGPointMake(topLeft.x, topLeft.y)];
+	[aPath3 closePath];
+	[self addGradientToPath:aPath3 context:context color1:[UIColor yellowColor] color2:(UIColor *)[UIColor whiteColor] lineWidth:(int)1 imgWidth:botRight.x-topLeft.x imgHeight:botRight.y-topLeft.y];
+}
+
++(UIImage *)pieChartWithItems:(NSArray *)itemList {
+	
+	int totalWidth=[self totalWidth];
+	int totalHeight=totalWidth/2;
+	
+	int maxItems=10;
+	if(itemList.count>maxItems) { // if there's too many objects
+		NSMutableArray *newArray = [[NSMutableArray alloc] init];
+		int i=0;
+		double othersTotal=0;
+		for (GraphObject *graphObj in itemList) {
+			i++;
+			if(i<maxItems)
+				[newArray addObject:graphObj];
+			else
+				othersTotal+=graphObj.amount;
+		}
+		GraphObject *othersObj = [[GraphObject alloc] init];
+		othersObj.name=@"Others";
+		othersObj.amount=othersTotal;
+		[newArray addObject:othersObj];
+		itemList=newArray;
+	}
+	
+	NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
+	double totalPieSize=0;
+	for (GraphObject *graphObj in itemList) {
+		totalPieSize+=graphObj.amount;
+		[sortedArray addObject:graphObj];
+	}
+
+	double min = 0;
+	
+	NSMutableArray *finalSortedArray = [[NSMutableArray alloc] init]; // sort from smallest to biggest
+	for(int i=0; i<itemList.count; i++) {
+		min = [self minAmountOfList:itemList min:totalPieSize prevMin:min];
+		
+		for (GraphObject *graphObj in itemList) {
+			if(abs(graphObj.amount)==min)
+				[finalSortedArray addObject:graphObj];
+		}
+	}
+	
+	NSMutableArray *finalSortedArray2 = [[NSMutableArray alloc] init]; // now stagger
+	int i=0;
+	BOOL topFlag=YES;
+	while (finalSortedArray.count>0) {
+		topFlag=!topFlag;
+		if(topFlag) {
+			[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:0]];
+			[finalSortedArray removeObjectAtIndex:0];
+		} else {
+			[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:finalSortedArray.count-1]];
+			[finalSortedArray removeObjectAtIndex:finalSortedArray.count-1];
+		}
+		i++;
+	}
+
+	itemList=finalSortedArray2;
+	
+	CGContextRef c = [GraphLib contextRefForGraphofWidth:totalWidth totalHeight:totalHeight];
+	
+	[self drawYellowBGForContext:c topLeft:CGPointMake(0, 0) botRight:CGPointMake(totalWidth, totalHeight)];
+	
+	CGPoint center = CGPointMake(totalWidth/2, totalHeight/2);
+
+	if(totalPieSize > 0) {
+		float startAngle = - M_PI_2;
+		CGFloat radius = (totalHeight-50)/2;
+		
+		float startDegree = 0;
+		float endDegree = 0;
+
+		CGPoint startPoint = [self pointFromCenter:center radius:radius degrees:startDegree];
+		[self drawWedgeFromCenter:CGPointMake(center.x+5, center.y+5) startPoint:startPoint radius:radius startAngle:0 endAngle:360 color:[UIColor grayColor] context:c];
+
+		CGPoint namePoint = CGPointMake(-20, -20); // off screen
+		int i=0;
+		for (GraphObject *graphObj in itemList) {
+			double value = graphObj.amount;
+			endDegree = startDegree+value*360/totalPieSize;
+			
+			CGPoint startPoint = [self pointFromCenter:center radius:radius degrees:startDegree];
+			CGPoint midPoint = [self pointFromCenter:center radius:radius/2 degrees:(startDegree+endDegree)/2];
+			CGPoint longPoint = [self pointFromCenter:center radius:radius+trunc(totalWidth/24) degrees:(startDegree+endDegree)/2];
+			CGPoint linePoint = [self pointFromCenter:center radius:radius+trunc(totalWidth/40) degrees:(startDegree+endDegree)/2];
+			
+			[self drawWedgeFromCenter:center startPoint:startPoint radius:radius startAngle:startDegree endAngle:endDegree color:[self colorForObject:graphObj.rowId] context:c];
+			
+			CGContextSetRGBFillColor(c, 0, 0, 0, 1); // text black
+			
+			int midDegree = (int)(endDegree+startDegree)/2;
+			namePoint = [self startingPointForString:graphObj.name midDegree:midDegree size:(endDegree-startDegree) midPoint:longPoint prevPoint:namePoint];
+			NSString *shortName = graphObj.name;
+			if(shortName.length>11)
+				shortName = [shortName substringToIndex:11];
+			float percentage = value*100/totalPieSize;
+			[self setTextColorForContext:c color:[self colorForObject:graphObj.rowId] darkFlg:YES];
+
+			if(kDebugPieChart)
+				NSLog(@"+++%@: Wedge from %d to %d (of 360)", graphObj.name, (int)startDegree, (int)endDegree);
+			if(startDegree<270 && endDegree>270 && percentage>30) { // top
+				[self centerTextAtPoint:midPoint name:shortName percentage:percentage color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
+			} else if(startDegree<90 && endDegree>90 && percentage>30) { // bottom
+				[self centerTextAtPoint:midPoint name:shortName percentage:percentage color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
+			} else {
+				NSString *name = [NSString stringWithFormat:@"%@ %.1f%%", shortName, percentage];
+				[name drawAtPoint:CGPointMake(namePoint.x, namePoint.y) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+			}
+
+			if(percentage<2) {
+				[self drawLine:c startPoint:midPoint endPoint:linePoint];
+			}
+			
+			if(kDebugPieChart) {
+				[self drawGraphCircleForContext:c x:midPoint.x y:midPoint.y recordConfirmed:NO recExists:YES];
+				[self drawGraphCircleForContext:c x:longPoint.x y:longPoint.y recordConfirmed:YES recExists:YES];
+			}
+			startAngle += M_PI*2*value/totalPieSize;
+			startDegree=endDegree;
+			i++;
+		}
+	}
+	UIGraphicsPopContext();
+	UIImage *dynamicChartImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	return dynamicChartImage;
+}
+
++(double)minAmountOfList:(NSArray *)list min:(double)min prevMin:(double)prevMin {
+	for(GraphObject *graphObject in list) {
+		double amount = abs(graphObject.amount);
+		if(amount>prevMin && amount<min)
+			min=amount;
+	}
+	return min;
+}
+
++(void)centerTextAtPoint:(CGPoint)midPoint name:(NSString *)name percentage:(float)percentage color:(UIColor *)color context:(CGContextRef)context rowId:(int)rowId {
+	int totalWidth = [self totalWidth];
+	int letterSpacing = trunc(totalWidth/60);
+	int lineSpacing = trunc(totalWidth/25.6);
+
+	if(rowId%2==0)
+		CGContextSetRGBFillColor(context, 0, 0, 0, 1); // text black
+	else
+		CGContextSetRGBFillColor(context, 1, 1, 1, 1); // text white
+
+	NSString *percentStr = [NSString stringWithFormat:@"%.1f%%", percentage];
+	[name drawAtPoint:CGPointMake(midPoint.x-(name.length*letterSpacing/2), midPoint.y-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[percentStr drawAtPoint:CGPointMake(midPoint.x-(percentStr.length*letterSpacing/2), midPoint.y) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+
+	if(rowId%2==0)
+		CGContextSetRGBFillColor(context, 1, 1, 1, 1); // text white
+	else
+		[self setDarkTextColorForContext:context color:color];
+
+	[name drawAtPoint:CGPointMake(midPoint.x+1-(name.length*letterSpacing/2), midPoint.y+1-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[percentStr drawAtPoint:CGPointMake(midPoint.x+1-(percentStr.length*letterSpacing/2), midPoint.y+1) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+
+}
+
++(void)setDarkTextColorForContext:(CGContextRef)context color:(UIColor *)color {
+	CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha =0.0;
+	[color getRed:&red green:&green blue:&blue alpha:&alpha];
+	red/=2;
+	green/=2;
+	blue/=2;
+	CGContextSetRGBFillColor(context, red, green, blue, alpha); // text black
+}
+
++(void)setTextColorForContext:(CGContextRef)context color:(UIColor *)color darkFlg:(BOOL)darkFlg {
+	CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha =0.0;
+	[color getRed:&red green:&green blue:&blue alpha:&alpha];
+	if(darkFlg && ((red+green+blue)>1.5 || green==1)) {
+		red/=2;
+		green/=2;
+		blue/=2;
+	}
+	CGContextSetRGBFillColor(context, red, green, blue, alpha); // text black
+}
+
++(CGPoint)startingPointForString:(NSString *)name midDegree:(int)midDegree size:(int)size midPoint:(CGPoint)midPoint prevPoint:(CGPoint)prevPoint {
+	int totalWidth = [self totalWidth];
+	int letterSpacing = trunc(totalWidth/60);
+	int lineSpacing = trunc(totalWidth/36);
+	
+	int x=midPoint.x-(letterSpacing/2);
+	int y=midPoint.y-lineSpacing/2;
+
+	if(kDebugPieChart)
+		NSLog(@"%@ xyStart=(%d, %d) midDegree=[%d]", name, x, y, midDegree);
+
+	BOOL leftSideFlg=NO;
+	if(midDegree>90 && midDegree<270)
+		leftSideFlg=YES;
+	
+	if(leftSideFlg)
+		x-=name.length*letterSpacing+letterSpacing*6;
+
+	if(abs(y-prevPoint.y)<lineSpacing && abs(x-prevPoint.x)<100) {
+		if(kDebugPieChart)
+			NSLog(@"Prev Y: %f", prevPoint.y);
+		
+		if(midDegree>90 && midDegree<270)
+			y=prevPoint.y-lineSpacing; // move up
+		else
+			y=prevPoint.y+lineSpacing; // move down
+		
+		if(midDegree>270)
+			x+=letterSpacing;
+	}
+	
+	int botMax = trunc(totalWidth/2.21);
+	if(y>botMax) { // It's too Low!
+		y=botMax;
+		if(leftSideFlg)
+			x-=letterSpacing;
+		else
+			x+=letterSpacing;
+		
+		if(midDegree>=85 && midDegree<=95) { // right at bottom
+			if(leftSideFlg)
+				x-=letterSpacing*4;
+			else
+				x+=letterSpacing*4;
+		}
+	}
+
+	if(x<4) // keep it in the screen
+		x=4;
+	
+	if(y<0) // keep it in the screen
+		y=0;
+	
+	if(kDebugPieChart)
+		NSLog(@"%@ xyEnd=(%d, %d) midDegree=[%d]", name, x, y, midDegree);
+	
+	return CGPointMake(x, y);
+}
+
++(CGPoint)pointFromCenter:(CGPoint)center radius:(float)radius degrees:(float)degrees {
+	float x_oncircle = center.x + radius * cos (degrees * M_PI / 180);
+	float y_oncircle = center.y + radius * sin (degrees * M_PI / 180);
+	return CGPointMake(x_oncircle, y_oncircle);
+}
+
++(UIColor *)colorForObject:(int)number {
+	NSArray *colors=[NSArray arrayWithObjects:
+					 [UIColor colorWithRed:0 green:.5 blue:0 alpha:1], // green
+					 [UIColor colorWithRed:1 green:.8 blue:0 alpha:1], // Gold
+					 [UIColor redColor],
+					 [UIColor greenColor],
+					 [UIColor blueColor],
+					 [UIColor cyanColor],
+					 [UIColor magentaColor],
+					 [UIColor orangeColor],
+					 [UIColor purpleColor],
+					 [UIColor whiteColor],
+					 [UIColor grayColor],
+					 [UIColor colorWithRed:1 green:1 blue:.5 alpha:1],
+					 [UIColor colorWithRed:.5 green:0 blue:0 alpha:1],
+					 [UIColor colorWithRed:1 green:.5 blue:1 alpha:1],
+					 nil];
+	return [colors objectAtIndex:number%colors.count];
+}
+
++(void) drawWedgeFromCenter:(CGPoint)center startPoint:(CGPoint)startPoint radius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color context:(CGContextRef)context
+{
+	UIBezierPath * aPath = [UIBezierPath bezierPath];
+	[aPath moveToPoint:center];
+	[aPath addLineToPoint:startPoint];
+	[aPath addArcWithCenter:center radius:radius startAngle:DEGREES_TO_RADIANS(startAngle) endAngle:DEGREES_TO_RADIANS(endAngle) clockwise:YES];
+	[aPath closePath];
+	
+	aPath.lineWidth = 0;
+	[aPath stroke];
+	[self addGradientToWedgePath:aPath context:context color1:color lineWidth:1 imgWidth:[self totalWidth] imgHeight:[self totalWidth]/2];
+}
+
++(void)addGradientToWedgePath:(UIBezierPath *)aPath
+				 context:(CGContextRef)context
+				  color1:(UIColor *)color1
+			   lineWidth:(int)lineWidth
+				imgWidth:(int)width
+			   imgHeight:(int)height
+{
+	width=[self totalWidth];
+	height=width/2;
+	
+	CGFloat red1 = 0.0, green1 = 0.0, blue1 = 0.0, alpha1 =0.0;
+	[color1 getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
+	
+	CGFloat red2 = red1+.5, green2 = green1+.5, blue2 = blue1+.5, alpha2 =alpha1;
+	
+	CGColorSpaceRef myColorspace=CGColorSpaceCreateDeviceRGB();
+	size_t num_locations = 2;
+	CGFloat locations[2] = { 1.0, 0.0 };
+	CGFloat components[8] =	{ red2, green2, blue2, alpha2,    red1, green1, blue1, alpha1};
+	
+	CGGradientRef myGradient = CGGradientCreateWithColorComponents(myColorspace, components, locations, num_locations);
+	
+	CGContextSaveGState(context);
+	[aPath addClip];
+	CGContextDrawLinearGradient(context, myGradient, CGPointMake(0, 0), CGPointMake(width, height), 0);
+	CGContextRestoreGState(context);
+	
+	[[UIColor blackColor] setStroke];
+	aPath.lineWidth = lineWidth;
+	[aPath stroke];
+	
+	CGGradientRelease(myGradient);
+}
+
+
++(UIImage *)graphBarsWithItems:(NSArray *)itemList {
+	
+	int totalWidth=[self totalWidth];
+	int totalHeight=totalWidth/2;
+	int leftEdgeOfChart=totalWidth/12.8;
+	int bottomEdgeOfChart=totalHeight-(totalWidth/25.6);
+	
+	int maxItems=10;
+	if(itemList.count>maxItems) {
+		NSMutableArray *newArray = [[NSMutableArray alloc] init];
+		int i=0;
+		double othersTotal=0;
+		for (GraphObject *graphObj in itemList) {
+			i++;
+			if(i<maxItems)
+				[newArray addObject:graphObj];
+			else
+				othersTotal+=graphObj.amount;
+		}
+		GraphObject *othersObj = [[GraphObject alloc] init];
+		othersObj.name=@"Others";
+		othersObj.amount=othersTotal;
+		[newArray addObject:othersObj];
+		itemList=newArray;
+	}
+	
+	double min=0;
+	double max=0;
+	for (GraphObject *graphObj in itemList) {
+		if(graphObj.amount > max)
+			max=graphObj.amount;
+		if(graphObj.amount < min)
+			min=graphObj.amount;
+	}
+	
+	max*=1.1;
+	min*=1.05;
+	if(max==0)
+		max=min*-.1;
+	
+	if(min==0)
+		min=max*-.06;
+	int totalMoneyRange = max-min;
+	
+	float yMultiplier = 1;
+	if(totalMoneyRange>0)
+		yMultiplier = (float)bottomEdgeOfChart/totalMoneyRange;
+	
+	CGContextRef c = [GraphLib contextRefForGraphofWidth:totalWidth totalHeight:totalHeight];
+	int zeroLoc = [GraphLib drawZeroLineForContext:c min:min max:max bottomEdgeOfChart:bottomEdgeOfChart leftEdgeOfChart:leftEdgeOfChart totalWidth:totalWidth];
+	
+	[GraphLib drawLeftLabelsAndLinesForContext:c totalMoneyRange:(max-min) min:min leftEdgeOfChart:leftEdgeOfChart totalHeight:totalHeight totalWidth:totalWidth numOnlyFlg:NO];
+	
+	[GraphLib drawBottomLabelsForArray:itemList c:c bottomEdgeOfChart:bottomEdgeOfChart leftEdgeOfChart:leftEdgeOfChart totalWidth:totalWidth];
+	
+	[GraphLib drawBarChartForContext:c itemArray:itemList leftEdgeOfChart:leftEdgeOfChart mainGoal:0 zeroLoc:zeroLoc yMultiplier:yMultiplier totalWidth:totalWidth];
+	
+	UIGraphicsPopContext();
+//	UIImage *dynamicChartImage = [[UIImage alloc] init];
+	UIImage *dynamicChartImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	return dynamicChartImage;
+}
+
++(CGContextRef)contextRefForGraphofWidth:(int)totalWidth totalHeight:(int)totalHeight
+{
+	UIGraphicsBeginImageContext(CGSizeMake(totalWidth,totalHeight));
+	CGContextRef c = UIGraphicsGetCurrentContext();
+	UIGraphicsPushContext(c); // <--
+	CGContextSetLineCap(c, kCGLineCapRound);
+	
+	// draw Box---------------------
+	CGContextSetLineWidth(c, 1);
+	CGContextSetRGBStrokeColor(c, 0, 0, 0, 1); // blank
+	CGContextSetRGBFillColor(c, 1, 1, 1, 1); // white
+	CGContextFillRect(c, CGRectMake(0, 0, totalWidth, totalHeight));
+	CGContextStrokeRect(c, CGRectMake(0, 0, totalWidth, totalHeight));
+	
+	return c;
+}
+
++(int)drawZeroLineForContext:(CGContextRef)c min:(float)min max:(float)max bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth
+{
+	
+	[self drawYellowBGForContext:c topLeft:CGPointMake(leftEdgeOfChart, 0) botRight:CGPointMake(totalWidth, bottomEdgeOfChart)];
+	
+	// draw zero line---------------
+	CGContextSetRGBStrokeColor(c, 0.6, 0, 0, 1); // red
+	CGContextSetLineWidth(c, 4);
+	int zeroLoc = 0;
+	if((max-min)>0)
+		zeroLoc = bottomEdgeOfChart*max/(max-min);
+	if(zeroLoc<bottomEdgeOfChart)
+		[self drawLine:c startX:leftEdgeOfChart startY:zeroLoc endX:totalWidth endY:zeroLoc];
+
+	// Draw horizontal and vertical baselines
+	CGContextSetRGBStrokeColor(c, 0, 0, 0, 1); // black
+	[self drawLine:c startX:leftEdgeOfChart startY:bottomEdgeOfChart endX:totalWidth endY:bottomEdgeOfChart];
+	[self drawLine:c startX:leftEdgeOfChart startY:0 endX:leftEdgeOfChart endY:bottomEdgeOfChart];
+
+	CGContextSetLineWidth(c, 1);
+
+	return zeroLoc;
+}
+
++(void)drawLeftLabelsAndLinesForContext:(CGContextRef)c totalMoneyRange:(float)totalMoneyRange min:(double)min leftEdgeOfChart:(int)leftEdgeOfChart totalHeight:(int)totalHeight totalWidth:(int)totalWidth numOnlyFlg:(BOOL)numOnlyFlg
+{
+	//------ draw left hand labels and grid---------------------
+	int distance = trunc(totalWidth/80);
+	int YCord=-distance;
+	for(int i=11; i>=0; i--) {
+		float multiplyer = (float)totalMoneyRange/11;
+		float money = (multiplyer*i+min);
+		
+		NSString *label = (numOnlyFlg)?[NSString stringWithFormat:@"%d", (int)money]:[self smallLabelForMoney:money totalMoneyRange:totalMoneyRange];
+		
+		if(money>=0)
+			CGContextSetRGBFillColor(c, 0.0, 0.3, 0.0, 1); // text green
+		else
+			CGContextSetRGBFillColor(c, .8, 0, 0, 1); // text red
+		
+		if(i<11) {
+			[label drawAtPoint:CGPointMake(6, YCord) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/42.67)]];
+			CGContextSetRGBFillColor(c, 0.9, 0.9, 0.9, 1); // text light gray
+			CGContextSetRGBStrokeColor(c, 0.9, 0.9, 0.9, 1); // line color - lightGray
+			[self drawLine:c startX:leftEdgeOfChart+1 startY:YCord+distance endX:totalWidth endY:YCord+distance];
+		}
+		YCord += totalHeight/12;
+	}
+	
+}
+
++(void)drawBottomLabelsForArray:(NSArray *)labels c:(CGContextRef)c bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth
+{
+	int spacing = totalWidth/(labels.count+1);
+	int XCord = leftEdgeOfChart+spacing/2-10;
+	CGContextSetRGBFillColor(c, 0, 0, 0, 1); // black
+	
+	int lenMax = 14-(int)labels.count;
+	if(lenMax<1)
+		lenMax=1;
+	
+	for(GraphObject *graphObject in labels) {
+		NSString *labelStr = graphObject.name;
+		if(labelStr.length > lenMax)
+			labelStr = [graphObject.name substringToIndex:lenMax];
+		
+		[labelStr drawAtPoint:CGPointMake(XCord+spacing/10, bottomEdgeOfChart+2) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/35.55)]];
+		XCord+=spacing;
+	}
+}
+
++(void)drawBottomLabelsForArray2:(NSArray *)labels c:(CGContextRef)c bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth
+{
+	if(labels.count==0)
+		return;
+	
+	int spacing = (totalWidth-10)/(labels.count);
+	int XCord = leftEdgeOfChart-15;
+	CGContextSetRGBFillColor(c, 0, 0, 0, 1); // black
+	
+	int lenMax = 14-(int)labels.count;
+	if(lenMax<3)
+		lenMax=3;
+	
+	for(GraphObject *graphObject in labels) {
+		NSString *labelStr = graphObject.name;
+		if(labelStr.length > lenMax)
+			labelStr = [graphObject.name substringToIndex:lenMax];
+		
+		[labelStr drawAtPoint:CGPointMake(XCord+spacing/10, bottomEdgeOfChart-2) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/35.55)]];
+		XCord+=spacing;
+	}
+}
+
++(void)drawBarChartForContext:(CGContextRef)c itemArray:(NSArray *)itemArray leftEdgeOfChart:(int)leftEdgeOfChart mainGoal:(int)mainGoal zeroLoc:(int)zeroLoc yMultiplier:(float)yMultiplier totalWidth:(int)totalWidth
+{
+	int spacing = totalWidth/(itemArray.count+1);
+	int XCord = leftEdgeOfChart+spacing/2-10;
+	for(GraphObject *graphObject in itemArray) {
+		double value = graphObject.amount;
+		
+		BOOL showGreen = value>=0;
+		if(graphObject.reverseColorFlg)
+			showGreen=!showGreen;
+		
+		UIColor *mainColor = (showGreen)?[UIColor colorWithRed:0 green:.8 blue:0 alpha:1]:[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+		UIColor *topColor = (showGreen)?[UIColor colorWithRed:0 green:.5 blue:0 alpha:1]:[UIColor colorWithRed:.5 green:0 blue:0 alpha:1];
+		UIColor *sideColor = (showGreen)?[UIColor colorWithRed:.7 green:1 blue:.7 alpha:1]:[UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+		
+		int top = zeroLoc-value*yMultiplier;
+		int bot = zeroLoc;
+		if(value<0) {
+			bot = top;
+			top = zeroLoc;
+		}
+		
+		if(value != 0) {
+			int width=(totalWidth/(itemArray.count+2))-10;
+			UIBezierPath *aPath = [UIBezierPath bezierPath];
+			[aPath moveToPoint:CGPointMake(XCord, bot)];
+			[aPath addLineToPoint:CGPointMake(XCord, top)];
+			[aPath addLineToPoint:CGPointMake(XCord+width, top)];
+			[aPath addLineToPoint:CGPointMake(XCord+width, bot)];
+			[aPath addLineToPoint:CGPointMake(XCord, bot)];
+			[aPath closePath];
+			[self addGradientToPath:aPath context:c color1:[UIColor whiteColor] color2:(UIColor *)mainColor lineWidth:(int)1 imgWidth:XCord+width imgHeight:300];
+			
+			UIBezierPath *aPath2 = [UIBezierPath bezierPath];
+			[aPath2 moveToPoint:CGPointMake(XCord, top)];
+			[aPath2 addLineToPoint:CGPointMake(XCord+10, top-10)];
+			[aPath2 addLineToPoint:CGPointMake(XCord+10+width, top-10)];
+			[aPath2 addLineToPoint:CGPointMake(XCord+width, top)];
+			[aPath2 addLineToPoint:CGPointMake(XCord, top)];
+			[aPath2 closePath];
+			[self addGradientToPath:aPath2 context:c color1:[UIColor whiteColor] color2:(UIColor *)topColor lineWidth:(int)1 imgWidth:XCord+width imgHeight:300];
+			
+			UIBezierPath *aPath3 = [UIBezierPath bezierPath];
+			[aPath3 moveToPoint:CGPointMake(XCord+width, top)];
+			[aPath3 addLineToPoint:CGPointMake(XCord+width+10, top-10)];
+			[aPath3 addLineToPoint:CGPointMake(XCord+10+width, bot-10)];
+			[aPath3 addLineToPoint:CGPointMake(XCord+width, bot)];
+			[aPath3 addLineToPoint:CGPointMake(XCord+width, bot)];
+			[aPath3 closePath];
+			[self addGradientToPath:aPath3 context:c color1:[UIColor whiteColor] color2:(UIColor *)sideColor lineWidth:(int)1 imgWidth:XCord+width imgHeight:300];
+			
+		}
+		XCord+=spacing;
+	}
+}
+
+
+
+
+
+
+
++(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type year:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth
+{
+	int totalWidth=[self totalWidth];
+	int totalHeight=totalWidth/2;
+	int leftEdgeOfChart=totalWidth/12.8;
+	int bottomEdgeOfChart=totalHeight-(totalWidth/25.6);
+	
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	
+	//Find min and max---------
+	float min=999999;
+	float max=0;
+	
+	NSMutableArray *assetArray = [[NSMutableArray alloc] init];
+	NSMutableArray *balanceArray = [[NSMutableArray alloc] init];
+	BOOL networthPositive=YES;
+	for(int month=1; month<=12; month++) {
+		
+		NSPredicate *predicate = [self predicateForMonth:month year:displayYear item_id:item_id type:type];
+		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:mOC ascendingFlg:YES];
+		double asset_value=0;
+		double balance_owed=0;
+		double interest=0;
+//		BOOL bal_confirm_flg=NO;
+//		BOOL val_confirm_flg=NO;
+//		BOOL recordExists=NO;
+		for(NSManagedObject *mo in items) {
+			asset_value += [[mo valueForKey:@"asset_value"] doubleValue];
+			balance_owed += [[mo valueForKey:@"balance_owed"] doubleValue];
+			interest += [[mo valueForKey:@"interest"] doubleValue];
+			
+//			bal_confirm_flg = [[mo valueForKey:@"bal_confirm_flg"] boolValue];
+//			val_confirm_flg = [[mo valueForKey:@"val_confirm_flg"] boolValue];
+//			recordExists=YES;
+		}
+		if(month==displayMonth)
+			networthPositive = (asset_value>=balance_owed);
+		
+		if(type==99) {
+			asset_value=interest;
+			balance_owed=interest;
+		}
+		
+		[assetArray addObject:[NSString stringWithFormat:@"%f", asset_value]];
+		[balanceArray addObject:[NSString stringWithFormat:@"%f", balance_owed]];
+		
+		if(asset_value<min)
+			min=asset_value;
+		if(balance_owed<min)
+			min=balance_owed;
+		
+		if(asset_value>max)
+			max=asset_value;
+		if(balance_owed>max)
+			max=balance_owed;
+	}
+	
+	max*=1.1; //Put graphs more in the middle
+	min/=2;
+	
+	float totalMoneyRange=max-min;
+	float yMultiplier = 1;
+	if(totalMoneyRange>0)
+		yMultiplier = (float)bottomEdgeOfChart/totalMoneyRange;
+	
+	
+	UIGraphicsBeginImageContext(CGSizeMake(totalWidth,totalHeight));
+	CGContextRef c = UIGraphicsGetCurrentContext();
+	UIGraphicsPushContext(c); // <--
+	CGContextSetLineCap(c, kCGLineCapRound);
+	
+	// draw Box---------------------
+	CGContextSetLineWidth(c, 1);
+	CGContextSetRGBStrokeColor(c, 0, 0, 0, 1); // black
+	CGContextSetRGBFillColor(c, 1, 1, 1, 1); // white
+	CGContextFillRect(c, CGRectMake(0, 0, totalWidth, totalHeight));
+	CGContextStrokeRect(c, CGRectMake(0, 0, totalWidth, totalHeight));
+	
+	[self drawYellowBGForContext:c topLeft:CGPointMake(leftEdgeOfChart, 0) botRight:CGPointMake(totalWidth, bottomEdgeOfChart)];
+
+	
+	//First do the gradients
+	float xCord = leftEdgeOfChart;
+	UIBezierPath *aPath = [UIBezierPath bezierPath];
+	[aPath moveToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
+	UIBezierPath *aPath2 = [UIBezierPath bezierPath];
+	[aPath2 moveToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
+	int plotY=0;
+	int plotY2=0;
+	for(int i=0; i<12; i++) {
+		double asset_value = [[assetArray objectAtIndex:i] doubleValue];
+		double balance_owed = [[balanceArray objectAtIndex:i] doubleValue];
+		
+		int plotX = xCord;
+		plotY = bottomEdgeOfChart-(asset_value-min)*yMultiplier;
+		plotY2 = bottomEdgeOfChart-(balance_owed-min)*yMultiplier;
+		[aPath addLineToPoint:CGPointMake(plotX, plotY)];
+		[aPath2 addLineToPoint:CGPointMake(plotX, plotY2)];
+		xCord+=totalWidth/12;
+	}
+	
+	[aPath addLineToPoint:CGPointMake(totalWidth, plotY)];
+	[aPath addLineToPoint:CGPointMake(totalWidth, bottomEdgeOfChart)];
+	[aPath addLineToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
+	[aPath closePath];
+	
+	[aPath2 addLineToPoint:CGPointMake(totalWidth, plotY2)];
+	[aPath2 addLineToPoint:CGPointMake(totalWidth, bottomEdgeOfChart)];
+	[aPath2 addLineToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
+	[aPath2 closePath];
+	UIColor *mainColor = [UIColor greenColor];
+	UIColor *secondColor = [UIColor redColor];
+	if(type==3)
+		mainColor = [UIColor redColor];
+	if(type==99)
+		secondColor = [UIColor blackColor];
+	
+	if(networthPositive) {
+		[self addGradientToPath:aPath context:c color1:[UIColor whiteColor] color2:(UIColor *)mainColor lineWidth:(int)0 imgWidth:totalWidth imgHeight:totalHeight];
+		[self addGradientToPath:aPath2 context:c color1:[UIColor whiteColor] color2:(UIColor *)secondColor lineWidth:(int)0 imgWidth:totalWidth imgHeight:totalHeight];
+	} else {
+		[self addGradientToPath:aPath2 context:c color1:[UIColor whiteColor] color2:(UIColor *)secondColor lineWidth:(int)0 imgWidth:totalWidth imgHeight:totalHeight];
+		[self addGradientToPath:aPath context:c color1:[UIColor whiteColor] color2:(UIColor *)[UIColor greenColor] lineWidth:(int)0 imgWidth:totalWidth imgHeight:totalHeight];
+	}
+	
+	// draw bottom labels ---------------------
+	CGContextSetRGBFillColor(c, 0.4, 0.4, 0.4, 1); // gray
+	xCord = leftEdgeOfChart-10;
+	NSArray *months = [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", nil];
+	for(int i=1; i<=12; i++) {
+		[[months objectAtIndex:i-1] drawAtPoint:CGPointMake(xCord, bottomEdgeOfChart) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/42.67)]];
+		xCord+=totalWidth/12;
+	}
+	
+	// draw left hand labels and grid---------------------
+	int YCord=-8;
+	for(int i=11; i>=0; i--) {
+		CGContextSetRGBStrokeColor(c, 0.9, 0.9, 0.9, 1); // lightGray <--- this one does lines
+		float multiplyer = (float)totalMoneyRange/11;
+		float money = (multiplyer*i+min);
+		
+		NSString *label = [self smallLabelForMoney:money totalMoneyRange:totalMoneyRange];
+		
+		if(money>=0)
+			CGContextSetRGBFillColor(c, 0, 0, 0, 1); // black // <--- this one does letters
+		else
+			CGContextSetRGBFillColor(c, 0.5, 0.3, 0.3, 1); // red // <--- this one does letters
+		
+		if(i<11) {
+			[self drawLine:c startX:leftEdgeOfChart startY:YCord+7 endX:totalWidth endY:YCord+7];
+			[label drawAtPoint:CGPointMake(10, YCord) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/45.71)]];
+		}
+		YCord += totalHeight/12;
+	}
+	
+	
+	// draw zero line---------------
+	CGContextSetRGBStrokeColor(c, 0.6, 0.2, 0.2, 1); // red
+	CGContextSetLineWidth(c, 2);
+	int zeroLoc = 0;
+	
+	float percentUp = 0;
+	if(totalMoneyRange>0)
+		percentUp = (float)(0 - min) / totalMoneyRange;
+	
+	zeroLoc = bottomEdgeOfChart - ((float)bottomEdgeOfChart*percentUp);
+	if(zeroLoc <= bottomEdgeOfChart && zeroLoc >= 0)
+		[self drawLine:c startX:leftEdgeOfChart startY:zeroLoc endX:totalWidth endY:zeroLoc];
+	
+	
+	// Draw horizontal and vertical baselines
+	CGContextSetRGBStrokeColor(c, 0, 0, 0, 1); // black
+	[self drawLine:c startX:leftEdgeOfChart startY:bottomEdgeOfChart endX:totalWidth endY:bottomEdgeOfChart];
+	[self drawLine:c startX:leftEdgeOfChart startY:0 endX:leftEdgeOfChart endY:bottomEdgeOfChart];
+	
+	
+	// Draw box outline again
+	CGContextSetRGBStrokeColor(c, 0, 0, 0, 1); // black
+	CGContextStrokeRect(c, CGRectMake(0, 0, totalWidth, totalHeight));
+	
+	
+	// Graph the Chart---------------------
+	
+	int oldX=0;
+	int oldY=0;
+	int oldY2=0;
+	
+	int todayX=0;
+	int todayY=0;
+	NSString *todayAmount=nil;
+	
+	int todayY2=0;
+	NSString *todayAmount2=nil;
+	
+	
+	CGContextSetRGBFillColor(c, 0.4, 0.4, 0.4, 1); // gray
+	xCord = leftEdgeOfChart;
+	BOOL firstRecord = YES;
+	BOOL oldRecordConfirmed=NO;
+	BOOL oldRecordConfirmed2=NO;
+	BOOL isTodayFlg=NO;
+	for(int month=1; month<=12; month++) {
+		NSPredicate *predicate = [self predicateForMonth:month year:displayYear item_id:item_id type:type];
+		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:mOC ascendingFlg:YES];
+		float asset_value=0;
+		float balance_owed=0;
+		float interest=0;
+		BOOL bal_confirm_flg=NO;
+		BOOL val_confirm_flg=NO;
+		BOOL recordConfirmed=NO;
+		BOOL recordConfirmed2=NO;
+		BOOL recordExists=NO;
+		BOOL recExists = (displayYear<nowYear || (displayYear==nowYear && month<=nowMonth+1));
+		for(NSManagedObject *mo in items) {
+			asset_value += [[mo valueForKey:@"asset_value"] floatValue];
+			balance_owed += [[mo valueForKey:@"balance_owed"] floatValue];
+			interest += [[mo valueForKey:@"interest"] floatValue];
+			
+			bal_confirm_flg = [[mo valueForKey:@"bal_confirm_flg"] boolValue];
+			val_confirm_flg = [[mo valueForKey:@"val_confirm_flg"] boolValue];
+			if(val_confirm_flg)
+				recordConfirmed=YES;
+			if(bal_confirm_flg)
+				recordConfirmed2=YES;
+			
+			recordExists=YES;
+		}
+		
+		if(recordExists) {
+			int plotX = xCord;
+			int plotY = bottomEdgeOfChart-(asset_value-min)*yMultiplier;
+			int plotY2 = bottomEdgeOfChart-(balance_owed-min)*yMultiplier;
+			if(type==99) {
+				// interest
+				plotY2 = bottomEdgeOfChart-(interest-min)*yMultiplier;
+				balance_owed=interest;
+			}
+			
+			if(firstRecord) {
+				oldY = plotY;
+				oldY2 = plotY2;
+				oldX = plotX;
+				firstRecord=NO;
+			}
+			
+			
+			
+			if(type !=3 ) {
+				// draw green line
+				CGContextSetLineWidth(c, 2);
+				CGContextSetRGBStrokeColor(c, 0, .5, 0, 1); // green
+				[self drawLine:c startX:oldX startY:oldY endX:plotX endY:plotY];
+				
+				// draw circle
+				[self drawGraphCircleForContext:c x:oldX y:oldY recordConfirmed:oldRecordConfirmed recExists:recExists];
+				[self drawGraphCircleForContext:c x:plotX y:plotY recordConfirmed:recordConfirmed recExists:recExists];
+				
+			}
+			
+			if(type !=4 ) {
+				// draw red line
+				CGContextSetLineWidth(c, 2);
+				CGContextSetRGBStrokeColor(c, .5, 0, 0, 1); // green
+				[self drawLine:c startX:oldX startY:oldY2 endX:plotX endY:plotY2];
+				
+				// draw circle
+				[self drawGraphCircleForContext:c x:oldX y:oldY2 recordConfirmed:oldRecordConfirmed2 recExists:recExists];
+				[self drawGraphCircleForContext:c x:plotX y:plotY2 recordConfirmed:recordConfirmed2 recExists:recExists];
+				
+			}
+			
+			
+			
+			if(month==nowMonth && displayYear==nowYear) {
+				CGContextSetLineWidth(c, 4);
+				CGContextSetRGBStrokeColor(c, 0, .5, .5, 1); // today
+				[self drawLine:c startX:plotX startY:0 endX:plotX endY:bottomEdgeOfChart];
+			}
+			if(month==displayMonth) {
+				if(month==nowMonth && displayYear==nowYear)
+					isTodayFlg=YES;
+				CGContextSetLineWidth(c, 2);
+				CGContextSetRGBStrokeColor(c, .5, .5, 0, 1); // display month
+				[self drawLine:c startX:plotX startY:0 endX:plotX endY:bottomEdgeOfChart];
+				todayX=plotX;
+				todayY=plotY;
+				NSString *label = @"Assets";
+				if(type==1 || type==2)
+					label = @"Value";
+				todayAmount = [NSString stringWithFormat:@"%@: %@", label, [ObjectiveCScripts convertNumberToMoneyString:asset_value]];
+				
+				todayY2=plotY2;
+				label = @"Debts";
+				if(type==99)
+					label = @"Interest";
+				if(type==1 || type==2)
+					label = @"Owed";
+				
+				todayAmount2 = [NSString stringWithFormat:@"%@: %@", label, [ObjectiveCScripts convertNumberToMoneyString:balance_owed]];
+				
+				
+			}
+			
+			oldX = plotX;
+			oldY = plotY;
+			oldY2 = plotY2;
+			oldRecordConfirmed = recordConfirmed;
+			oldRecordConfirmed2 = recordConfirmed2;
+		}
+		
+		xCord+=totalWidth/12;
+	} // for month
+	
+	if(todayY>0)
+		[self drawGraphLabelForContext:c x:todayX y:todayY string:todayAmount isTodayFlg:isTodayFlg];
+	
+	if(abs(todayY-todayY2)<=30 && todayY2>0 && todayY>todayY2) { // make sure they don't overlap
+		todayY2-=30;
+		if(todayY2<=0)
+			todayY2+=60;
+	}
+	if(abs(todayY-todayY2)<=30 && todayY2>0 && todayY<=todayY2) { // make sure they don't overlap
+		todayY2+=30;
+		if(todayY2>bottomEdgeOfChart-30)
+			todayY2-=60;
+	}
+	
+	if(todayY2>0)
+		[self drawGraphLabelForContext:c x:todayX y:todayY2 string:todayAmount2 isTodayFlg:isTodayFlg];
+	
+	
+	
+	UIGraphicsPopContext();
+//	UIImage *dynamicImage = [[UIImage alloc] init];
+	UIImage *dynamicImage = UIGraphicsGetImageFromCurrentImageContext();
+	
+	UIGraphicsEndImageContext();
+	
+	return dynamicImage;
+	
+}
+
++(UIImage *)plotGraphWithItems:(NSArray *)itemList
+{
+	int totalWidth=[self totalWidth];
+	int totalHeight=totalWidth/2;
+	int leftEdgeOfChart=totalWidth/12.8;
+	int bottomEdgeOfChart=totalHeight-(totalWidth/25.6);
+	
+	//Find min and max---------
+	double min=0;
+	double max=0;
+	for (GraphObject *graphObj in itemList) {
+		if(graphObj.amount > max)
+			max=graphObj.amount;
+		if(graphObj.amount < min)
+			min=graphObj.amount;
+	}
+	
+	max*=1.1;
+	min*=1.05;
+	double totalMoneyRange = max-min;
+	
+	float yMultiplier = 1;
+	if(totalMoneyRange>0)
+		yMultiplier = (float)bottomEdgeOfChart/totalMoneyRange;
+
+
+	CGContextRef c = [GraphLib contextRefForGraphofWidth:totalWidth totalHeight:totalHeight];
+	int zeroLoc = [GraphLib drawZeroLineForContext:c min:min max:max bottomEdgeOfChart:bottomEdgeOfChart leftEdgeOfChart:leftEdgeOfChart totalWidth:totalWidth];
+	
+	[GraphLib drawLeftLabelsAndLinesForContext:c totalMoneyRange:(max-min) min:min leftEdgeOfChart:leftEdgeOfChart totalHeight:totalHeight totalWidth:totalWidth numOnlyFlg:YES];
+	
+	[GraphLib drawBottomLabelsForArray2:itemList c:c bottomEdgeOfChart:bottomEdgeOfChart leftEdgeOfChart:leftEdgeOfChart totalWidth:totalWidth];
+	
+	[GraphLib drawGraphForContext:c itemArray:itemList leftEdgeOfChart:leftEdgeOfChart zeroLoc:zeroLoc yMultiplier:yMultiplier totalWidth:totalWidth bottomEdgeOfChart:bottomEdgeOfChart shadingFlg:YES];
+	[GraphLib drawGraphForContext:c itemArray:itemList leftEdgeOfChart:leftEdgeOfChart zeroLoc:zeroLoc yMultiplier:yMultiplier totalWidth:totalWidth bottomEdgeOfChart:bottomEdgeOfChart shadingFlg:NO];
+	
+	
+	UIGraphicsPopContext();
+	UIImage *dynamicChartImage = UIGraphicsGetImageFromCurrentImageContext();
+	
+	UIGraphicsEndImageContext();
+	
+	return dynamicChartImage;
+	
+}
+
++(void)drawGraphForContext:(CGContextRef)c itemArray:(NSArray *)itemArray leftEdgeOfChart:(int)leftEdgeOfChart zeroLoc:(int)zeroLoc yMultiplier:(float)yMultiplier totalWidth:(int)totalWidth bottomEdgeOfChart:(int)bottomEdgeOfChart shadingFlg:(BOOL)shadingFlg
+{
+	if(itemArray.count==0)
+		return;
+	
+	UIBezierPath *aPath = [UIBezierPath bezierPath];
+	[aPath moveToPoint:CGPointMake(leftEdgeOfChart, zeroLoc)];
+	int spacing = totalWidth/(itemArray.count);
+	int XCord = leftEdgeOfChart;
+	int YCord = 0;
+	int oldX=leftEdgeOfChart;
+	int oldY=bottomEdgeOfChart;
+	int i=1;
+	double oldValue=0;
+	BOOL confirmOld=NO;
+	BOOL existsOld=NO;
+	for(GraphObject *graphObject in itemArray) {
+		double value = graphObject.amount;
+		
+//		BOOL showGreen = value>=0;
+//		if(graphObject.reverseColorFlg)
+//			showGreen=!showGreen;
+		
+		YCord=zeroLoc-value*yMultiplier;
+		
+		if(value>=oldValue)
+			CGContextSetRGBStrokeColor(c, 0, .5, 0, 1); // green
+		else
+			CGContextSetRGBStrokeColor(c, 1, 0, 0, 1); // red
+		
+		[self drawGraphCircleForContext:c x:XCord y:YCord recordConfirmed:graphObject.confirmFlg recExists:graphObject.existsFlg];
+		if(i==1)
+			[aPath addLineToPoint:CGPointMake(leftEdgeOfChart, YCord)];
+		else {
+			[self drawLine:c startX:oldX startY:oldY endX:XCord endY:YCord];
+			[self drawGraphCircleForContext:c x:oldX y:oldY recordConfirmed:confirmOld recExists:existsOld];
+		}
+		
+		[aPath addLineToPoint:CGPointMake(XCord, YCord)];
+		confirmOld = graphObject.confirmFlg;
+		existsOld = graphObject.existsFlg;
+		oldX=XCord;
+		oldY=YCord;
+		XCord+=spacing;
+		i++;
+	}
+	[self drawGraphCircleForContext:c x:oldX y:oldY recordConfirmed:confirmOld recExists:YES];
+	[aPath addLineToPoint:CGPointMake(totalWidth, YCord)];
+	[aPath addLineToPoint:CGPointMake(totalWidth, bottomEdgeOfChart)];
+	[aPath addLineToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
+	[aPath closePath];
+	if(shadingFlg)
+		[self addGradientToPath:aPath context:c color1:[UIColor whiteColor] color2:(UIColor *)[UIColor orangeColor] lineWidth:(int)1 imgWidth:totalWidth imgHeight:300];
+}
+
++(void)addGradientToPath:(UIBezierPath *)aPath
+				 context:(CGContextRef)context
+				  color1:(UIColor *)color1
+				  color2:(UIColor *)color2
+			   lineWidth:(int)lineWidth
+				imgWidth:(int)width
+			   imgHeight:(int)height
+{
+	width=[self totalWidth];
+	height=width/2;
+	
+	CGFloat red1 = 0.0, green1 = 0.0, blue1 = 0.0, alpha1 =0.0;
+	[color1 getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
+	
+	CGFloat red2 = 0.0, green2 = 0.0, blue2 = 0.0, alpha2 =0.0;
+	[color2 getRed:&red2 green:&green2 blue:&blue2 alpha:&alpha2];
+	
+	CGColorSpaceRef myColorspace=CGColorSpaceCreateDeviceRGB();
+	size_t num_locations = 2;
+	CGFloat locations[2] = { 1.0, 0.0 };
+	CGFloat components[8] =	{ red2, green2, blue2, alpha2,    red1, green1, blue1, alpha1};
+	
+	CGGradientRef myGradient = CGGradientCreateWithColorComponents(myColorspace, components, locations, num_locations);
+	
+	CGContextSaveGState(context);
+	[aPath addClip];
+	CGContextDrawLinearGradient(context, myGradient, CGPointMake(0, 0), CGPointMake(width, height), 0);
+	CGContextRestoreGState(context);
+	
+	[[UIColor blackColor] setStroke];
+	aPath.lineWidth = lineWidth;
+	[aPath stroke];
+	
+	CGGradientRelease(myGradient);
+}
+
++(void)drawGraphLabelForContext:(CGContextRef)c x:(int)x y:(int)y string:(NSString *)string isTodayFlg:(BOOL)isTodayFlg {
+	int charSpacing=trunc([self totalWidth]/55);
+	int width=(int)string.length*charSpacing+charSpacing*4;
+	int height=trunc([self totalWidth]/20);
+
+	x-=width/2-5;
+	y+=14;
+	
+	if(x<40)
+		x=40;
+	if(x>trunc([self totalWidth]/1.5))
+		x=trunc([self totalWidth]/1.5);
+	if(y>[self totalWidth]/4)
+		y-=(height*2);
+	
+	CGContextSetRGBFillColor(c, 0, 0, 0, 1); //
+	CGContextFillRect(c, CGRectMake(x-charSpacing, y, width, height));
+	if(isTodayFlg)
+		CGContextSetRGBFillColor(c, 1, 1, 0, 1);
+	else
+		CGContextSetRGBFillColor(c, 1, 1, 1, 1);
+	CGContextFillRect(c, CGRectMake(x-charSpacing+2, y+2, width-4, height-4));
+	
+	CGContextSetRGBFillColor(c, 0, 0, 0, 1); // red // <--- this one does letters
+	[string drawAtPoint:CGPointMake(x, y+1) withFont:[UIFont fontWithName:@"Helvetica" size:trunc([self totalWidth]/25)]];
+}
+
++(void)drawGraphCircleForContext:(CGContextRef)c x:(int)x y:(int)y recordConfirmed:(BOOL)recordConfirmed recExists:(BOOL)recExists {
+	int circleMultiplyer = trunc([self totalWidth]/320);
+	int circleSize=circleMultiplyer*11;
+
+	CGContextSetRGBFillColor(c, .5, .5, .5, 1);
+	for(int i=1; i<=2; i++)
+		CGContextFillEllipseInRect(c, CGRectMake(x-circleSize/2+i,y-circleSize/2+i,circleSize,circleSize));
+
+	CGContextSetRGBFillColor(c, 0, 0, 0, 1);
+	CGContextFillEllipseInRect(c, CGRectMake(x-circleSize/2,y-circleSize/2,circleSize,circleSize));
+	
+	circleSize-=circleMultiplyer;
+	CGContextSetRGBFillColor(c, 1, 1, 1, 1);
+	CGContextFillEllipseInRect(c, CGRectMake(x-circleSize/2,y-circleSize/2,circleSize,circleSize));
+	
+	circleSize-=circleMultiplyer*4;
+	if(recordConfirmed)
+		CGContextSetRGBFillColor(c, 0, .5, 0, 1);
+	else
+		CGContextSetRGBFillColor(c, 1, 0, 0, 1);
+	
+	if(!recExists)
+		CGContextSetRGBFillColor(c, 1, 1, 0, 1);
+	
+	CGContextFillEllipseInRect(c, CGRectMake(x-circleSize/2,y-circleSize/2,circleSize,circleSize));
+	
+	CGContextDrawPath(c, kCGPathFillStroke);
+}
+
++(NSPredicate *)predicateForMonth:(int)month year:(int)year item_id:(int)item_id type:(int)type {
+	if(item_id>0) // single item
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", year, month, item_id];
+
+	if(type==0) // assets and debts
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
+	
+	if(type==99) // interest
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
+	else
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, type];
+}
+
+
++(NSString *)smallLabelForMoney:(double)money totalMoneyRange:(double)totalMoneyRange {
+	int moneyRoundingFactor = 1;
+	if(totalMoneyRange>500)
+		moneyRoundingFactor=10;
+	if(totalMoneyRange>5000)
+		moneyRoundingFactor=100;
+	if(totalMoneyRange>50000)
+		moneyRoundingFactor=1000;
+	if(totalMoneyRange>500000)
+		moneyRoundingFactor=10000;
+	if(totalMoneyRange>5000000)
+		moneyRoundingFactor=100000;
+	if(totalMoneyRange>50000000)
+		moneyRoundingFactor=1000000;
+	
+	money /=moneyRoundingFactor;
+	money *=moneyRoundingFactor;
+	
+	BOOL negValue = (money<0)?YES:NO;
+	if(negValue)
+		money*=-1;
+	
+	NSString *label = [NSString stringWithFormat:@"%@%d", [self getMoneySymbol], (int)money];
+	if(money>1000)
+		label = [NSString stringWithFormat:@"%@%.1fk", [self getMoneySymbol], (double)money/1000];
+	if(money>10000)
+		label = [NSString stringWithFormat:@"%@%dk", [self getMoneySymbol], (int)money/1000];
+	if(money>100000)
+		label = [NSString stringWithFormat:@"%dk", (int)money/1000];
+	if(money>1000000)
+		label = [NSString stringWithFormat:@"%@%.1fM", [self getMoneySymbol], (double)money/1000000];
+	if(money>10000000)
+		label = [NSString stringWithFormat:@"%@%dM", [self getMoneySymbol], (int)money/1000000];
+	if(money>100000000)
+		label = [NSString stringWithFormat:@"%@%.1fB", [self getMoneySymbol], (double)money/1000000000];
+	
+	if (negValue)
+		return [NSString stringWithFormat:@"-%@", label];
+	else
+		return label;
+}
+
++(NSString *)getMoneySymbol {
+	return @"$";
+}
+
++(void)drawLine:(CGContextRef)c startX:(int)startX startY:(int)startY endX:(int)endX endY:(int)endY
+{
+	CGContextMoveToPoint(c, startX, startY);
+	CGContextAddLineToPoint(c, endX, endY);
+	CGContextStrokePath(c);
+}
+
++(void)drawLine:(CGContextRef)c startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
+	CGContextMoveToPoint(c, startPoint.x, startPoint.y);
+	CGContextAddLineToPoint(c, endPoint.x, endPoint.y);
+	CGContextStrokePath(c);
+}
+
++(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context {
+	
+	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
+	month-=5;
+	if(month<1) {
+		month+=12;
+		year--;
+	}
+	int prevMonth=month;
+	int prevYear=year;
+	prevMonth--;
+	if(prevMonth<1) {
+		prevMonth=12;
+		prevYear--;
+	}
+
+	NSArray *monthList = [ObjectiveCScripts monthListShort];
+	for(int i=1; i<=6; i++) {
+		GraphObject *graphObject = [[GraphObject alloc] init];
+		graphObject.name=[monthList objectAtIndex:month-1];
+		double amount=[self getAmountForMonth:month year:year type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id];
+		double prevAmount=[self getAmountForMonth:prevMonth year:prevYear type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id];
+		
+		graphObject.amount=amount-prevAmount;
+		graphObject.reverseColorFlg = reverseColorFlg;
+		[graphArray addObject:graphObject];
+		prevYear=year;
+		prevMonth=month;
+		
+		month++;
+		if(month>12) {
+			month=1;
+			year++;
+		}
+	}
+	return graphArray;
+}
+
++(double)getAmountForMonth:(int)month year:(int)year type:(int)type context:(NSManagedObjectContext *)context reverseColorFlg:(BOOL)reverseColorFlg row_id:(int)row_id {
+
+	double amount=0;
+	if(type==3) {
+		return [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"balance_owed" context:context type:0];
+	}
+	
+	if(type==99)
+		amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"interest" context:context type:0];
+	else if(type==4) {
+		amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:nil context:context type:0];
+	} else {
+		if(!reverseColorFlg)
+			amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"asset_value" context:context type:type];
+		else
+			amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"balance_owed" context:context type:type];
+	}
+	return amount;
+}
+
+
+
+@end
