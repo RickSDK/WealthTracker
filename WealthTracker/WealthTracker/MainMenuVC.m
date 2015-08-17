@@ -262,6 +262,8 @@
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.tag=4;
+		detailViewController.type=0;
+		detailViewController.fieldType=2; // equity
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		return;
 	}
@@ -269,6 +271,8 @@
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.tag=(startTouchPosition.x>[[UIScreen mainScreen] bounds].size.width/2)?11:12;
+		detailViewController.fieldType=(startTouchPosition.x>[[UIScreen mainScreen] bounds].size.width/2)?1:0;
+		detailViewController.type=0;
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		return;
 	}

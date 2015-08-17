@@ -56,5 +56,7 @@
 +(BOOL)validateStandardResponse:(NSString *)responseStr delegate:(id)delegate;
 +(void)swipeBackRecognizerForTableView:(UITableView *)tableview delegate:(id)delegate selector:(SEL)selector;
 +(int)badgeStatusForAppWithContext:(NSManagedObjectContext *)context label:(UILabel *)label;
++(NSString *)fieldTypeNameForFieldType:(int)fieldType;
++(NSString *)typeLabelForType:(int)type fieldType:(int)fieldType;
 
 @end

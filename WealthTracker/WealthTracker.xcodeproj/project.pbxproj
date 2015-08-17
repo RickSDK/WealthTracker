@@ -11,6 +11,8 @@
 		6B04442F1B58973A001E7007 /* ChartsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B04442D1B58973A001E7007 /* ChartsVC.xib */; };
 		6B0444321B596A56001E7007 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0444311B596A56001E7007 /* DateCell.m */; };
 		6B0444421B59DD48001E7007 /* redCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0444411B59DD48001E7007 /* redCircle.png */; };
+		6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */; };
+		6B2A7FD51B8149CE009AF987 /* BreakdownSingleMonthVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */; };
 		6B2E23E21B54372B00CC2851 /* MainMenuVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */; };
 		6B2E23E61B543E8700CC2851 /* UpdateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2E23E41B543E8700CC2851 /* UpdateVC.m */; };
 		6B2E23E71B543E8700CC2851 /* UpdateVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2E23E51B543E8700CC2851 /* UpdateVC.xib */; };
@@ -145,6 +147,9 @@
 		6B0444301B596A56001E7007 /* DateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateCell.h; sourceTree = "<group>"; };
 		6B0444311B596A56001E7007 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
 		6B0444411B59DD48001E7007 /* redCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redCircle.png; sourceTree = "<group>"; };
+		6B2A7FD11B8149CE009AF987 /* BreakdownSingleMonthVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakdownSingleMonthVC.h; sourceTree = "<group>"; };
+		6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreakdownSingleMonthVC.m; sourceTree = "<group>"; };
+		6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BreakdownSingleMonthVC.xib; sourceTree = "<group>"; };
 		6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuVC.xib; sourceTree = "<group>"; };
 		6B2E23E31B543E8700CC2851 /* UpdateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateVC.h; sourceTree = "<group>"; };
 		6B2E23E41B543E8700CC2851 /* UpdateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateVC.m; sourceTree = "<group>"; };
@@ -426,6 +431,9 @@
 				6BDCEF161B5FFCD500DDA3AC /* BreakdownByMonthVC.h */,
 				6BDCEF171B5FFCD500DDA3AC /* BreakdownByMonthVC.m */,
 				6BDCEF181B5FFCD500DDA3AC /* BreakdownByMonthVC.xib */,
+				6B2A7FD11B8149CE009AF987 /* BreakdownSingleMonthVC.h */,
+				6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */,
+				6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */,
 				6B2E23F51B556FAB00CC2851 /* AnalysisVC.h */,
 				6B2E23F61B556FAB00CC2851 /* AnalysisVC.m */,
 				6B2E23F71B556FAB00CC2851 /* AnalysisVC.xib */,
@@ -727,6 +735,7 @@
 				6B63899F1B7BA2A100260656 /* Icon-152.png in Resources */,
 				6B38E3E01B6C678900EF8D40 /* karma.png in Resources */,
 				6B644CB91B68203400483F98 /* NewAccountVC.xib in Resources */,
+				6B2A7FD51B8149CE009AF987 /* BreakdownSingleMonthVC.xib in Resources */,
 				6BE8EAF71B618B66005510F6 /* UpdateSalaryVC.xib in Resources */,
 				6B6389991B7BA2A100260656 /* Icon-58.png in Resources */,
 				6B416ED71B506D53009C9834 /* Images.xcassets in Resources */,
@@ -759,6 +768,7 @@
 				6B8EB9931B5218BD00F8A20B /* ProfileObj.m in Sources */,
 				6B416EFE1B508774009C9834 /* StartupVC.m in Sources */,
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
+				6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */,
 				6B644CC21B68206000483F98 /* InAppPurchaseVC.m in Sources */,
 				6B416F261B50CF81009C9834 /* MoneyCell.m in Sources */,
 				6B644CB81B68203400483F98 /* NewAccountVC.m in Sources */,
@@ -935,7 +945,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1c8550f7-1824-4dbb-b14a-b94fde54fb37";
+				PROVISIONING_PROFILE = "980fd1fb-8abf-4e1d-a4fd-928d51b5e18c";
 			};
 			name = Debug;
 		};
@@ -950,7 +960,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1c8550f7-1824-4dbb-b14a-b94fde54fb37";
+				PROVISIONING_PROFILE = "980fd1fb-8abf-4e1d-a4fd-928d51b5e18c";
 			};
 			name = Release;
 		};

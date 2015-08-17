@@ -338,6 +338,22 @@
 			nil];
 }
 
++(NSArray *)fieldTypeList {
+	return [NSArray arrayWithObjects:
+			@"Value",
+			@"Balance",
+			@"Equity",
+			@"Interest",
+			nil];
+}
+
++(NSString *)fieldTypeNameForFieldType:(int)fieldType {
+	if(fieldType>3)
+		return @"Error";
+	else
+		return [[self fieldTypeList] objectAtIndex:fieldType];
+}
+
 +(NSArray *)subtypeList {
 			// type | sub_type | type#
 	return [NSArray arrayWithObjects:
@@ -712,6 +728,23 @@
 		return 0; // green status
 	
 }
+
++(NSString *)typeLabelForType:(int)type fieldType:(int)fieldType {
+	if(type==0) {
+		if(fieldType==0)
+			return @"Assets";
+		if(fieldType==1)
+			return @"Debts";
+		if(fieldType==2)
+			return @"Net Worth";
+		if(fieldType==3)
+			return @"Debt Interest";
+	} else
+		return [ObjectiveCScripts typeNameForType:type];
+	
+	return @"Error";
+}
+
 
 
 

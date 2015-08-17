@@ -14,6 +14,7 @@
 #import "GraphLib.h"
 #import "GraphObject.h"
 #import "GraphCell.h"
+#import "BreakdownSingleMonthVC.h"
 
 @interface BreakdownByMonthVC ()
 
@@ -33,25 +34,18 @@
     [super viewDidLoad];
 	[self setTitle:@"Breakdown"];
 	
+	NSLog(@"+++BreakdownByMonthVC type: %d, fieldType: %d", self.type, self.fieldType);
+
+	
 	self.topGraphImageView = [[UIImageView alloc] init];
-//	NSLog(@"+tag: %d", self.tag);
+	
 	
 	if(self.itemObject) {
 		self.titleLabel.text = self.itemObject.name;
 		self.type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 		self.row_id = [self.itemObject.rowId intValue];
 	} else {
-		if(self.tag==4 || self.tag==0)
-			self.titleLabel.text = @"Net Worth";
-		else if(self.tag==99)
-			self.titleLabel.text = @"Interest";
-		else if(self.tag==11)
-			self.titleLabel.text = @"Debts Paid";
-		else if(self.tag==12)
-			self.titleLabel.text = @"Assets";
-		else
-			self.titleLabel.text = [[ObjectiveCScripts typeList] objectAtIndex:self.tag];
-
+		self.titleLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
 	}
 
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
@@ -117,6 +111,15 @@
 		prevValue=prevInterest;
 	
 	for(int i=1; i<=12; i++) {
+		
+		NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
+		NSString *field = [fieldTypes objectAtIndex:self.fieldType];
+		double amount = [ObjectiveCScripts changedForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1];
+
+		double total = [ObjectiveCScripts amountForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext type:self.type];
+		
+		NSLog(@"+++%d %f %f", i, total, amount);
+
 		NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear, i];
 		NSPredicate *predicate=[self predicateForYearMonth:year_month item_id:self.row_id tag:self.tag];
 		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
@@ -130,7 +133,7 @@
 			interest += [[mo valueForKey:@"interest"] doubleValue];
 		}
 
-		if(self.tag==99)
+		if(self.fieldType==3)
 			value=interest;
 
 		equity=value-balance;
@@ -152,6 +155,10 @@
 	
 //	NSLog(@"tag: %d, type: %d", self.tag, type);
 	
+	//fieldTypeNameForFieldType
+	
+	self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
+/*
 	if(self.tag==0 && self.topSegmentControl.selectedSegmentIndex==0)
 		self.graphTitleLabel.text = @"Value Change by Month";
 	if(self.tag==0 && self.topSegmentControl.selectedSegmentIndex==1)
@@ -170,10 +177,10 @@
 		self.graphTitleLabel.text = @"Net Worth Change by Month";
 	if(self.tag==99)
 		self.graphTitleLabel.text = @"Interest Change by Month";
+	*/
+//	int type=self.tag;
 	
-	int type=self.tag;
-	
-	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:type context:self.managedObjectContext];
+	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType];
 	
 	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 	int width = [[UIScreen mainScreen] bounds].size.width;
@@ -252,8 +259,10 @@
 		cell.monthLabel.textColor = [UIColor blackColor];
 	}
 	
-	cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
-	cell.accessoryType= UITableViewCellAccessoryNone;
+	if(indexPath.section>0 && self.row_id==0)
+		cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
+	else
+		cell.accessoryType= UITableViewCellAccessoryNone;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	return cell;
 }
@@ -277,6 +286,7 @@
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
+	self.fieldType = (int)self.topSegmentControl.selectedSegmentIndex;
 	[self setupData];
 }
 
@@ -293,6 +303,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section==1 && self.row_id==0) {
+		BreakdownSingleMonthVC *detailViewController = [[BreakdownSingleMonthVC alloc] initWithNibName:@"BreakdownSingleMonthVC" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		detailViewController.displayYear=self.displayYear;
+		detailViewController.displayMonth=(int)indexPath.row+1;
+		detailViewController.nowYear=self.nowYear;
+		detailViewController.nowMonth=self.nowMonth;
+		detailViewController.fieldType=self.fieldType;
+		detailViewController.type=self.type;
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -345,7 +366,7 @@
 	if(indexPath.section==0)
 		return 190;
 	else
-		return 30;
+		return 34;
 }
 
 

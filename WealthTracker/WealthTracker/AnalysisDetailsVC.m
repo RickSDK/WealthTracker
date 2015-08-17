@@ -88,9 +88,22 @@
 }
 
 -(void)breakdownButtonPressed {
+	int type=self.tag;
+	int fieldType = 0;
+	if(type==3) {
+		type=0;
+		fieldType=1;
+	}
+	if(type==4) {
+		type=0;
+		fieldType=2;
+	}
+	
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.tag = self.tag;
+	detailViewController.type = type;
+	detailViewController.fieldType = fieldType;
 	detailViewController.displayYear=self.displayYear;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

@@ -69,10 +69,23 @@
 	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
 	//Get the corresponding index path within the table view
 	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
+	int type=(int)indexPath.section;
+	int fieldType=0;
+	if(type==3) {
+		type=0;
+		fieldType=3;
+	}
+	if(type==4) {
+		type=0;
+		fieldType=1;
+	}
+	
 	NSArray *dates = [[self.graphDates objectAtIndex:indexPath.section] componentsSeparatedByString:@"|"];
 	int displayYear = [[dates objectAtIndex:0] intValue];
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.type=type;
+	detailViewController.fieldType=fieldType;
 	detailViewController.displayYear=displayYear;
 	if(indexPath.section==3)
 		detailViewController.tag = 99; // interest

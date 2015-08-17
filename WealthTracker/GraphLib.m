@@ -57,7 +57,7 @@
 			if(i<maxItems)
 				[newArray addObject:graphObj];
 			else
-				othersTotal+=graphObj.amount;
+				othersTotal+=abs(graphObj.amount);
 		}
 		GraphObject *othersObj = [[GraphObject alloc] init];
 		othersObj.name=@"Others";
@@ -69,7 +69,7 @@
 	NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
 	double totalPieSize=0;
 	for (GraphObject *graphObj in itemList) {
-		totalPieSize+=graphObj.amount;
+		totalPieSize+=abs(graphObj.amount);
 		[sortedArray addObject:graphObj];
 	}
 
@@ -121,7 +121,7 @@
 		CGPoint namePoint = CGPointMake(-20, -20); // off screen
 		int i=0;
 		for (GraphObject *graphObj in itemList) {
-			double value = graphObj.amount;
+			double value = abs(graphObj.amount);
 			endDegree = startDegree+value*360/totalPieSize;
 			
 			CGPoint startPoint = [self pointFromCenter:center radius:radius degrees:startDegree];
@@ -135,9 +135,7 @@
 			
 			int midDegree = (int)(endDegree+startDegree)/2;
 			namePoint = [self startingPointForString:graphObj.name midDegree:midDegree size:(endDegree-startDegree) midPoint:longPoint prevPoint:namePoint];
-			NSString *shortName = graphObj.name;
-			if(shortName.length>11)
-				shortName = [shortName substringToIndex:11];
+			NSString *shortName = [self smartStringForName:graphObj.name max:11];
 			float percentage = value*100/totalPieSize;
 			[self setTextColorForContext:c color:[self colorForObject:graphObj.rowId] darkFlg:YES];
 
@@ -504,11 +502,34 @@
 	for(GraphObject *graphObject in labels) {
 		NSString *labelStr = graphObject.name;
 		if(labelStr.length > lenMax)
-			labelStr = [graphObject.name substringToIndex:lenMax];
+			labelStr = [self smartStringForName:graphObject.name max:lenMax];
 		
 		[labelStr drawAtPoint:CGPointMake(XCord+spacing/10, bottomEdgeOfChart+2) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/35.55)]];
 		XCord+=spacing;
 	}
+}
+
++(NSString *)smartStringForName:(NSString *)name max:(int)max {
+	if(name.length<=max)
+		return name;
+	
+	NSArray *words = [name componentsSeparatedByString:@" "];
+	NSMutableArray *newWords = [[NSMutableArray alloc] init];
+	if(words.count>1) {
+		int wordLen = max/words.count;
+		for(NSString *word in words) {
+			NSString *newWord=word;
+			if(word.length>wordLen)
+				newWord=[word substringToIndex:wordLen];
+			[newWords addObject:newWord];
+		}
+		name = [newWords componentsJoinedByString:@" "];
+		
+	}
+	if(name.length<=max)
+		return name;
+	else
+		return [name substringToIndex:max];
 }
 
 +(void)drawBottomLabelsForArray2:(NSArray *)labels c:(CGContextRef)c bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth
@@ -527,7 +548,7 @@
 	for(GraphObject *graphObject in labels) {
 		NSString *labelStr = graphObject.name;
 		if(labelStr.length > lenMax)
-			labelStr = [graphObject.name substringToIndex:lenMax];
+			labelStr = [self smartStringForName:graphObject.name max:lenMax];
 		
 		[labelStr drawAtPoint:CGPointMake(XCord+spacing/10, bottomEdgeOfChart-2) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/35.55)]];
 		XCord+=spacing;
@@ -1206,7 +1227,7 @@
 	CGContextStrokePath(c);
 }
 
-+(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context {
++(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType {
 	
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	month-=5;
@@ -1226,9 +1247,10 @@
 	for(int i=1; i<=6; i++) {
 		GraphObject *graphObject = [[GraphObject alloc] init];
 		graphObject.name=[monthList objectAtIndex:month-1];
-		double amount=[self getAmountForMonth:month year:year type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id];
-		double prevAmount=[self getAmountForMonth:prevMonth year:prevYear type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id];
+		double amount=[self getAmountForMonth:month year:year type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id fieldType:fieldType];
+		double prevAmount=[self getAmountForMonth:prevMonth year:prevYear type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id fieldType:fieldType];
 		
+		NSLog(@"+++%d %f", i, amount);
 		graphObject.amount=amount-prevAmount;
 		graphObject.reverseColorFlg = reverseColorFlg;
 		[graphArray addObject:graphObject];
@@ -1244,16 +1266,16 @@
 	return graphArray;
 }
 
-+(double)getAmountForMonth:(int)month year:(int)year type:(int)type context:(NSManagedObjectContext *)context reverseColorFlg:(BOOL)reverseColorFlg row_id:(int)row_id {
++(double)getAmountForMonth:(int)month year:(int)year type:(int)type context:(NSManagedObjectContext *)context reverseColorFlg:(BOOL)reverseColorFlg row_id:(int)row_id fieldType:(int)fieldType {
 
 	double amount=0;
 	if(type==3) {
 		return [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"balance_owed" context:context type:0];
 	}
 	
-	if(type==99)
+	if(type==99 || fieldType==3)
 		amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"interest" context:context type:0];
-	else if(type==4) {
+	else if(type==4 || fieldType==2) {
 		amount = [ObjectiveCScripts amountForItem:row_id month:month year:year field:nil context:context type:0];
 	} else {
 		if(!reverseColorFlg)

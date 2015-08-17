@@ -243,7 +243,7 @@
 		
 		value = equityToday-equityLastMonth;
 		sign = (value<0)?@"":@"+";
-		[self.namesArray addObject:@"Equity Last 30 Days"];
+		[self.namesArray addObject:@"Equity This Month"];
 		[self.valuesArray addObject:[NSString stringWithFormat:@"%@%@", sign, [ObjectiveCScripts convertNumberToMoneyString:value]]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:value lightFlg:NO]];
 
@@ -272,7 +272,7 @@
 		value = valueToday-value30;
 		if(value30>0) {
 			sign = (value<0)?@"":@"+";
-			[self.namesArray addObject:@"Value Last 30 Days"];
+			[self.namesArray addObject:@"Value This Month"];
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%@%@ (%.1f%%)", sign, [ObjectiveCScripts convertNumberToMoneyString:value], value*100/value30]];
 			[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:value lightFlg:NO]];
 		}
@@ -423,7 +423,7 @@
 			if(type==3)
 				reverseColorFlg=YES; // debt
 
-			NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext];
+			NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0];
 			
 			cell.graphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 		} else {

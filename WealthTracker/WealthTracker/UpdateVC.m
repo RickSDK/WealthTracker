@@ -102,7 +102,7 @@
 			if(obj.status==2)
 				redCount++;
 			double amount = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-			if(abs(amount) > 100) {
+			if(abs(amount) > 0) {
 				GraphObject *graphObject = [[GraphObject alloc] init];
 				graphObject.name=obj.name;
 				graphObject.amount=(self.displayPieFlg)?abs(amount):amount;

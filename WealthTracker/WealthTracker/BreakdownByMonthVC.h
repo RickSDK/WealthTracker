@@ -33,6 +33,7 @@
 @property (nonatomic) int nowMonth;
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
+@property (nonatomic) int fieldType;
 
 -(IBAction)topSegmentChanged:(id)sender;
 -(IBAction)prevYearButtonPressed:(id)sender;
