@@ -117,6 +117,9 @@
 		6BC472281B6151D400F68341 /* UpdateWebCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC472271B6151D400F68341 /* UpdateWebCell.m */; };
 		6BC4722C1B61576B00F68341 /* WebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4722A1B61576B00F68341 /* WebViewVC.m */; };
 		6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC4722B1B61576B00F68341 /* WebViewVC.xib */; };
+		6BD0D8E11B83D9D70062E152 /* MonthlySpendingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD0D8DF1B83D9D70062E152 /* MonthlySpendingVC.m */; };
+		6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BD0D8E01B83D9D70062E152 /* MonthlySpendingVC.xib */; };
+		6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD0D8E41B83DB320062E152 /* MultiLineObj.m */; };
 		6BDCEF191B5FFCD500DDA3AC /* BreakdownByMonthVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDCEF171B5FFCD500DDA3AC /* BreakdownByMonthVC.m */; };
 		6BDCEF1A1B5FFCD500DDA3AC /* BreakdownByMonthVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BDCEF181B5FFCD500DDA3AC /* BreakdownByMonthVC.xib */; };
 		6BDCEF1D1B600C3500DDA3AC /* BreakdownCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BDCEF1C1B600C3500DDA3AC /* BreakdownCell.m */; };
@@ -304,6 +307,11 @@
 		6BC472291B61576B00F68341 /* WebViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewVC.h; sourceTree = "<group>"; };
 		6BC4722A1B61576B00F68341 /* WebViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewVC.m; sourceTree = "<group>"; };
 		6BC4722B1B61576B00F68341 /* WebViewVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebViewVC.xib; sourceTree = "<group>"; };
+		6BD0D8DE1B83D9D70062E152 /* MonthlySpendingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonthlySpendingVC.h; sourceTree = "<group>"; };
+		6BD0D8DF1B83D9D70062E152 /* MonthlySpendingVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonthlySpendingVC.m; sourceTree = "<group>"; };
+		6BD0D8E01B83D9D70062E152 /* MonthlySpendingVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MonthlySpendingVC.xib; sourceTree = "<group>"; };
+		6BD0D8E31B83DB320062E152 /* MultiLineObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiLineObj.h; sourceTree = "<group>"; };
+		6BD0D8E41B83DB320062E152 /* MultiLineObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiLineObj.m; sourceTree = "<group>"; };
 		6BDCEF161B5FFCD500DDA3AC /* BreakdownByMonthVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakdownByMonthVC.h; sourceTree = "<group>"; };
 		6BDCEF171B5FFCD500DDA3AC /* BreakdownByMonthVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreakdownByMonthVC.m; sourceTree = "<group>"; };
 		6BDCEF181B5FFCD500DDA3AC /* BreakdownByMonthVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BreakdownByMonthVC.xib; sourceTree = "<group>"; };
@@ -383,6 +391,9 @@
 				6B5B87F41B681C0D00BBE741 /* OptionsVC.h */,
 				6B5B87F51B681C0D00BBE741 /* OptionsVC.m */,
 				6B5B87F61B681C0D00BBE741 /* OptionsVC.xib */,
+				6BD0D8DE1B83D9D70062E152 /* MonthlySpendingVC.h */,
+				6BD0D8DF1B83D9D70062E152 /* MonthlySpendingVC.m */,
+				6BD0D8E01B83D9D70062E152 /* MonthlySpendingVC.xib */,
 				6B644CB01B68201800483F98 /* LoginVC.h */,
 				6B644CB11B68201800483F98 /* LoginVC.m */,
 				6B644CB21B68201800483F98 /* LoginVC.xib */,
@@ -594,6 +605,8 @@
 				6B8EB9921B5218BD00F8A20B /* ProfileObj.m */,
 				6B6940F51B646C5D00088D55 /* GraphObject.h */,
 				6B6940F61B646C5D00088D55 /* GraphObject.m */,
+				6BD0D8E31B83DB320062E152 /* MultiLineObj.h */,
+				6BD0D8E41B83DB320062E152 /* MultiLineObj.m */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -681,6 +694,7 @@
 			files = (
 				6B63899B1B7BA2A100260656 /* Icon-76.png in Resources */,
 				6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */,
+				6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */,
 				6B63899C1B7BA2A100260656 /* Icon-80.png in Resources */,
 				6B416ED51B506D53009C9834 /* Main.storyboard in Resources */,
 				6B644CBE1B68204900483F98 /* PrivacyPolicyVC.xib in Resources */,
@@ -774,6 +788,7 @@
 				6B644CB81B68203400483F98 /* NewAccountVC.m in Sources */,
 				6B416ECF1B506D53009C9834 /* MasterViewController.m in Sources */,
 				6B04442E1B58973A001E7007 /* ChartsVC.m in Sources */,
+				6BD0D8E11B83D9D70062E152 /* MonthlySpendingVC.m in Sources */,
 				6B644CBD1B68204900483F98 /* PrivacyPolicyVC.m in Sources */,
 				6B3C18001B6FED7A0039733B /* CashFlowVC.m in Sources */,
 				6B2E24061B56BD6700CC2851 /* UpdateCell.m in Sources */,
@@ -807,6 +822,7 @@
 				6B8EB98B1B51D75A00F8A20B /* ItemObject.m in Sources */,
 				6B2E24091B58268E00CC2851 /* GraphCell.m in Sources */,
 				6B416F181B509FC2009C9834 /* WebServiceView.m in Sources */,
+				6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */,
 				6B416EF21B506E0B009C9834 /* MainMenuVC.m in Sources */,
 				6B2E23EB1B545B0B00CC2851 /* UpdateDetails.m in Sources */,
 				6BE8EAF61B618B66005510F6 /* UpdateSalaryVC.m in Sources */,

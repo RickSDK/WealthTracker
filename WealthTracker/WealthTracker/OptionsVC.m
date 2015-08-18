@@ -15,6 +15,7 @@
 #import "InAppPurchaseVC.h"
 #import "CreditScoreTracker.h"
 #import "CashFlowVC.h"
+#import "MonthlySpendingVC.h"
 
 #define kExportAlert	1
 #define kImporttAlert	2
@@ -28,6 +29,7 @@
 #define kMenu5	@"Delete All Database Data"
 #define kMenu6	@"Email Developer"
 #define kMenu7	@"Allow Decimals"
+#define kMenu8	@"Monthly Spending"
 
 @interface OptionsVC ()
 
@@ -51,6 +53,7 @@
 	NSArray *titles = [NSArray arrayWithObjects:
 					   kMenu1,
 					   kMenu2,
+					   kMenu8,
 					   kMenu3,
 					   kMenu4,
 					   kMenu5,
@@ -109,7 +112,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.row<=3 && [ObjectiveCScripts getUserDefaultValue:@"emailAddress"].length==0) {
+	if(indexPath.row<=4 && [ObjectiveCScripts getUserDefaultValue:@"emailAddress"].length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You must be logged in to use this feature."];
 		return;
 	}
@@ -153,6 +156,13 @@
 			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"allowDecFlg"];
 		[self.mainTableView reloadData];
 	}
+	if([kMenu8 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+		MonthlySpendingVC *detailViewController = [[MonthlySpendingVC alloc] initWithNibName:@"MonthlySpendingVC" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		[self.navigationController pushViewController:detailViewController animated:YES];
+
+	}
+	
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

@@ -289,6 +289,13 @@
 }
 
 +(UIColor *)colorForObject:(int)number {
+	if(number==99)
+		return [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0];
+	if(number==100)
+		return [UIColor colorWithRed:237/255.0 green:243/255.0 blue:254/255.0 alpha:1.0];
+	if(number==101)
+		return [UIColor colorWithRed:(182/255.0) green:(191/255.0) blue:(0/255.0) alpha:1.0];
+	
 	NSArray *colors=[NSArray arrayWithObjects:
 					 [UIColor colorWithRed:0 green:.5 blue:0 alpha:1], // green
 					 [UIColor colorWithRed:1 green:.8 blue:0 alpha:1], // Gold

@@ -87,13 +87,13 @@
 	self.debt1ImageView.image = [UIImage imageNamed:@"green.png"];
 	if(badDebtToIncome>10)
 		self.debt1ImageView.image = [UIImage imageNamed:@"yellow.png"];
-	if(badDebtToIncome>25)
+	if(badDebtToIncome>40)
 		self.debt1ImageView.image = [UIImage imageNamed:@"red.png"];
 	
 	self.debt2ImageView.image = [UIImage imageNamed:@"green.png"];
-	if(debtToIncome>50)
+	if(debtToIncome>100)
 		self.debt2ImageView.image = [UIImage imageNamed:@"yellow.png"];
-	if(debtToIncome>200)
+	if(debtToIncome>300)
 		self.debt2ImageView.image = [UIImage imageNamed:@"red.png"];
 
 	//------------Wealth-----------

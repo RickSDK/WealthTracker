@@ -26,6 +26,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *popupDebtsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *popupNWLabel;
 @property (nonatomic, strong) IBOutlet UILabel *popupLast30Label;
+@property (nonatomic, strong) IBOutlet UILabel *updateNumberLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *popupValImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *popupBalImageView;
 

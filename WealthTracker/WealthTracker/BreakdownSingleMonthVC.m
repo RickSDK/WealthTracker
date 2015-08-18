@@ -35,7 +35,7 @@
 	self.fieldColorsArray = [[NSMutableArray alloc] init];
 	self.dataArray = [[NSMutableArray alloc] init];
 	
-	NSLog(@"+++type: %d, fieldType: %d", self.type, self.fieldType);
+//	NSLog(@"+++type: %d, fieldType: %d", self.type, self.fieldType);
 	[self setTitle:[NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear]];
 	self.typeLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
 	self.fieldTypeLabel.text = [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType];

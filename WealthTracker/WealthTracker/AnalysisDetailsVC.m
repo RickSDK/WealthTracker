@@ -192,7 +192,7 @@
 	  [self addBlackLabelForMoneyWithName:@"Total Monthly Payment" amount:totalValueObj.monthlyPayment];
 	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:monthlyIncome];
 	  
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40];
  
 	  int idealMortgage = monthlyIncome/4;
 	  idealMortgage = (idealMortgage/100)*100; // rounding!
@@ -220,7 +220,7 @@
 	  [self addNetChangeLabel:@"Value change past 12 mo" amount:valueToday-valueLastYear revFlg:NO];
 	  [self addBlackLabelForMoneyWithName:@"Value of Vehicles" amount:totalValueObj.value];
 	  [self addBlackLabelForMoneyWithName:@"Annual Income" amount:annual_income];
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income low:25 high:55];
 
 	  self.topRightlabel.text = [NSString stringWithFormat:@"%@", [ObjectiveCScripts convertNumberToMoneyString:valueToday]];
 	  self.topRightlabel.textColor = [ObjectiveCScripts colorBasedOnNumber:valueToday lightFlg:YES];
@@ -233,11 +233,18 @@
 	  ValueObj *totalValueObj = [self populateTopCellForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext tag:self.tag];
 	  
 	  int badDebtToIncome = 999;
-	  if(annual_income>0)
+	  int dti = totalValueObj.balance*12/100;
+	  int homeDTI=(totalValueObj.balance-totalValueObj.badDebt)*12/100;
+	  if(annual_income>0) {
 		  badDebtToIncome = totalValueObj.badDebt*100/annual_income;
-
- 	  [self addPercentLabelWithName:@"Debt to Income" amount:totalValueObj.balance otherAmount:annual_income];
-	  int detbToAssets = [self addPercentLabelWithName:@"Debt to Assets" amount:totalValueObj.balance otherAmount:totalValueObj.value];
+	  }
+	  
+	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annual_income low:150 high:350];
+	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annual_income low:16 high:27];
+	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annual_income low:19 high:40];
+	  
+	  
+	  int detbToAssets = [self addPercentLabelWithName:@"Debt to Assets" amount:totalValueObj.balance otherAmount:totalValueObj.value low:25 high:90];
 	  [self addBlackLabelForMoneyWithName:@"Interest per Month" amount:totalValueObj.interest];
 	  int interestToIncome = 999;
 	  if(annual_income>0)
@@ -277,8 +284,8 @@
 	  [self addNetChangeLabel:@"Debt Change This Month" amount:debtToday-debtLastMonth revFlg:YES];
 	  [self addNetChangeLabel:@"Debt Past 90 days" amount:debtToday-debtLastQuarter revFlg:YES];
 	  [self addNetChangeLabel:@"Debt Past 12 months" amount:debtToday-debtLastYear revFlg:YES];
-	  if(debtLastYear>debtToday) {
-		  int reduction = (debtLastYear-debtToday)/12;
+	  int reduction = (debtLastYear-debtToday)/12;
+	  if(reduction>0) {
 		  [self addPerMonthLabelWithName:@"Current Reduction Rate" amount:reduction];
 		  int monthsToPayoff = totalValueObj.balance/reduction;
 		  [self addMonthsToPayoff:@"Time till Payoff" months:monthsToPayoff];
@@ -310,14 +317,19 @@
 	  int netWorthLastQuarter = [self netWorthForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
 	  int netWorthLastYear = [self netWorthForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 
-	  [self addNetChangeLabel:@"Net Worth past 30 days" amount:netWorthToday-netWorthLastMonth revFlg:NO];
+	  [self addNetChangeLabel:@"Net Worth This Month" amount:netWorthToday-netWorthLastMonth revFlg:NO];
 	  [self addNetChangeLabel:@"Net Worth past 90 days" amount:netWorthToday-netWorthLastQuarter revFlg:NO];
-	  [self addNetChangeLabel:@"Net Worth past year" amount:netWorthToday-netWorthLastYear revFlg:NO];
-	  [self addBlankLine];
+	  [self addNetChangeLabel:@"Net Worth past 12 months" amount:netWorthToday-netWorthLastYear revFlg:NO];
 
-	  double estValuePerYear = ((netWorthToday-netWorthLastYear)+(netWorthToday-netWorthLastMonth))/2;
+	  double estValuePerYear = ((netWorthToday-netWorthLastYear)+(netWorthToday-netWorthLastMonth)*12)/2;
 	  int age = [CoreDataLib getAge:self.managedObjectContext];
 	  int netWorth = totalValueObj.value-totalValueObj.balance;
+	  
+	  int accumRate = estValuePerYear/12;
+	  accumRate = accumRate/100*100;
+	  
+	  [self addPerMonthLabelWithName:@"Accumulation Rate" amount:accumRate];
+	  [self addBlankLine];
 	  [self addMOneyLabel:@"Net Worth Today" amount:netWorth revFlg:NO];
 	  
 	  int retAmount = (int)(netWorth*.08/12);
@@ -457,13 +469,37 @@
 	[self.colorsArray1 addObject:[UIColor blackColor]];
 }
 
--(int)addPercentLabelWithName:(NSString *)name amount:(double)amount otherAmount:(double)otherAmount {
+-(int)addPercentLabelWithName:(NSString *)name amount:(double)amount otherAmount:(double)otherAmount low:(int)low high:(int)high {
+	
+	if(high<=low)
+		high=low*2;
+	
+	NSArray *statuses = [NSArray arrayWithObjects:@"Very Good", @"Good", @"Fair", @"High", @"Very High", nil];
+	NSArray *colors = [NSArray arrayWithObjects:[UIColor colorWithRed:0 green:.75 blue:0 alpha:1],
+					   [UIColor colorWithRed:0 green:.5 blue:0 alpha:1],
+					   [UIColor orangeColor],
+					   [UIColor redColor],
+					   [UIColor colorWithRed:.5 green:0 blue:0 alpha:1],
+					   nil];
 	int percent = 100;
 	if(otherAmount>0)
 		percent = amount*100/otherAmount;
+	
+	int status=0;
+	int third=(high-low)/3;
+	if(percent>high)
+		status=4;
+	else if(percent>high-third)
+		status=3;
+	else if(percent>high-third*2)
+		status=2;
+	else if(percent>=low)
+		status=1;
+	
+	
 	[self.namesArray1 addObject:name];
-	[self.valuesArray1 addObject:[NSString stringWithFormat:@"%d%%", percent]];
-	[self.colorsArray1 addObject:[UIColor blackColor]];
+	[self.valuesArray1 addObject:[NSString stringWithFormat:@"%d%% (%@)", percent, [statuses objectAtIndex:status]]];
+	[self.colorsArray1 addObject:[colors objectAtIndex:status]];
 	return percent;
 }
 
@@ -638,7 +674,7 @@
 			line1 = @"Your assets are worth more than your debts, but more work is needed to pay off those debts.";
 			line4 = @"Follow the plan on the Analysis screen to improve your finances situation.";
 		} else if(detbToAssets>25) {
-			line1 = @"You have a very good asset to debt ratio, but more work is still needed.";
+			line1 = @"You have a good asset to debt ratio, but more work is still needed.";
 			line4 = @"Follow the plan on the Analysis screen to get your finances in perfect shape.";
 		} else {
 			line1 = @"You have done an outstanding job of keeping your debt low and your assets high.";
@@ -806,7 +842,6 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else if(indexPath.section==3) {
-//		MultiLineDetailCellWordWrap *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.namesArray0.count labelProportion:kProportionList];
 
 		cell.mainTitle = self.title0;
@@ -820,9 +855,7 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else if (indexPath.section==4) {
-		MultiLineDetailCellWordWrap *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if(cell==nil)
-			cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray1.count labelProportion:kProportionAnalysis];
+		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray1.count labelProportion:kProportionAnalysis];
 		cell.mainTitle = self.title1;
 		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 		cell.titleTextArray = self.namesArray1;
@@ -832,9 +865,7 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else {
-		MultiLineDetailCellWordWrap *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if(cell==nil)
-			cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray2.count labelProportion:0];
+		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray2.count labelProportion:0];
 		cell.mainTitle = self.title2;
 		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 		cell.titleTextArray = self.namesArray2;
@@ -877,7 +908,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section>1)
+	if(indexPath.section>2)
 		[self breakdownButtonPressed];
 }
 

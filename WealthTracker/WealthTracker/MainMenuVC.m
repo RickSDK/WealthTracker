@@ -39,9 +39,12 @@
 	
 	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
 	
-	if(status==-1)
+	self.updateNumberLabel.text=@"";
+	
+	if(status<0) {
 		self.updateStatusImageView.image = [UIImage imageNamed:@"yellow.png"];
-	else if (status==0)
+		self.updateNumberLabel.text=[NSString stringWithFormat:@"%d", status*-1];
+	} else if (status==0)
 		self.updateStatusImageView.image = [UIImage imageNamed:@"green.png"];
 	else
 		self.updateStatusImageView.image = [UIImage imageNamed:@"red.png"];

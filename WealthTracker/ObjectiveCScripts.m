@@ -576,7 +576,7 @@
 
 
 +(void)displayNetChangeLabel:(UILabel *)label amount:(double)amount lightFlg:(BOOL)lightFlg revFlg:(BOOL)revFlg {
-	NSString *sign=(amount>0)?@"+":@"";
+	NSString *sign=(amount>=0)?@"+":@"";
 	label.text = [NSString stringWithFormat:@"%@%@", sign, [ObjectiveCScripts convertNumberToMoneyString:amount]];
 	if(revFlg)
 		amount*=-1;
@@ -723,7 +723,7 @@
 	if(numberNeedsUpdating>0)
 		return numberNeedsUpdating; // red status
 	if(numberInYellow>0)
-		return -1; // yellow status
+		return numberInYellow*-1; // yellow status
 	else
 		return 0; // green status
 	

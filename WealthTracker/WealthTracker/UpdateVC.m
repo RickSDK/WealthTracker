@@ -114,13 +114,16 @@
 	}
 	if(redCount>0) {
 		self.statusCountLabel.text = [NSString stringWithFormat:@"%d", redCount];
+		self.statusCountLabel.textColor=[UIColor whiteColor];
 		self.statusImageView.image = [UIImage imageNamed:@"red.png"];
 	} else if(yellowCount>0) {
 		self.statusCountLabel.text = [NSString stringWithFormat:@"%d", yellowCount];
 		self.statusImageView.image = [UIImage imageNamed:@"yellow.png"];
+		self.statusCountLabel.textColor=[UIColor blackColor];
 	} else {
 		self.statusCountLabel.text = [NSString stringWithFormat:@"%d", greenCount];
 		self.statusImageView.image = [UIImage imageNamed:@"green.png"];
+		self.statusCountLabel.textColor=[UIColor blackColor];
 	}
 	
 	[self.amountArray addObject:[NSString stringWithFormat:@"%d", (int)[ObjectiveCScripts changedEquityLast30ForItem:-1 context:self.managedObjectContext]]];

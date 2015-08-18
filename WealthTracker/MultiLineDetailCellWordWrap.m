@@ -90,6 +90,14 @@ static NSInteger X_INSET			= 10;
 		titleTextArray = newArray;
 	}
 	int rows = (int)numberOfRows;
+	if(rows>titleLabelArray.count) {
+		NSLog(@"Whatthe?!? %d %d", rows, (int)titleLabelArray.count);
+		rows=(int)titleLabelArray.count;
+	}
+	if(rows>titleTextArray.count) {
+		NSLog(@"Whatthe?!? %d %d", rows, (int)titleTextArray.count);
+		rows=(int)titleTextArray.count;
+	}
 	for (int i=0; i<rows; i++) {
 		UILabel *label = [titleLabelArray objectAtIndex:i];
 		label.text = [titleTextArray objectAtIndex:i];
@@ -104,6 +112,10 @@ static NSInteger X_INSET			= 10;
 	if(rows>fieldLabelArray.count) {
 		NSLog(@"Whatthe?!? %d %d", rows, (int)fieldLabelArray.count);
 		rows=(int)fieldLabelArray.count;
+	}
+	if(rows>fieldTextArray.count) {
+		NSLog(@"Whatthe?!? %d %d", rows, (int)fieldTextArray.count);
+		rows=(int)fieldTextArray.count;
 	}
 	for (int i=0; i<rows; i++) {
 		UILabel *label = [fieldLabelArray objectAtIndex:i];
