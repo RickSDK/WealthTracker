@@ -38,6 +38,7 @@
 
 	
 	self.topGraphImageView = [[UIImageView alloc] init];
+	self.dataArray2 = [[NSMutableArray alloc] init];
 	
 	
 	if(self.itemObject) {
@@ -54,13 +55,14 @@
 		self.displayYear=self.nowYear;
 	self.displayMonth = self.nowMonth;
 	
-	self.dataArray = [[NSMutableArray alloc] init];
-
-	if(self.tag==3 || self.type==3) {
+	if(self.tag==3 || self.type==3 || self.fieldType==1) {
 		self.topSegmentControl.selectedSegmentIndex=1;
 		self.topSegmentControl.enabled=NO;
 	}
-	if(self.tag==4 || self.type==4 || self.tag==99)
+	if(self.tag==4 || self.type==4 || self.tag==99 || self.fieldType==3)
+		self.topSegmentControl.enabled=NO;
+	
+	if(self.fieldType==0 && self.type==0)
 		self.topSegmentControl.enabled=NO;
 	
 	if(self.tag==11) // show debts
@@ -92,93 +94,23 @@
 	
 	self.nextYearButton.enabled = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
 	
-	[self.dataArray removeAllObjects];
-	
-	double prevValue=0;
-	double prevBalance=0;
-	double prevEquity=0;
-	double prevInterest=0;
-	NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear-1, 12];
-	NSPredicate *predicate=[self predicateForYearMonth:year_month item_id:self.row_id tag:self.tag];
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	for (NSManagedObject *mo in items) {
-		prevValue += [[mo valueForKey:@"asset_value"] doubleValue];
-		prevBalance += [[mo valueForKey:@"balance_owed"] doubleValue];
-		prevInterest += [[mo valueForKey:@"interest"] doubleValue];
-	}
-	prevEquity=prevValue-prevBalance;
-	if(self.tag==99)
-		prevValue=prevInterest;
-	
+	[self.dataArray2 removeAllObjects];
+
 	for(int i=1; i<=12; i++) {
 		
 		NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
 		NSString *field = [fieldTypes objectAtIndex:self.fieldType];
-		double amount = [ObjectiveCScripts changedForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1];
+		double amount = [ObjectiveCScripts changedForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:self.type];
 
 		double total = [ObjectiveCScripts amountForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext type:self.type];
 		
-		NSLog(@"+++%d %f %f", i, total, amount);
-
-		NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear, i];
-		NSPredicate *predicate=[self predicateForYearMonth:year_month item_id:self.row_id tag:self.tag];
-		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-		double value=0;
-		double balance=0;
-		double interest=0;
-		double equity=0;
-		for (NSManagedObject *mo in items) {
-			value += [[mo valueForKey:@"asset_value"] doubleValue];
-			balance += [[mo valueForKey:@"balance_owed"] doubleValue];
-			interest += [[mo valueForKey:@"interest"] doubleValue];
-		}
-
-		if(self.fieldType==3)
-			value=interest;
-
-		equity=value-balance;
-		double last30Value = value-prevValue;
-		double last30Balance = balance-prevBalance;
+		NSLog(@"+++total: %f", total);
 		
-		if(self.tag==4) {
-			value=equity;
-			last30Value=equity-prevEquity;
-		}
-	
-		prevValue = value;
-		prevBalance = balance;
-		prevEquity = equity;
-
-		[self.dataArray addObject:[NSString stringWithFormat:@"%f|%f|%f|%f|%d", value, last30Value, balance, last30Balance, (int)items.count]];
+		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
+		
 	}
 
-	
-//	NSLog(@"tag: %d, type: %d", self.tag, type);
-	
-	//fieldTypeNameForFieldType
-	
 	self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
-/*
-	if(self.tag==0 && self.topSegmentControl.selectedSegmentIndex==0)
-		self.graphTitleLabel.text = @"Value Change by Month";
-	if(self.tag==0 && self.topSegmentControl.selectedSegmentIndex==1)
-		self.graphTitleLabel.text = @"Debt Change by Month";
-	if(self.tag==1 && self.topSegmentControl.selectedSegmentIndex==0)
-		self.graphTitleLabel.text = @"Home Value Change by Month";
-	if(self.tag==1 && self.topSegmentControl.selectedSegmentIndex==1)
-		self.graphTitleLabel.text = @"Home Loan Balance Change by Month";
-	if(self.tag==2 && self.topSegmentControl.selectedSegmentIndex==0)
-		self.graphTitleLabel.text = @"Vehicle Value Change by Month";
-	if(self.tag==2 && self.topSegmentControl.selectedSegmentIndex==1)
-		self.graphTitleLabel.text = @"Vehicle Loan Balance Change by Month";
-	if(self.tag==3)
-		self.graphTitleLabel.text = @"Debt Change by Month";
-	if(self.tag==4)
-		self.graphTitleLabel.text = @"Net Worth Change by Month";
-	if(self.tag==99)
-		self.graphTitleLabel.text = @"Interest Change by Month";
-	*/
-//	int type=self.tag;
 	
 	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType];
 	
@@ -214,26 +146,16 @@
 		cell = [[BreakdownCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
 	cell.monthLabel.text=[[ObjectiveCScripts monthListShort] objectAtIndex:indexPath.row];
-	
-	NSArray *components = [[self.dataArray objectAtIndex:indexPath.row] componentsSeparatedByString:@"|"];
-	int items = 0;
-	if(components.count>4) {
-		double amount = 0;
-		double past30Amount = 0;
-		if(self.topSegmentControl.selectedSegmentIndex==0) {
-			amount = [[components objectAtIndex:0] doubleValue];
-			past30Amount = [[components objectAtIndex:1] doubleValue];
-		} else {
-			amount = [[components objectAtIndex:2] doubleValue];
-			past30Amount = [[components objectAtIndex:3] doubleValue];
-		}
-		
-		items = [[components objectAtIndex:4] intValue];
 
-
-		cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:amount];
-		cell.amountLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:amount lightFlg:NO];
-		[ObjectiveCScripts displayNetChangeLabel:cell.past30DaysLabel amount:past30Amount lightFlg:NO revFlg:(self.topSegmentControl.selectedSegmentIndex==1)];
+	double total=0;
+	double amount=0;
+	NSArray *components = [[self.dataArray2 objectAtIndex:indexPath.row] componentsSeparatedByString:@"|"];
+	if(components.count>1) {
+		total = [[components objectAtIndex:0] doubleValue];
+		amount = [[components objectAtIndex:1] doubleValue];
+		cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:total];
+		cell.amountLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:total lightFlg:NO];
+		[ObjectiveCScripts displayNetChangeLabel:cell.past30DaysLabel amount:amount lightFlg:NO revFlg:(self.topSegmentControl.selectedSegmentIndex==1)];
 	}
 	
 	if(self.displayYear==self.nowYear && self.nowMonth==indexPath.row+1)
@@ -241,7 +163,7 @@
 	else
 		cell.backgroundColor=[UIColor whiteColor];
 
-	if(items==0) {
+	if(total==0 && amount==0) {
 		cell.backgroundColor = [UIColor grayColor];
 		cell.monthLabel.text = @"No Data";
 		cell.amountLabel.text = @"-";
@@ -299,7 +221,7 @@
 	if(section==0)
 		return 1;
 	else
-		return self.dataArray.count;
+		return self.dataArray2.count;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -364,7 +286,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
-		return 190;
+		return [ObjectiveCScripts chartHeightForSize:190];
 	else
 		return 34;
 }

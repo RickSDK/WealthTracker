@@ -640,7 +640,7 @@
 	return amount;
 }
 
-+(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths {
++(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths type:(int)type {
 	if(month==0 && year==0) {
 		year = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
 		month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -655,7 +655,6 @@
 			prevYear--;
 		}
 	}
-	int type=0;
 	if(item_id<0) {
 		type=item_id*-1;
 		item_id=0;
@@ -668,11 +667,11 @@
 }
 
 +(double)changedEquityLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context {
-	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:nil context:context numMonths:1];
+	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:nil context:context numMonths:1 type:0];
 }
 
 +(double)changedEquityLast30:(NSManagedObjectContext *)context {
-	return [ObjectiveCScripts changedForItem:0 month:0 year:0 field:nil context:context numMonths:1];
+	return [ObjectiveCScripts changedForItem:0 month:0 year:0 field:nil context:context numMonths:1 type:0];
 }
 
 +(float)chartHeightForSize:(float)height

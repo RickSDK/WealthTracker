@@ -171,7 +171,7 @@
 	[self setupTitles];
 	
 	switch (self.tag) {
-  case 1:	{ // Home
+  case 1:	{ // Home (Real estate)
 	  int monthlyIncome = annual_income*.8/12;
 	  
 	  ValueObj *totalValueObj = [self populateTopCellForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext tag:self.tag];
@@ -184,15 +184,15 @@
 	  int valueLastYear = [self homeValueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 	  int value3Months = [self homeValueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
 
-	  [self addNetPercentChangeLabel:@"Value Change Past 3 mo" amountNow:valueToday amountThen:value3Months revFlg:NO];
+	  [self addNetPercentChangeLabel:@"Value Change Last 3 mo" amountNow:valueToday amountThen:value3Months revFlg:NO];
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Value Change in %d", self.displayYear] amountNow:valueToday amountThen:valueAtEndOfLastYear revFlg:NO];
-	  [self addNetPercentChangeLabel:@"Value Change Past 12 mo" amountNow:valueToday amountThen:valueLastYear revFlg:NO];
+	  [self addNetPercentChangeLabel:@"Value Change Last 12 mo" amountNow:valueToday amountThen:valueLastYear revFlg:NO];
 
 	  [self addBlankLine];
 	  [self addBlackLabelForMoneyWithName:@"Total Monthly Payment" amount:totalValueObj.monthlyPayment];
 	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:monthlyIncome];
 	  
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40 revFlg:NO];
  
 	  int idealMortgage = monthlyIncome/4;
 	  idealMortgage = (idealMortgage/100)*100; // rounding!
@@ -202,8 +202,12 @@
 	  idealLoan = (idealLoan/25000)*25000; // rounding!
 	  
 	  [self addBlackLabelForMoneyWithName:@"Your Ideal Loan" amount:idealLoan];
+	  [self addBlankLine];
 	  
-	  [self addConclusionsForHome:percentOfIncome value:totalValueObj.value balance:totalValueObj.balance idealLoan:idealLoan];
+	  [self addMOneyLabel:@"Total Home Equity" amount:totalValueObj.value-totalValueObj.balance revFlg:NO];
+	  int percentOfEquity = [self addPercentLabelWithName:@"Equity %" amount:totalValueObj.value-totalValueObj.balance otherAmount:totalValueObj.value low:5 high:30 revFlg:YES];
+	  
+	  [self addConclusionsForHome:percentOfIncome value:totalValueObj.value balance:totalValueObj.balance idealLoan:idealLoan equity:percentOfEquity];
 
 	  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:totalValueObj.monthlyPayment lightFlg:YES revFlg:NO];
   }
@@ -217,15 +221,20 @@
 	  int valueLastYear = [self vehicleValueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 
 	  [self addNetChangeLabel:[NSString stringWithFormat:@"Value Change in %d", self.displayYear] amount:valueToday-valueAtEndOfLastYear revFlg:NO];
-	  [self addNetChangeLabel:@"Value change past 12 mo" amount:valueToday-valueLastYear revFlg:NO];
+	  [self addNetChangeLabel:@"Value Change Last 12 mo" amount:valueToday-valueLastYear revFlg:NO];
 	  [self addBlackLabelForMoneyWithName:@"Value of Vehicles" amount:totalValueObj.value];
 	  [self addBlackLabelForMoneyWithName:@"Annual Income" amount:annual_income];
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income low:25 high:55];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income low:25 high:55 revFlg:NO];
 
 	  self.topRightlabel.text = [NSString stringWithFormat:@"%@", [ObjectiveCScripts convertNumberToMoneyString:valueToday]];
 	  self.topRightlabel.textColor = [ObjectiveCScripts colorBasedOnNumber:valueToday lightFlg:YES];
 	  
-	  [self addConclusionsForVehicle:percentOfIncome value:totalValueObj.value];
+	  [self addBlankLine];
+	  
+	  [self addMOneyLabel:@"Total Vehicle Equity" amount:totalValueObj.value-totalValueObj.balance revFlg:NO];
+	  int percentOfEquity = [self addPercentLabelWithName:@"Equity %" amount:totalValueObj.value-totalValueObj.balance otherAmount:totalValueObj.value low:50 high:95 revFlg:YES];
+
+	  [self addConclusionsForVehicle:percentOfIncome value:totalValueObj.value equity:percentOfEquity];
   }
 			break;
 			
@@ -239,12 +248,12 @@
 		  badDebtToIncome = totalValueObj.badDebt*100/annual_income;
 	  }
 	  
-	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annual_income low:150 high:350];
-	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annual_income low:16 high:27];
-	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annual_income low:19 high:40];
+	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annual_income low:150 high:350 revFlg:NO];
+	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annual_income low:16 high:27 revFlg:NO];
+	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annual_income low:19 high:40 revFlg:NO];
 	  
 	  
-	  int detbToAssets = [self addPercentLabelWithName:@"Debt to Assets" amount:totalValueObj.balance otherAmount:totalValueObj.value low:25 high:90];
+	  int detbToAssets = [self addPercentLabelWithName:@"Debt to Assets" amount:totalValueObj.balance otherAmount:totalValueObj.value low:25 high:90 revFlg:NO];
 	  [self addBlackLabelForMoneyWithName:@"Interest per Month" amount:totalValueObj.interest];
 	  int interestToIncome = 999;
 	  if(annual_income>0)
@@ -255,8 +264,8 @@
 	  int debtLastQuarter = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
 	  int debtLastYear = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 	  
-	  double homeDebt30 = [ObjectiveCScripts changedForItem:-1 month:0 year:0 field:@"balance_owed" context:self.managedObjectContext numMonths:1];
-	  double homeDebtChangePast12 = [ObjectiveCScripts changedForItem:-1 month:0 year:0 field:@"balance_owed" context:self.managedObjectContext numMonths:12];
+	  double homeDebt30 = [ObjectiveCScripts changedForItem:-1 month:0 year:0 field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
+	  double homeDebtChangePast12 = [ObjectiveCScripts changedForItem:-1 month:0 year:0 field:@"balance_owed" context:self.managedObjectContext numMonths:12 type:0];
 	  double allDebt30 = debtToday-debtLastMonth;
 	  
 	  double classADebt30 = allDebt30-homeDebt30;
@@ -282,8 +291,8 @@
 	  [self addBlankLine];
 	  [self addBlackLabelForMoneyWithName:@"Total Debt" amount:totalValueObj.balance];
 	  [self addNetChangeLabel:@"Debt Change This Month" amount:debtToday-debtLastMonth revFlg:YES];
-	  [self addNetChangeLabel:@"Debt Past 90 days" amount:debtToday-debtLastQuarter revFlg:YES];
-	  [self addNetChangeLabel:@"Debt Past 12 months" amount:debtToday-debtLastYear revFlg:YES];
+	  [self addNetChangeLabel:@"Debt Last 90 days" amount:debtToday-debtLastQuarter revFlg:YES];
+	  [self addNetChangeLabel:@"Debt Last 12 months" amount:debtToday-debtLastYear revFlg:YES];
 	  int reduction = (debtLastYear-debtToday)/12;
 	  if(reduction>0) {
 		  [self addPerMonthLabelWithName:@"Current Reduction Rate" amount:reduction];
@@ -318,8 +327,8 @@
 	  int netWorthLastYear = [self netWorthForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 
 	  [self addNetChangeLabel:@"Net Worth This Month" amount:netWorthToday-netWorthLastMonth revFlg:NO];
-	  [self addNetChangeLabel:@"Net Worth past 90 days" amount:netWorthToday-netWorthLastQuarter revFlg:NO];
-	  [self addNetChangeLabel:@"Net Worth past 12 months" amount:netWorthToday-netWorthLastYear revFlg:NO];
+	  [self addNetChangeLabel:@"Net Worth Last 90 days" amount:netWorthToday-netWorthLastQuarter revFlg:NO];
+	  [self addNetChangeLabel:@"Net Worth Last 12 months" amount:netWorthToday-netWorthLastYear revFlg:NO];
 
 	  double estValuePerYear = ((netWorthToday-netWorthLastYear)+(netWorthToday-netWorthLastMonth)*12)/2;
 	  int age = [CoreDataLib getAge:self.managedObjectContext];
@@ -367,15 +376,24 @@
 	[self.mainTableView reloadData];
 }
 
--(void)addConclusionsForVehicle:(int)percentOfIncome value:(double)value {
+-(void)addConclusionsForVehicle:(int)percentOfIncome value:(double)value equity:(int)equity {
 	NSString *line1 = [NSString stringWithFormat:@"Your vehicles are worth %d%% of your annual income which is too much. Regardless of the interest rates or amount you owe, you are driving vehicles that are too expensive for your income. Seriously consider selling at least one and purchasing a beater instead, until you get your debt under control.\n\nIdeally the value of all vehicles combined should be less than 50%% of your annual income.", percentOfIncome];
 	
 	
 	if(percentOfIncome<60)
 		line1 = [NSString stringWithFormat:@"Your vehicles are worth %d%% of your annual income so you are in pretty good shape. Ideally you want to be under 50%%.\n\nNote this is based on their real time value, regardless of what you owe on them or what you paid for them.", percentOfIncome];
-	
+
+	NSString *line2 = [NSString stringWithFormat:@"Your vehicle purchases are currently under water at %d%% equity. In order to build wealth, you need to break out of the cycle of buying expensive cars. If you are having trouble making the payments, consider selling the car and getting a beater until you have some money saved up.", equity];
+
 	if(value==0) {
 		line1 = @"You don't own any vehicles.";
+		
+		line2 = @"If you are considering getting a car, it is best to pay cash instead of financing or leasing. Stay out of debt.";
+	} else {
+		if(equity>=0)
+			line2 = [NSString stringWithFormat:@"Your vehicle purchases are currently sitting at %d%% equity. Follow the plan on the analysis screen in order to get them paid off as quickly as possible.", equity];
+		if(equity>=80)
+			line2 = @"Great job paying off your vehicles. Remember to ONLY pay cash for future purchases. The goal is to saty out of debt.";
 	}
 
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"type = 'Vehicle' AND payment_type = 'Leasing'"];
@@ -384,12 +402,12 @@
 		line1 = @"You are choosing lease over buy, which is attractive in the near term with low monthly payments, but over the course of a 10 year period, you will end up spending many thousands more by going the lease route. Consider breaking out of the lease cycle and purchasing a used car with cash. It's the smarter way to go if you are trying to build wealth.";
 
 	[self.namesArray2 addObject:@""];
-	[self.valuesArray2 addObject:line1];
+	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@\n\n%@", line1, line2]];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 
 }
 
--(void)addConclusionsForHome:(int)percentOfIncome value:(double)value balance:(double)balance idealLoan:(double)idealLoan {
+-(void)addConclusionsForHome:(int)percentOfIncome value:(double)value balance:(double)balance idealLoan:(double)idealLoan equity:(int)equity {
 	NSString *line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is too high. Ideally it should be about 25%%. You should look for ways to improve your income, or consider selling the house and finding something smaller. Maybe even rent for a period of time while you pay off debt and save for a down payment.", percentOfIncome];
 	
 	if(balance < idealLoan)
@@ -398,16 +416,29 @@
 	if(percentOfIncome<34)
 		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be at around 25%%.", percentOfIncome];
 	
+	
+	
+	NSString *line2 = [NSString stringWithFormat:@"Your real estate purchases are currently under water at %d%% equity. Your best bet is to remain calm and wait for the market to recover. Start working the plan on the analysis page to get out of the hole.", equity];
+
 	if(value==0) {
 		if(percentOfIncome<34)
 			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is pretty good. Ideally you want to be at around 25%%.\n\nView the plan on the previous page for details on how to start working towards owning your own home.", percentOfIncome];
 		else
 			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is too high. Ideally you want to be at around 25%%. Strongly consider moving to a smaller rental and start saving up for a home.\n\nAnd view the previous page for details on starting a good plan of action.", percentOfIncome];
+		
+		line2 = @"You currently do not own any property. Consider following the plan on the analysis page to start building wealth.";
+	} else {
+		if(equity>=0)
+			line2 = [NSString stringWithFormat:@"Your real estate purchases have %d%% equity which is good, but you are still below the 20%% mark. Start working the plan on the analysis page and aim towards getting the mortgage paid down.", equity];
+		if(equity>=20)
+			line2 = [NSString stringWithFormat:@"Your real estate purchases are in very good shape, sitting at %d%% equity. You are well on your way towards being debt free. Work the plan on the analysis page to continue building wealth.", equity];
+		
+		if(equity>=80)
+			line2 = @"Fantastic job paying down your mortgages! Continue working the plan on the analysis screen as you watch your wealth build.";
 	}
 	
-	
 	[self.namesArray2 addObject:@""];
-	[self.valuesArray2 addObject:line1];
+	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@\n\n%@", line1, line2]];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 
 }
@@ -469,18 +500,29 @@
 	[self.colorsArray1 addObject:[UIColor blackColor]];
 }
 
--(int)addPercentLabelWithName:(NSString *)name amount:(double)amount otherAmount:(double)otherAmount low:(int)low high:(int)high {
+-(int)addPercentLabelWithName:(NSString *)name amount:(double)amount otherAmount:(double)otherAmount low:(int)low high:(int)high revFlg:(BOOL)revFlg {
 	
 	if(high<=low)
 		high=low*2;
 	
 	NSArray *statuses = [NSArray arrayWithObjects:@"Very Good", @"Good", @"Fair", @"High", @"Very High", nil];
-	NSArray *colors = [NSArray arrayWithObjects:[UIColor colorWithRed:0 green:.75 blue:0 alpha:1],
+	NSArray *colors = [NSArray arrayWithObjects:
+					   [UIColor colorWithRed:0 green:.75 blue:0 alpha:1],
 					   [UIColor colorWithRed:0 green:.5 blue:0 alpha:1],
 					   [UIColor orangeColor],
 					   [UIColor redColor],
 					   [UIColor colorWithRed:.5 green:0 blue:0 alpha:1],
 					   nil];
+	if(revFlg) {
+		statuses = [NSArray arrayWithObjects:@"Very Low", @"Low", @"Fair", @"Good", @"Very Good", nil];
+		colors = [NSArray arrayWithObjects:
+				  [UIColor colorWithRed:.5 green:0 blue:0 alpha:1],
+				  [UIColor redColor],
+				  [UIColor orangeColor],
+				  [UIColor colorWithRed:0 green:.5 blue:0 alpha:1],
+				  [UIColor colorWithRed:0 green:.75 blue:0 alpha:1],
+				  nil];
+	}
 	int percent = 100;
 	if(otherAmount>0)
 		percent = amount*100/otherAmount;
@@ -551,25 +593,25 @@
 				continue;
 			amount = valueObj.value;
 			if(self.topSegment.selectedSegmentIndex==0)
-				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"asset_value" context:context numMonths:1];
+				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"asset_value" context:context numMonths:1 type:0];
 		}
 		if(tag==2) {
 			if(![@"Vehicle" isEqualToString:obj.type])
 				continue;
 			amount = valueObj.value;
 			if(self.topSegment.selectedSegmentIndex==0)
-				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"asset_value" context:context numMonths:1];
+				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"asset_value" context:context numMonths:1 type:0];
 		}
 		if(tag==3) { // debt
 			reverseColorFlg=YES;
 			amount = valueObj.balance;
 			if(self.topSegment.selectedSegmentIndex==0)
-				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"balance_owed" context:context numMonths:1];
+				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:@"balance_owed" context:context numMonths:1 type:0];
 		}
 		if(tag==4) { //wealth
 			amount = valueObj.value-valueObj.balance;
 			if(self.topSegment.selectedSegmentIndex==0)
-				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:nil context:context numMonths:1];
+				amount = [ObjectiveCScripts changedForItem:[obj.rowId intValue] month:month year:year field:nil context:context numMonths:1 type:0];
 		}
 
 		totalValueObj.balance+=valueObj.balance;
@@ -908,6 +950,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section==2) {
+		self.topSegment.selectedSegmentIndex=!self.topSegment.selectedSegmentIndex;
+		[self setupData];
+	}
 	if(indexPath.section>2)
 		[self breakdownButtonPressed];
 }

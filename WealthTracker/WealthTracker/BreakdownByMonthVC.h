@@ -24,7 +24,8 @@
 @property (nonatomic, strong) IBOutlet CustomButton *nextYearButton;
 
 @property (nonatomic, strong) ItemObject *itemObject;
-@property (nonatomic, strong) NSMutableArray *dataArray;
+//@property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, strong) NSMutableArray *dataArray2;
 
 @property (nonatomic) int row_id;
 @property (nonatomic) int tag;

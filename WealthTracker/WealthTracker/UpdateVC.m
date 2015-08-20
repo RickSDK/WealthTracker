@@ -260,12 +260,11 @@
 	cell.nameLabel.text = obj.name;
 	cell.subTypeLabel.text = obj.sub_type;
 	
-	double amount = [obj.value doubleValue];
+	double amount = [obj.value doubleValue]-[obj.loan_balance doubleValue];
 	double last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-	if(amount==0) {
-		amount = [obj.loan_balance doubleValue];
-		last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-	}
+//	if(amount==0) {
+//		last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
+//	}
 	
 	if(last30>0 && obj.status==0)
 		cell.bgView.layer.borderColor = [UIColor colorWithRed:0 green:.6 blue:0 alpha:1].CGColor;

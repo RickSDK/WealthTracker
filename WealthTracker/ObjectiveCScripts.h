@@ -46,7 +46,7 @@
 +(BOOL)shouldChangeCharactersForMoneyField:(UITextField *)textFieldlocal  replacementString:(NSString *)string;
 +(void)updateSalary:(double)amount year:(int)year context:(NSManagedObjectContext *)context;
 
-+(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths;
++(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths type:(int)type;
 +(double)changedEquityLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
 +(double)changedEquityLast30:(NSManagedObjectContext *)context;
 +(float)chartHeightForSize:(float)height;

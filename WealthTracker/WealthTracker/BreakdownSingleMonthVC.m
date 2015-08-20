@@ -62,7 +62,7 @@
 		int rowId = [[mo valueForKey:@"rowId"] intValue];
 		double amount = 0;
 		if(self.topSegmentControl.selectedSegmentIndex==0)
-			amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext numMonths:1];
+			amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:0];
 		else
 			amount = [ObjectiveCScripts amountForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext type:self.type];
 		
@@ -150,7 +150,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.row==0)
-		return [ObjectiveCScripts chartHeightForSize:170];
+		return [ObjectiveCScripts chartHeightForSize:190];
 	else
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.fieldValuesArray
 																   tableView:self.mainTableView

@@ -160,7 +160,7 @@
 	else
 		self.statusImageView.image=[UIImage imageNamed:@"green.png"];
 	
-	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:self.nowMonth year:self.nowYear field:nil context:self.managedObjectContext numMonths:1];
+	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:self.nowMonth year:self.nowYear field:nil context:self.managedObjectContext numMonths:1 type:0];
 	[ObjectiveCScripts displayNetChangeLabel:self.amountLabel amount:equityChange lightFlg:YES revFlg:NO];
 }
 
@@ -240,8 +240,12 @@
 	if(type<3) {
 		[self addBlankLine];
 		double equity = value-loan_balance;
+		float percent=100;
+		if(value>0)
+			percent = equity*100/value;
+		NSString *percentStr = (percent>5)?[NSString stringWithFormat:@"%d%%", (int)percent]:[NSString stringWithFormat:@"%.1f%%", percent];
 		[self.namesArray addObject:@"Equity"];
-		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:equity]];
+		[self.valuesArray addObject:[NSString stringWithFormat:@"%@ (%@)", [ObjectiveCScripts convertNumberToMoneyString:equity], percentStr]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:equity lightFlg:NO]];
 
 		int equityToday = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
@@ -284,7 +288,7 @@
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:-1 lightFlg:NO]];
 
 		[self addNetChangeLineWithName:@"Balance This Month" amount:balToday-bal30 revFlg:YES];
-		[self addNetChangeLineWithName:@"Balance Past 3 Months" amount:balToday-bal90 revFlg:YES];
+		[self addNetChangeLineWithName:@"Balance Last 3 Months" amount:balToday-bal90 revFlg:YES];
 		
 		int principalPaid = (balLastYear-balToday)/12;
 		if((bal30-balToday)>principalPaid)

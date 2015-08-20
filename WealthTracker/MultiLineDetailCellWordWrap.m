@@ -10,7 +10,7 @@ static NSInteger FONT_SIZE			= 14;
 static NSInteger COLUMN_SEP			= 6;
 static CGFloat LABEL_PROPORTION		= 0.4;
 static NSInteger Y_INSET			= 5;
-static NSInteger X_INSET			= 10;
+static NSInteger X_INSET			= 5;
 
 
 @implementation MultiLineDetailCellWordWrap
@@ -42,7 +42,7 @@ static NSInteger X_INSET			= 10;
 	int width = tableView.frame.size.width;
     
 	if (tableView.style == UITableViewStyleGrouped)
-		width -= (width*.12);
+		width -= (width*.02);
 	
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 	label.text = @"dummy";

@@ -57,7 +57,7 @@
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 		int rowId = [obj.rowId intValue];
-		double amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:@"balance_owed" context:self.managedObjectContext numMonths:1];
+		double amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
 		
 		amount *=-1;
 		float taxes=0;
@@ -73,22 +73,26 @@
 		amount += [[mo valueForKey:@"homeowner_dues"] floatValue];
 		if(amount > 0) {
 			monthlyIncome-=amount;
-			[self addGraphItem:obj.name rowId:[obj.rowId intValue] amount:amount];
+			BOOL confirmFlg=obj.bal_confirm_flg;
+			if(self.displayMonth!=self.nowMonth || self.displayYear != self.nowYear)
+				confirmFlg=YES;
+			
+			[self addGraphItem:obj.name rowId:[obj.rowId intValue] amount:amount confirmFlg:confirmFlg];
 		}
 	}
-	[self addGraphItem:@"Income Tax" rowId:99 amount:incomeTaxes];
+	[self addGraphItem:@"Income Tax" rowId:99 amount:incomeTaxes confirmFlg:YES];
 	monthlyIncome-=incomeTaxes;
 
 	double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
-	[self addGraphItem:@"Retirement" rowId:100 amount:retirement_payments];
+	[self addGraphItem:@"Retirement" rowId:100 amount:retirement_payments confirmFlg:YES];
 	monthlyIncome-=retirement_payments;
 	if(monthlyIncome>0)
-		[self addGraphItem:@"Other" rowId:101 amount:monthlyIncome];
+		[self addGraphItem:@"Other" rowId:101 amount:monthlyIncome confirmFlg:YES];
 	
 	[self.mainTableView reloadData];
 }
 
--(void)addGraphItem:(NSString *)name rowId:(int)rowId amount:(double)amount {
+-(void)addGraphItem:(NSString *)name rowId:(int)rowId amount:(double)amount confirmFlg:(BOOL)confirmFlg {
 	int amountInt = round(amount);
 	GraphObject *graphObject = [[GraphObject alloc] init];
 	graphObject.name=name;
@@ -97,9 +101,14 @@
 	[self.graphArray addObject:graphObject];
 	
 	MultiLineObj *multiLineObj = [[MultiLineObj alloc] init];
-	multiLineObj.name=name;
 	multiLineObj.value=[ObjectiveCScripts convertNumberToMoneyString:amountInt];
-	multiLineObj.color=[UIColor blackColor];
+	if(confirmFlg) {
+		multiLineObj.name=name;
+		multiLineObj.color=[UIColor blackColor];
+	} else {
+		multiLineObj.name=[NSString stringWithFormat:@"*%@", name];
+		multiLineObj.color=[UIColor grayColor];
+	}
 	[self.multiLineArray addObject:multiLineObj];
 }
 

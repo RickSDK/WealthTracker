@@ -116,7 +116,7 @@
 		float endDegree = 0;
 
 		CGPoint startPoint = [self pointFromCenter:center radius:radius degrees:startDegree];
-		[self drawWedgeFromCenter:CGPointMake(center.x+5, center.y+5) startPoint:startPoint radius:radius startAngle:0 endAngle:360 color:[UIColor grayColor] context:c];
+		[self drawCircleAtCenter:CGPointMake(center.x+8, center.y+8) startPoint:startPoint radius:radius color:[UIColor colorWithWhite:.2 alpha:1] context:c];
 
 		CGPoint namePoint = CGPointMake(-20, -20); // off screen
 		int i=0;
@@ -141,9 +141,8 @@
 
 			if(kDebugPieChart)
 				NSLog(@"+++%@: Wedge from %d to %d (of 360)", graphObj.name, (int)startDegree, (int)endDegree);
-			if(startDegree<270 && endDegree>270 && percentage>30) { // top
-				[self centerTextAtPoint:midPoint name:shortName percentage:percentage color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
-			} else if(startDegree<90 && endDegree>90 && percentage>30) { // bottom
+			
+			if(percentage>25) { // place label inside
 				[self centerTextAtPoint:midPoint name:shortName percentage:percentage color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
 			} else {
 				NSString *name = [NSString stringWithFormat:@"%@ %.1f%%", shortName, percentage];
@@ -180,26 +179,30 @@
 }
 
 +(void)centerTextAtPoint:(CGPoint)midPoint name:(NSString *)name percentage:(float)percentage color:(UIColor *)color context:(CGContextRef)context rowId:(int)rowId {
+
+	NSString *percentStr = [NSString stringWithFormat:@"%.1f%%", percentage];
+
 	int totalWidth = [self totalWidth];
-	int letterSpacing = trunc(totalWidth/60);
+	int letterSpacing = trunc(totalWidth/80);
 	int lineSpacing = trunc(totalWidth/25.6);
+	int nameHalfLength = (int)((name.length+3)*letterSpacing/2);
+	int percentHalfLength = (int)((percentStr.length+3)*letterSpacing/2);
 
 	if(rowId%2==0)
 		CGContextSetRGBFillColor(context, 0, 0, 0, 1); // text black
 	else
 		CGContextSetRGBFillColor(context, 1, 1, 1, 1); // text white
 
-	NSString *percentStr = [NSString stringWithFormat:@"%.1f%%", percentage];
-	[name drawAtPoint:CGPointMake(midPoint.x-(name.length*letterSpacing/2), midPoint.y-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
-	[percentStr drawAtPoint:CGPointMake(midPoint.x-(percentStr.length*letterSpacing/2), midPoint.y) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[name drawAtPoint:CGPointMake(midPoint.x-nameHalfLength, midPoint.y-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[percentStr drawAtPoint:CGPointMake(midPoint.x-percentHalfLength, midPoint.y) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
 
 	if(rowId%2==0)
 		CGContextSetRGBFillColor(context, 1, 1, 1, 1); // text white
 	else
 		[self setDarkTextColorForContext:context color:color];
 
-	[name drawAtPoint:CGPointMake(midPoint.x+1-(name.length*letterSpacing/2), midPoint.y+1-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
-	[percentStr drawAtPoint:CGPointMake(midPoint.x+1-(percentStr.length*letterSpacing/2), midPoint.y+1) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[name drawAtPoint:CGPointMake(midPoint.x+1-nameHalfLength, midPoint.y+1-(lineSpacing)) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
+	[percentStr drawAtPoint:CGPointMake(midPoint.x+1-percentHalfLength, midPoint.y+1) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
 
 }
 
@@ -314,6 +317,19 @@
 					 nil];
 	return [colors objectAtIndex:number%colors.count];
 }
+
++(void) drawCircleAtCenter:(CGPoint)center startPoint:(CGPoint)startPoint radius:(float)radius color:(UIColor *)color context:(CGContextRef)context
+{
+	UIBezierPath * aPath = [UIBezierPath bezierPath];
+	[aPath moveToPoint:startPoint];
+	[aPath addArcWithCenter:center radius:radius startAngle:DEGREES_TO_RADIANS(0) endAngle:DEGREES_TO_RADIANS(360) clockwise:YES];
+	[aPath closePath];
+	
+	aPath.lineWidth = 0;
+	[aPath stroke];
+	[self addGradientToWedgePath:aPath context:context color1:color lineWidth:0 imgWidth:[self totalWidth] imgHeight:[self totalWidth]/2];
+}
+
 
 +(void) drawWedgeFromCenter:(CGPoint)center startPoint:(CGPoint)startPoint radius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color context:(CGContextRef)context
 {

@@ -83,7 +83,7 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
 	cell.textLabel.text=[self.menuItems objectAtIndex:indexPath.row];
-	if(indexPath.row==6) {
+	if([kMenu7 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
 		if([ObjectiveCScripts getUserDefaultValue:@"allowDecFlg"].length==0)
 			cell.accessoryType= UITableViewCellAccessoryNone;
 		else
