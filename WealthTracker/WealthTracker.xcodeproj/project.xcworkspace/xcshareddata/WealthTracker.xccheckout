@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>93C02318-8DE0-4C63-A266-CF3905A72ADF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>WealthTracker</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6A4CD29F755B4F4EAE6375F40CE1D76A776956D1</key>
+		<string>https://github.com/RickSDK/WealthTracker.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>WealthTracker/WealthTracker.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6A4CD29F755B4F4EAE6375F40CE1D76A776956D1</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/RickSDK/WealthTracker.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6A4CD29F755B4F4EAE6375F40CE1D76A776956D1</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6A4CD29F755B4F4EAE6375F40CE1D76A776956D1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>WealthTrackerGH</string>
+		</dict>
+	</array>
+</dict>
+</plist>
