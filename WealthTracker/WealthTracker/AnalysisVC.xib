@@ -9,11 +9,9 @@
             <connections>
                 <outlet property="ButtonsView" destination="ggB-5r-F3f" id="GXg-Cc-ch9"/>
                 <outlet property="autoImageView" destination="PFs-hf-U8b" id="tVs-JR-xgj"/>
-                <outlet property="currentStepLabel" destination="gWY-2k-hnJ" id="RwE-hR-OUe"/>
                 <outlet property="debt1ImageView" destination="sdk-ix-Ef2" id="AQV-Zc-BD3"/>
                 <outlet property="debt2ImageView" destination="igL-aW-6Fk" id="epY-Kp-pUG"/>
                 <outlet property="homeImageView" destination="Hqa-JJ-P31" id="7mi-xV-k6P"/>
-                <outlet property="myPlanView" destination="jTo-MO-cwN" id="Eaa-4z-I3f"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="wealthImageView" destination="DWk-iW-R6Q" id="1j7-9G-XUm"/>
             </connections>
@@ -27,44 +25,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
-                <view contentMode="scaleToFill" id="jTo-MO-cwN">
-                    <rect key="frame" x="196" y="8" width="94" height="84"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Step" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="ZwD-XI-Tia">
-                            <rect key="frame" x="8" y="0.0" width="78" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" id="gWY-2k-hnJ">
-                            <rect key="frame" x="8" y="15" width="78" height="59"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="53"/>
-                            <color key="textColor" red="0.86413043479999996" green="0.75708302220000001" blue="0.089375510680000006" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                            <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            <size key="shadowOffset" width="1" height="1"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="V0n-g2-Oau">
-                    <rect key="frame" x="30" y="19" width="174" height="61"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
-                    <size key="titleShadowOffset" width="1" height="1"/>
-                    <state key="normal" title="My Plan" backgroundImage="yellowButton.png">
-                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="myPlanButtonClicked:" destination="-1" eventType="touchDown" id="qLO-ln-IK4"/>
-                    </connections>
-                </button>
                 <view contentMode="scaleToFill" id="ggB-5r-F3f">
-                    <rect key="frame" x="15" y="98" width="290" height="310"/>
+                    <rect key="frame" x="15" y="88" width="290" height="310"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kx5-SE-nxJ">
@@ -169,6 +131,20 @@
                             <rect key="frame" x="250" y="243" width="30" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" id="93v-Ga-Aop" customClass="CustomView">
+                    <rect key="frame" x="15" y="8" width="290" height="72"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click the buttons below for a detailed financial analysis of all 4 areas of your protfolio:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QSq-9B-ogy">
+                            <rect key="frame" x="8" y="0.0" width="274" height="72"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>

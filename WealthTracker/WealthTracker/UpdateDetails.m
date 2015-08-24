@@ -221,7 +221,7 @@
 		
 		int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
 		if(annual_income>0) {
-			[self.namesArray addObject:@"% of Income"];
+			[self.namesArray addObject:@"% of Gross Income"];
 			double totalPayment = [self.itemObject.monthly_payment doubleValue]+[self.itemObject.homeowner_dues doubleValue];
 			int percent = round(totalPayment*1200/annual_income);
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%d%%", percent]];
@@ -254,7 +254,7 @@
 		int equityLastYear = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 		
 		[self addNetChangeLineWithName:@"Equity This Month" amount:equityToday-equityLastMonth revFlg:NO];
-		[self addNetChangeLineWithName:@"Equity Last 90 Days" amount:equityToday-equityLastQuarter revFlg:NO];
+		[self addNetChangeLineWithName:@"Equity Last 3 Months" amount:equityToday-equityLastQuarter revFlg:NO];
 		[self addNetChangeLineWithName:@"Equity Last 12 Months" amount:equityToday-equityLastYear revFlg:NO];
 
 	}
@@ -438,7 +438,7 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if(indexPath.section==3) {
+	} else if((self.itemObject.status==0 && indexPath.section==2) || (self.itemObject.status>0 && indexPath.section==3)) {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray.count labelProportion:0.6];
 		
 		cell.mainTitle = self.itemObject.name;
@@ -452,10 +452,9 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else if(indexPath.section==1) {
-		UpdateCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
-		if(cell==nil)
-			cell = [[UpdateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		UpdateCell *cell = [[UpdateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
 		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
 		[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
@@ -562,10 +561,9 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else {
-		UpdateWebCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//		UpdateWebCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
-		if(cell==nil)
-			cell = [[UpdateWebCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		UpdateWebCell *cell = [[UpdateWebCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
 		if(indexPath.row==1 || [@"Debt" isEqualToString:self.itemObject.type]) {
 			[cell.updateButton setTitle:@"Check Balance" forState:UIControlStateNormal];
@@ -710,11 +708,14 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+	if(self.itemObject.status==0)
+		return 3;
+	else
+		return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(section==2 && ([@"Vehicle" isEqualToString:self.itemObject.type] || [@"Real Estate" isEqualToString:self.itemObject.type]))
+	if(section==2 && self.itemObject.status>0 && ([@"Vehicle" isEqualToString:self.itemObject.type] || [@"Real Estate" isEqualToString:self.itemObject.type]))
 		return 2;
 	else
 		return 1;
@@ -725,7 +726,7 @@
 		self.displayBarsFlg=!self.displayBarsFlg;
 		[self setupData];
 	}
-	if(indexPath.section==3) {
+	if((self.itemObject.status==0 && indexPath.section==2) || (self.itemObject.status>0 && indexPath.section==3)) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.itemObject = self.itemObject;
@@ -782,7 +783,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
 		return [ObjectiveCScripts chartHeightForSize:254];
-	else if(indexPath.section==3)
+	else if((indexPath.section==3 && self.itemObject.status>0) || (indexPath.section==2 && self.itemObject.status==0))
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
 																			  tableView:self.mainTableView
 																   labelWidthProportion:0.6]+20;

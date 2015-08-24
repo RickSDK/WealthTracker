@@ -16,6 +16,7 @@
 #import "CreditScoreTracker.h"
 #import "CashFlowVC.h"
 #import "MonthlySpendingVC.h"
+#import "StartupVC.h"
 
 #define kExportAlert	1
 #define kImporttAlert	2
@@ -30,6 +31,8 @@
 #define kMenu6	@"Email Developer"
 #define kMenu7	@"Allow Decimals"
 #define kMenu8	@"Monthly Spending"
+#define kMenu9	@"Manage Portfolio"
+#define kMenu10	@"Update Profile"
 
 @interface OptionsVC ()
 
@@ -57,6 +60,8 @@
 					   kMenu3,
 					   kMenu4,
 					   kMenu5,
+					   kMenu10,
+					   kMenu9,
 					   kMenu6,
 					   kMenu7,
 					   nil];
@@ -161,6 +166,17 @@
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		[self.navigationController pushViewController:detailViewController animated:YES];
 
+	}
+	
+	if([kMenu9 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+		StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
+	if([kMenu10 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+		StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 	
 }

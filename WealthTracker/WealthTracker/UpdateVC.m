@@ -35,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Item List"];
+	[self setTitle:@"Portfolio List"];
 	
 	self.propertyArray = [[NSMutableArray alloc] init];
 	self.vehicleArray = [[NSMutableArray alloc] init];

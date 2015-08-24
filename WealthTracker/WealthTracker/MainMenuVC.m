@@ -19,6 +19,7 @@
 #import "BreakdownByMonthVC.h"
 #import "OptionsVC.h"
 #import "InfoVC.h"
+#import "MyPlanVC.h"
 
 
 @interface MainMenuVC ()
@@ -37,6 +38,12 @@
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
+	[self setupData];
+}
+
+-(void)setupData {
+	self.displaySwitch.on = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
+	
 	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
 	
 	self.updateNumberLabel.text=@"";
@@ -48,7 +55,7 @@
 		self.updateStatusImageView.image = [UIImage imageNamed:@"green.png"];
 	else
 		self.updateStatusImageView.image = [UIImage imageNamed:@"red.png"];
-
+	
 	self.needsUpdatingLabel.text = [NSString stringWithFormat:@"%d", status];
 	
 	
@@ -68,7 +75,7 @@
 		prevBalance += [[mo valueForKey:@"balance_owed"] doubleValue];
 	}
 	prevNetWorth = (prevValue-prevBalance);
-
+	
 	double assetChange=0;
 	double debtChange=0;
 	
@@ -81,7 +88,7 @@
 		double value=0;
 		double balance=0;
 		NSString *futureFlag = (month>self.nowMonth)?@"Y":@"N";
-
+		
 		for(NSManagedObject *mo in updateItems) {
 			value+=[[mo valueForKey:@"asset_value"] doubleValue];
 			balance += [[mo valueForKey:@"balance_owed"] doubleValue];
@@ -93,23 +100,22 @@
 		}
 		last30 = (value-balance)-prevNetWorth;
 		if(month==self.nowMonth) {
-//			netWorthChange=(value-balance)-prevNetWorth;
+			//			netWorthChange=(value-balance)-prevNetWorth;
 			assetChange=value-prevValue;
 			debtChange=balance-prevBalance;
 		}
 		prevNetWorth = (value-balance);
 		prevValue=value;
 		prevBalance=balance;
-
+		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
 		
 		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, self.nowYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
-
+		
 	} //<-- for month
+	
 
-	[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:YES revFlg:NO];
-	[ObjectiveCScripts displayNetChangeLabel:self.assetsLabel amount:assetChange lightFlg:YES revFlg:NO];
-	[ObjectiveCScripts displayNetChangeLabel:self.debtsLabel amount:debtChange lightFlg:YES revFlg:YES];
+	[self displayBottomLabels];
 	
 	self.graphImageView.layer.cornerRadius = 8.0;
 	self.graphImageView.layer.masksToBounds = YES;
@@ -124,10 +130,36 @@
 	self.popUpView.hidden=YES;
 	
 	
-
 	self.currentYearLabel.text = [NSString stringWithFormat:@"%d", self.nowYear];
 	self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:self.nowMonth];
+}
 
+-(void)displayBottomLabels {
+	if(self.displaySwitch.on) {
+		self.netWorthNameLabel.text = @"Change This Month";
+		double asset_value = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext numMonths:1 type:0];
+		double balance_owed = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
+		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayNetChangeLabel:self.assetsLabel amount:asset_value lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayNetChangeLabel:self.debtsLabel amount:balance_owed lightFlg:YES revFlg:YES];
+	} else {
+		self.netWorthNameLabel.text = @"Net Worth";
+		double asset_value = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext type:0];
+		double balance_owed = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext type:0];
+		
+		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayMoneyLabel:self.assetsLabel amount:asset_value lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayMoneyLabel:self.debtsLabel amount:balance_owed lightFlg:YES revFlg:YES];
+	}
+}
+
+-(NSString *)boolToString:(BOOL)flag {
+	return (flag)?@"Y":@"N";
+}
+
+-(IBAction)displaySwitchChanged:(id)sender {
+	[ObjectiveCScripts setUserDefaultValue:[self boolToString:self.displaySwitch.on] forKey:@"displaySwitchFlg"];
+	[self displayBottomLabels];
 }
 
 -(void)checkNextItemDue {
@@ -235,6 +267,7 @@
 
 -(void)infoButtonPressed {
 	InfoVC *detailViewController = [[InfoVC alloc] initWithNibName:@"InfoVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
@@ -347,8 +380,8 @@
 	
 }
 
--(IBAction)editButtonClicked:(id)sender {
-	StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
+-(IBAction)myPlanButtonClicked:(id)sender {
+	MyPlanVC *detailViewController = [[MyPlanVC alloc] initWithNibName:@"MyPlanVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

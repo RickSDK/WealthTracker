@@ -35,6 +35,8 @@
 @property (nonatomic, strong) IBOutlet UILabel *currentYearLabel;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
 @property (nonatomic, strong) IBOutlet UILabel *percentUpdatedLabel;
+@property (nonatomic, strong) IBOutlet UILabel *netWorthNameLabel;
+@property (nonatomic, strong) IBOutlet UISwitch *displaySwitch;
 
 
 @property (nonatomic, strong) NSMutableArray *popupArray;
@@ -42,9 +44,10 @@
 @property (nonatomic) int nowMonth;
 @property (nonatomic) BOOL expiredFlg;
 
--(IBAction)editButtonClicked:(id)sender;
+-(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)updateButtonClicked:(id)sender;
 -(IBAction)chartsButtonClicked:(id)sender;
 -(IBAction)analysisButtonClicked:(id)sender;
+-(IBAction)displaySwitchChanged:(id)sender;
 
 @end

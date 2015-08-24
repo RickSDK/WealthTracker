@@ -7,6 +7,7 @@
 //
 
 #import "InfoVC.h"
+#import "StartupVC.h"
 
 @interface InfoVC ()
 
@@ -25,7 +26,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Info"];
-    // Do any additional setup after loading the view from its nib.
+	
+}
+
+-(void)manageButtonPressed {
+	StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 

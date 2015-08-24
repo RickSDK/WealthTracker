@@ -145,11 +145,11 @@
 
 -(void)setupData {
 	
-	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Total Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
-	self.topLeftlabel.text = [topLeft objectAtIndex:self.tag];
-	
-	if(self.topSegment.selectedSegmentIndex==0)
-		self.topLeftlabel.text = [NSString stringWithFormat:@"%@, %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Monthly Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
+//	self.topLeftlabel.text = [topLeft objectAtIndex:self.tag];
+	NSLog(@"+++%d", self.tag);
+	if(self.topSegment.selectedSegmentIndex==0 && self.tag>2)
+		self.topLeftlabel.text = @"This Month";
 	else
 		self.topLeftlabel.text = [topLeft objectAtIndex:self.tag];
 
@@ -192,7 +192,7 @@
 	  [self addBlackLabelForMoneyWithName:@"Total Monthly Payment" amount:totalValueObj.monthlyPayment];
 	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:monthlyIncome];
 	  
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40 revFlg:NO];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Net Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40 revFlg:NO];
  
 	  int idealMortgage = monthlyIncome/4;
 	  idealMortgage = (idealMortgage/100)*100; // rounding!
@@ -391,7 +391,7 @@
 		line2 = @"If you are considering getting a car, it is best to pay cash instead of financing or leasing. Stay out of debt.";
 	} else {
 		if(equity>=0)
-			line2 = [NSString stringWithFormat:@"Your vehicle purchases are currently sitting at %d%% equity. Follow the plan on the analysis screen in order to get them paid off as quickly as possible.", equity];
+			line2 = [NSString stringWithFormat:@"Your vehicle purchases are currently sitting at %d%% equity. Follow the plan on the main menu screen in order to get them paid off as quickly as possible.", equity];
 		if(equity>=80)
 			line2 = @"Great job paying off your vehicles. Remember to ONLY pay cash for future purchases. The goal is to saty out of debt.";
 	}
@@ -408,7 +408,7 @@
 }
 
 -(void)addConclusionsForHome:(int)percentOfIncome value:(double)value balance:(double)balance idealLoan:(double)idealLoan equity:(int)equity {
-	NSString *line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is too high. Ideally it should be about 25%%. You should look for ways to improve your income, or consider selling the house and finding something smaller. Maybe even rent for a period of time while you pay off debt and save for a down payment.", percentOfIncome];
+	NSString *line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high. Ideally it should be about 25%%. You may find it difficult to dig out of debt with your current payments. It's important to reduce any other debts you have to make room for this monthly payment. Follow the plan on the main menu screen to further build your wealth.", percentOfIncome];
 	
 	if(balance < idealLoan)
 		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high, but it looks like this may be due to agressively paying off your mortgage.\n\nIdeally you want your payments to be about 25%% of your monthly income, based on a 15 year loan.", percentOfIncome];
@@ -422,9 +422,9 @@
 
 	if(value==0) {
 		if(percentOfIncome<34)
-			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is pretty good. Ideally you want to be at around 25%%.\n\nView the plan on the previous page for details on how to start working towards owning your own home.", percentOfIncome];
+			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is pretty good. Ideally you want to be at around 25%%.\n\nView the plan on the main menu page for details on how to start working towards owning your own home.", percentOfIncome];
 		else
-			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is too high. Ideally you want to be at around 25%%. Strongly consider moving to a smaller rental and start saving up for a home.\n\nAnd view the previous page for details on starting a good plan of action.", percentOfIncome];
+			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is too high. Ideally you want to be at around 25%%. Strongly consider moving to a smaller rental and start saving up for a home.\n\nAnd view the main menu page for details on starting a good plan of action.", percentOfIncome];
 		
 		line2 = @"You currently do not own any property. Consider following the plan on the analysis page to start building wealth.";
 	} else {
@@ -434,7 +434,7 @@
 			line2 = [NSString stringWithFormat:@"Your real estate purchases are in very good shape, sitting at %d%% equity. You are well on your way towards being debt free. Work the plan on the analysis page to continue building wealth.", equity];
 		
 		if(equity>=80)
-			line2 = @"Fantastic job paying down your mortgages! Continue working the plan on the analysis screen as you watch your wealth build.";
+			line2 = @"Fantastic job paying down your mortgages! Continue working the plan on the main menu screen as you watch your wealth build.";
 	}
 	
 	[self.namesArray2 addObject:@""];
@@ -459,13 +459,13 @@
 	NSString *line2=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, this will take you about %d years, allowing you to retire at age %d.", idealNetWorthString, timeToReach, retirementAge];
 	
 	if(timeToReach>50)
-		line2=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the previous screen to improve your outlook.", idealNetWorthString];
+		line2=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];
 	
 	if(netWorthToday<=0)
-		line2=@"You are currently broke, but you can work your way out of debt and into prosperity if you follow the plan on the previous screen.";
+		line2=@"You are currently broke, but you can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
 	
 	if(netWorthToday>0 && estValuePerYear<0 && netWorthToday<idealNetWorth/2)
-		line2=@"You have a positive net worth, but this past year has not been good to you. You can work your way out of debt and into prosperity if you follow the plan on the previous screen.";
+		line2=@"You have a positive net worth, but this past year has not been good to you. You can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
 	
 	[self.namesArray2 addObject:@""];
 	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@\n\n%@", line1, line2]];
@@ -694,7 +694,7 @@
 	
 	if(detbToAssets>100) { // broke!
 		line1 = @"You are flat broke as you owe more to creditors than all your assets are worth.";
-		line4 = @"Follow the plan on the Analysis screen to get your finances back in order.";
+		line4 = @"Follow the plan on the main menu screen to get your finances back in order.";
 		
 		if(badDebtToIncome>40) {
 			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is WAY too high, at %d%% of income. This needs to be paid down ASAP!", badDebtToIncome];
@@ -711,16 +711,16 @@
 	} else { // positive net worth
 		if(detbToAssets>75) {
 			line1 = @"The good news is that you have a net positive net worth.";
-			line4 = @"The bad news is that is isn't by much. Follow the plan on the Analysis screen to get your finances in better shape.";
+			line4 = @"The bad news is that is isn't by much. Follow the plan on the main menu screen to get your finances in better shape.";
 		} else if(detbToAssets>50) {
 			line1 = @"Your assets are worth more than your debts, but more work is needed to pay off those debts.";
-			line4 = @"Follow the plan on the Analysis screen to improve your finances situation.";
+			line4 = @"Follow the plan on the main menu screen to improve your finances situation.";
 		} else if(detbToAssets>25) {
 			line1 = @"You have a good asset to debt ratio, but more work is still needed.";
-			line4 = @"Follow the plan on the Analysis screen to get your finances in perfect shape.";
+			line4 = @"Follow the plan on the main menu screen to get your finances in perfect shape.";
 		} else {
 			line1 = @"You have done an outstanding job of keeping your debt low and your assets high.";
-			line4 = @"Keep up the good work. Follow the plan on the Analysis screen to further improve your finances.";
+			line4 = @"Keep up the good work. Follow the plan on the main menu screen to further improve your finances.";
 		}
 		
 		if(badDebtToIncome>25) {
