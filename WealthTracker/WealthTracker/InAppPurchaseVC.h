@@ -24,6 +24,7 @@
 @property (nonatomic, strong) IBOutlet WebServiceView *webServiceView;
 
 -(IBAction)upgradeButtonClicked:(id)sender;
+-(IBAction)restorePurchaseButtonClicked:(id)sender;
 
 - (void)loadStore;
 - (BOOL)canMakePurchases;

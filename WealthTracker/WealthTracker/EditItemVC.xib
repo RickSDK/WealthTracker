@@ -9,7 +9,7 @@
             <connections>
                 <outlet property="deleteButton" destination="1DQ-gm-cIC" id="6Dz-JW-4U4"/>
                 <outlet property="mainTableView" destination="CcF-QO-H8H" id="k6o-Il-Ilm"/>
-                <outlet property="testLabel" destination="zr6-13-fnT" id="UIJ-f2-xOU"/>
+                <outlet property="topDescLabel" destination="PnZ-Hv-pxH" id="ZA6-hB-zZC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -23,7 +23,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="CcF-QO-H8H">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="374"/>
+                    <rect key="frame" x="0.0" y="60" width="320" height="314"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
@@ -31,15 +31,6 @@
                         <outlet property="delegate" destination="-1" id="UWg-ox-cH5"/>
                     </connections>
                 </tableView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EditItemVC.h" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zr6-13-fnT">
-                    <rect key="frame" x="200" y="4" width="136" height="21"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                    <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <size key="shadowOffset" width="-1" height="-1"/>
-                </label>
                 <view contentMode="scaleToFill" id="gch-02-Jjq">
                     <rect key="frame" x="0.0" y="371" width="320" height="45"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -60,6 +51,21 @@
                     </subviews>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
+                <view contentMode="scaleToFill" id="JvI-yT-hEY" customClass="CustomView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PnZ-Hv-pxH">
+                            <rect key="frame" x="8" y="0.0" width="304" height="60"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <size key="shadowOffset" width="1" height="1"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
@@ -69,7 +75,7 @@
         </view>
     </objects>
     <resources>
-        <image name="greenTexture.jpg" width="640" height="1164"/>
+        <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="redButton.png" width="400" height="100"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

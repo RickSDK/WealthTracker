@@ -75,6 +75,9 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Breakdown" style:UIBarButtonItemStyleBordered target:self action:@selector(breakdownButtonPressed)];
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
+	
+	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]])
+		self.topSegment.selectedSegmentIndex=1;
 
 	[self setupData];
 }
@@ -146,8 +149,12 @@
 -(void)setupData {
 	
 	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Monthly Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
-//	self.topLeftlabel.text = [topLeft objectAtIndex:self.tag];
-	NSLog(@"+++%d", self.tag);
+	
+	self.monthLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+	
+	self.nextButton.enabled = !(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
+
+	
 	if(self.topSegment.selectedSegmentIndex==0 && self.tag>2)
 		self.topLeftlabel.text = @"This Month";
 	else
@@ -305,7 +312,10 @@
 	  
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear] amountNow:debtToday amountThen:debtAtEndOfLastYear revFlg:YES];
 
-	  [self debtAnalysisWithDetbToAssets:detbToAssets badDebtToIncome:badDebtToIncome interestToIncome:interestToIncome];
+	  if(self.topSegment.selectedSegmentIndex==0)
+		  [self debtAnalysisMonthlyWithReduction:reduction allDebt30:allDebt30 classADebt:totalValueObj.badDebt classAReduction:classAReduction debtThisYear:debtToday-debtAtEndOfLastYear];
+	  else
+		  [self debtAnalysisWithDetbToAssets:detbToAssets badDebtToIncome:badDebtToIncome interestToIncome:interestToIncome];
 
 	  if(self.topSegment.selectedSegmentIndex==0)
 		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(debtToday-debtLastMonth) lightFlg:YES revFlg:YES];
@@ -330,7 +340,9 @@
 	  [self addNetChangeLabel:@"Net Worth Last 90 days" amount:netWorthToday-netWorthLastQuarter revFlg:NO];
 	  [self addNetChangeLabel:@"Net Worth Last 12 months" amount:netWorthToday-netWorthLastYear revFlg:NO];
 
-	  double estValuePerYear = ((netWorthToday-netWorthLastYear)+(netWorthToday-netWorthLastMonth)*12)/2;
+	  double estValuePerYear = netWorthToday-netWorthLastYear;
+	  if(netWorthToday>netWorthLastMonth)
+		  estValuePerYear = ((netWorthToday-netWorthLastYear)+(netWorthToday-netWorthLastMonth)*12)/2;
 	  int age = [CoreDataLib getAge:self.managedObjectContext];
 	  int netWorth = totalValueObj.value-totalValueObj.balance;
 	  
@@ -684,6 +696,79 @@
 	return valueObj;
 }
 
+-(void)debtAnalysisMonthlyWithReduction:(int)reduction allDebt30:(double)allDebt30 classADebt:(double)classADebt classAReduction:(int)classAReduction debtThisYear:(double)debtThisYear {
+	allDebt30*=-1;
+	[self.namesArray2 addObject:@""];
+	
+	int percentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
+	if(self.displayMonth != self.nowMonth || self.displayYear != self.displayYear)
+		percentComplete=100;
+	
+	NSString *line0=@"";
+	if(percentComplete==0)
+		line0 = @"Note: You have not started updating your portfolio for this month, so the following analysis may not be relevant.\n\n";
+	else if(percentComplete<75)
+		line0 = [NSString stringWithFormat:@"Note: You have only updated %d%% of your portfolio for this month, so the following analysis may not be entirely accurate.\n\n", percentComplete];
+	else if(percentComplete<100)
+		line0 = [NSString stringWithFormat:@"Note: You have only updated %d%% of your portfolio for this month, so the following analysis may still be subject to changes.\n\n", percentComplete];
+	
+	NSString *had = (percentComplete==100)?@"had":@"are having";
+	NSString *wereAble = (percentComplete==100)?@"were able":@"are on pace";
+	NSString *line1=@"";
+	NSString *line4=@"Keep working the plan on the main menu to further build your wealth.";
+	if(reduction>0) { // paying off debt
+		if(allDebt30 > reduction) // good month
+			line1 = [NSString stringWithFormat:@"You %@ a very good month %@ %d paying off %@ of total debt. Keep the needle moving in the right direction.", had, [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
+		else // bad month
+			line1 = [NSString stringWithFormat:@"You %@ to pay down %@ of total debt this month which is good, but that is below your average. More work is needed.", wereAble, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
+	} else { // falling further behind
+		if(allDebt30 >= 0) // good month
+			line1 = [NSString stringWithFormat:@"Good job paying off %@ of total debt this month, but you need to do more to reverse the recent trend of adding more debt.", [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
+		else  {// bad month
+			line1 = [NSString stringWithFormat:@"You added %@ more in total debt to an ever growing pile. Not a great month for wealth building.", [ObjectiveCScripts convertNumberToMoneyString:allDebt30*-1]];
+			line4 = @"Start working the plan on the main menu to get things under control and stard digging your way out.";
+		}
+	}
+	
+	NSString *line2=@"";
+	if(classADebt>5000) {
+		if(classAReduction>0)
+			line2 = [NSString stringWithFormat:@"Your total Class A debt now stands at %@, which puts you about %d months away from being debt free at your current rate.", [ObjectiveCScripts convertNumberToMoneyString:classADebt], (int)classADebt/classAReduction];
+		else
+			line2 = [NSString stringWithFormat:@"Your total Class A debt now stands at %@ and rising. It's time to put the breaks on spending.", [ObjectiveCScripts convertNumberToMoneyString:classADebt]];
+	} else {
+		line2 = @"Your class A debt is very managable so great job there. Continue building your wealth and planning for the future.";
+	}
+
+	NSString *line3=@"";
+	NSString *monStr = [NSString stringWithFormat:@"%d months", 12-self.displayMonth];
+	if(self.displayMonth>6)
+		monStr = [NSString stringWithFormat:@"just %d months", 12-self.displayMonth];
+	if(self.displayMonth>12)
+		monStr = @"just one month";
+
+	int debtPerMonth = 0;
+	if(self.displayMonth>0)
+		debtPerMonth = debtThisYear/self.displayMonth;
+	if(debtPerMonth<0) { // paying down
+		if(debtPerMonth<-1200)
+			line3 = [NSString stringWithFormat:@"You have paid off a good deal of total debt this year with %@ reduced so far in %d, with %@ to go.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1], self.displayYear, monStr];
+		else
+			line3 = [NSString stringWithFormat:@"You haven't been able to knock out a huge amount of your total debt this year, but have reduced it by %@ in %d, with %@ to go.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1], self.displayYear, monStr];
+
+	} else { // more debt
+		if(debtPerMonth>1200)
+			line3 = [NSString stringWithFormat:@"You have been loading tons of total debt this year with %@ added so far in %d, and %@ left to start paying it down.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear], self.displayYear, monStr];
+		else
+			line3 = [NSString stringWithFormat:@"You haven't managed to reduce debt this year and have in fact added %@ in %d, with %@ left to start paying it down.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear], self.displayYear, monStr];
+	}
+
+	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, line4]];
+	[self.colorsArray2 addObject:[UIColor blackColor]];
+}
+
+
+
 -(void)debtAnalysisWithDetbToAssets:(int)detbToAssets badDebtToIncome:(int)badDebtToIncome interestToIncome:(int)interestToIncome
 {
 	[self.namesArray2 addObject:@""];
@@ -808,26 +893,6 @@
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
 	if(indexPath.section==0) {
-		DateCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if(cell==nil)
-			cell = [[DateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
-		
-		[cell.prevYearButton addTarget:self action:@selector(prevYearButtonPressed) forControlEvents:UIControlEventTouchDown];
-		[cell.nextYearButton addTarget:self action:@selector(nextYearButtonPressed) forControlEvents:UIControlEventTouchDown];
-		
-		cell.nextYearButton.enabled = !(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
-		
-		if(self.tag==1 || self.tag==2) {
-			cell.prevYearButton.enabled=NO;
-			cell.nextYearButton.enabled=NO;
-		}
-
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
-	} else if(indexPath.section==1) {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
 		if(cell==nil)
@@ -866,7 +931,7 @@
 		self.titleLabel.backgroundColor = [UIColor clearColor];
 
 		return cell;
-	} else if(indexPath.section==2) {
+	} else if(indexPath.section==1) {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
 		if(cell==nil)
@@ -883,7 +948,7 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if(indexPath.section==3) {
+	} else if(indexPath.section==2) {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.namesArray0.count labelProportion:kProportionList];
 
 		cell.mainTitle = self.title0;
@@ -896,7 +961,7 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if (indexPath.section==4) {
+	} else if (indexPath.section==3) {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray1.count labelProportion:kProportionAnalysis];
 		cell.mainTitle = self.title1;
 		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
@@ -919,9 +984,7 @@
 	}
 }
 
-
-
--(void)prevYearButtonPressed {
+-(IBAction)prevButtonPressed:(id)sender {
 	self.monthOffset--;
 	self.displayMonth--;
 	if(self.displayMonth<=0) {
@@ -931,7 +994,7 @@
 	[self setupData];
 }
 
--(void)nextYearButtonPressed {
+-(IBAction)nextButtonPressed:(id)sender {
 	self.monthOffset++;
 	self.displayMonth++;
 	if(self.displayMonth>=12) {
@@ -941,8 +1004,14 @@
 	[self setupData];
 }
 
+-(void)prevYearButtonPressed {
+}
+
+-(void)nextYearButtonPressed {
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 6;
+	return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -950,11 +1019,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==2) {
+	if(indexPath.section<=1) {
 		self.topSegment.selectedSegmentIndex=!self.topSegment.selectedSegmentIndex;
 		[self setupData];
-	}
-	if(indexPath.section>2)
+	} else
 		[self breakdownButtonPressed];
 }
 
@@ -970,16 +1038,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
-		return 40;
-	if(indexPath.section==1)
 		return 20;
-	if(indexPath.section==2)
+	if(indexPath.section==1)
 		return [ObjectiveCScripts chartHeightForSize:170];
-	if(indexPath.section==3)
+	if(indexPath.section==2)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray0
 																   tableView:self.mainTableView
 														labelWidthProportion:kProportionList]+20;
-	if(indexPath.section==4)
+	if(indexPath.section==3)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray1
 																   tableView:self.mainTableView
 														labelWidthProportion:kProportionAnalysis]+20;

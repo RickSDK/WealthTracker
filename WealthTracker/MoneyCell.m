@@ -52,7 +52,7 @@
 		self.descLabel.adjustsFontSizeToFitWidth = YES;
 		self.descLabel.minimumScaleFactor = .8;
 		self.descLabel.text = @"Desc";
-		self.descLabel.numberOfLines=2;
+		self.descLabel.numberOfLines=3;
 		self.descLabel.textAlignment = NSTextAlignmentLeft;
 		self.descLabel.textColor = [UIColor whiteColor];
 		self.descLabel.backgroundColor = [UIColor clearColor];
@@ -68,29 +68,17 @@
 - (void)layoutSubviews {
 	
 	[super layoutSubviews];
-	
-	[MoneyCell layoutSubviews:self.bgView updateButton:self.updateButton descLabel:self.descLabel inBound:self.frame];
-	
-}
 
-+ (void) layoutSubviews:(UIView *)bgView
-		   updateButton:(CustomButton *)updateButton
-		   descLabel:(UILabel *)descLabel
-				inBound:(CGRect) cellRect
-{
+	float width=self.frame.size.width;
 	
-	float width=cellRect.size.width;
-	
-	bgView.frame = CGRectMake(2, 2, width-4, 106);
-	updateButton.frame = CGRectMake(width-85, 20, 75, 35);
-	descLabel.frame = CGRectMake(8, 56, width-32, 46);
-}
+	self.bgView.frame = CGRectMake(2, 2, width-4, 126);
+	self.updateButton.frame = CGRectMake(width-85, 20, 75, 35);
+	self.descLabel.frame = CGRectMake(8, 56, width-32, 61);
 
+}
 
 - (void)awakeFromNib {
     // Initialization code
-	
-	
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

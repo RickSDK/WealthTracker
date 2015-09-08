@@ -43,8 +43,14 @@
 @property (nonatomic, strong) IBOutlet UIView *topView;
 @property (nonatomic, strong) IBOutlet UILabel *topLeftlabel;
 @property (nonatomic, strong) IBOutlet UILabel *topRightlabel;
-@property (nonatomic, strong) IBOutlet UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@property (nonatomic, strong) IBOutlet UILabel *monthLabel;
+@property (nonatomic, strong) IBOutlet UIButton *prevButton;
+@property (nonatomic, strong) IBOutlet UIButton *nextButton;
 
 -(IBAction)segmentChanged:(id)sender;
+-(IBAction)nextButtonPressed:(id)sender;
+-(IBAction)prevButtonPressed:(id)sender;
 
 @end

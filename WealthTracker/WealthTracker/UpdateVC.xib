@@ -13,6 +13,8 @@
                 <outlet property="netWorthLabel" destination="wud-ec-M7M" id="rkZ-3b-paL"/>
                 <outlet property="statusCountLabel" destination="xUA-la-ODl" id="wRb-dN-57L"/>
                 <outlet property="statusImageView" destination="UKO-tU-orD" id="5lC-r6-zma"/>
+                <outlet property="topRightLabel" destination="9iD-30-6JJ" id="RtA-DI-F92"/>
+                <outlet property="topSegment" destination="31a-3c-T3c" id="W9Z-Yl-uTk"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -26,7 +28,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="eLf-sz-D9M">
-                    <rect key="frame" x="0.0" y="66" width="320" height="437"/>
+                    <rect key="frame" x="0.0" y="97" width="320" height="406"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
@@ -35,7 +37,7 @@
                     </connections>
                 </tableView>
                 <view contentMode="scaleToFill" id="DE4-xg-B1q" customClass="CustomView">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
+                    <rect key="frame" x="0.0" y="30" width="320" height="46"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Month" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oj2-Qj-Egs">
@@ -85,7 +87,7 @@
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" id="dWP-Md-X28">
-                    <rect key="frame" x="0.0" y="46" width="320" height="20"/>
+                    <rect key="frame" x="0.0" y="76" width="320" height="20"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="0B7-wp-kKx">
@@ -97,6 +99,25 @@
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="0.82178730870000005" green="0.82178730870000005" blue="0.82178730870000005" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" id="Jcl-YR-Eah">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="31a-3c-T3c">
+                            <rect key="frame" x="23" y="0.0" width="275" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Net Change"/>
+                                <segment title="Total"/>
+                            </segments>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="topSegmentChanged:" destination="-1" eventType="valueChanged" id="dwZ-UA-9sa"/>
+                            </connections>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

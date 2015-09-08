@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
+@property (nonatomic, strong) IBOutlet UILabel *topRightLabel;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
@@ -34,5 +36,8 @@
 @property (nonatomic) int nextItemDue;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL displayPieFlg;
+
+-(IBAction)topSegmentChanged:(id)sender;
+
 
 @end

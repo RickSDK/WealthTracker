@@ -58,8 +58,16 @@
 		self.subTypeLabel.textColor = [ObjectiveCScripts darkColor];
 		self.subTypeLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.subTypeLabel];
-		
-		self.amountLabel = [[UILabel alloc] initWithFrame:CGRectMake(66, 36, 163, 22)];
+
+		UILabel * amountLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(66, 36, 163, 22)];
+		amountLabel1.backgroundColor = [UIColor clearColor];
+		amountLabel1.textAlignment = NSTextAlignmentLeft;
+		amountLabel1.textColor = [UIColor grayColor];
+		amountLabel1.font = [UIFont systemFontOfSize:10];
+		amountLabel1.text = @"Equity:";
+		[self.contentView addSubview:amountLabel1];
+
+		self.amountLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 36, 163, 22)];
 		self.amountLabel.font = [UIFont boldSystemFontOfSize:15];
 		self.amountLabel.adjustsFontSizeToFitWidth = YES;
 		self.amountLabel.minimumScaleFactor = .8;
@@ -69,7 +77,15 @@
 		self.amountLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.amountLabel];
 		
-		self.last30Label = [[UILabel alloc] initWithFrame:CGRectMake(210, 3, 100, 22)];
+		UILabel * amountTopLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, -2, 140, 22)];
+		amountTopLabel.backgroundColor = [UIColor clearColor];
+		amountTopLabel.textAlignment = NSTextAlignmentRight;
+		amountTopLabel.textColor = [UIColor grayColor];
+		amountTopLabel.font = [UIFont systemFontOfSize:9];
+		amountTopLabel.text = @"Change This Month";
+		[self.contentView addSubview:amountTopLabel];
+		
+		self.last30Label = [[UILabel alloc] initWithFrame:CGRectMake(210, 12, 100, 22)];
 		self.last30Label.font = [UIFont boldSystemFontOfSize:17];
 		self.last30Label.adjustsFontSizeToFitWidth = YES;
 		self.last30Label.minimumScaleFactor = .8;

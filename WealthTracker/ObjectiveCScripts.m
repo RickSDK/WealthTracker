@@ -674,6 +674,15 @@
 	return [ObjectiveCScripts changedForItem:0 month:0 year:0 field:nil context:context numMonths:1 type:0];
 }
 
++(int)calculatePaydownRate:(double)balToday balLastYear:(double)balLastYear bal30:(double)bal30 bal90:(double)bal90 {
+	int principalPaid = (balLastYear-balToday)/12;
+	if((bal30-balToday)>principalPaid)
+		principalPaid = bal30-balToday;
+	if((bal90-balToday)>principalPaid)
+		principalPaid = (bal90-balToday)/3;
+	return principalPaid;
+}
+
 +(float)chartHeightForSize:(float)height
 {
 	float width = [[UIScreen mainScreen] bounds].size.width;
@@ -714,6 +723,10 @@
 	int percentComplete = 0;
 	if(totalRecordsForMonth>0)
 		percentComplete = totalRecordsCompleted*100/totalRecordsForMonth;
+	
+	int oldPercentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
+	if(oldPercentComplete != percentComplete)
+		[ObjectiveCScripts setUserDefaultValue:[NSString stringWithFormat:@"%d", percentComplete] forKey:@"percentComplete"];
 	
 	if(label)
 		label.text=[NSString stringWithFormat:@"%d%% Updated", percentComplete];

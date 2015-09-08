@@ -8,13 +8,20 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainMenuVC">
             <connections>
+                <outlet property="analysisButton" destination="R0A-1V-g3a" id="RVy-O4-c3g"/>
+                <outlet property="arrowImage" destination="w81-b6-B82" id="dAq-lF-A7G"/>
                 <outlet property="assetsLabel" destination="QLx-Ur-Hyp" id="WuI-LA-D7A"/>
                 <outlet property="botView" destination="xxk-67-dKc" id="zMc-UT-5xG"/>
+                <outlet property="chartsButton" destination="Z4i-hK-oSI" id="Z4F-I3-Lci"/>
                 <outlet property="currentYearLabel" destination="THm-OH-NFd" id="9IQ-nH-PQj"/>
                 <outlet property="debtsLabel" destination="O9R-Of-47H" id="in9-DL-B9J"/>
                 <outlet property="displaySwitch" destination="uhE-f4-DST" id="Q43-4P-v5r"/>
+                <outlet property="financesButton" destination="b06-WN-OYK" id="eA5-Rr-NA7"/>
                 <outlet property="graphImageView" destination="wvL-NL-PcE" id="GEs-Zi-st5"/>
+                <outlet property="messageLabel" destination="ZAj-xP-Fnl" id="6GI-az-yYM"/>
+                <outlet property="messageView" destination="hQ7-IQ-DRk" id="AD4-eT-gyp"/>
                 <outlet property="monthLabel" destination="HdH-GE-KjK" id="r5w-b2-ttD"/>
+                <outlet property="myPlanButton" destination="ndZ-m8-Fb8" id="rcJ-HQ-MUo"/>
                 <outlet property="needsUpdatingLabel" destination="mp4-Xi-ySG" id="pxw-Ph-tP1"/>
                 <outlet property="netWorthLabel" destination="fai-S1-63e" id="eXt-OM-5Fd"/>
                 <outlet property="netWorthNameLabel" destination="crp-zI-fwM" id="cNz-rt-y7e"/>
@@ -28,6 +35,7 @@
                 <outlet property="popupLast30Label" destination="Dej-bt-hyI" id="ol7-lP-IUa"/>
                 <outlet property="popupNWLabel" destination="GrC-6r-G5P" id="WCx-an-W0x"/>
                 <outlet property="popupValImageView" destination="guq-ZJ-Zb9" id="wvd-cx-1Gr"/>
+                <outlet property="portfolioButton" destination="0fg-HX-hHa" id="dQp-Z7-Nys"/>
                 <outlet property="redCircleImageView" destination="sxs-4l-tZs" id="VYs-Rc-Zmo"/>
                 <outlet property="updateNumberLabel" destination="bPk-3K-G3t" id="KwC-5D-ydy"/>
                 <outlet property="updateStatusImageView" destination="79q-uJ-baH" id="fvc-mf-34I"/>
@@ -43,6 +51,23 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="uhE-f4-DST">
+                    <rect key="frame" x="4" y="327" width="51" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <connections>
+                        <action selector="displaySwitchChanged:" destination="-1" eventType="valueChanged" id="6i2-UM-Xed"/>
+                    </connections>
+                </switch>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="b06-WN-OYK">
+                    <rect key="frame" x="60" y="180" width="200" height="90"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" backgroundImage="financesButton.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="financesButtonClicked:" destination="-1" eventType="touchDown" id="tCb-wq-1xS"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0fg-HX-hHa">
                     <rect key="frame" x="28" y="23" width="120" height="50"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -273,13 +298,34 @@
                     <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="uhE-f4-DST">
-                    <rect key="frame" x="4" y="327" width="51" height="31"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <connections>
-                        <action selector="displaySwitchChanged:" destination="-1" eventType="valueChanged" id="6i2-UM-Xed"/>
-                    </connections>
-                </switch>
+                <view contentMode="scaleToFill" id="hQ7-IQ-DRk" customClass="CustomView">
+                    <rect key="frame" x="17" y="16" width="282" height="192"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wealth Tracker!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZAj-xP-Fnl">
+                            <rect key="frame" x="8" y="4" width="266" height="148"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Tuh-E7-78A" customClass="CustomButton">
+                            <rect key="frame" x="111" y="154" width="60" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="OK">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="okButtonClicked:" destination="-1" eventType="touchDown" id="05F-Sv-ACf"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blueArrowDown.png" id="w81-b6-B82">
+                    <rect key="frame" x="50" y="200" width="123" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
@@ -289,6 +335,8 @@
         </view>
     </objects>
     <resources>
+        <image name="blueArrowDown.png" width="189" height="267"/>
+        <image name="financesButton.png" width="307" height="121"/>
         <image name="green.png" width="300" height="300"/>
         <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="red.png" width="300" height="300"/>

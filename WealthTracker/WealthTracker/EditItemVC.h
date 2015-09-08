@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIBarButtonItem *cancelButton;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UILabel *testLabel;
+@property (nonatomic, strong) IBOutlet UILabel *topDescLabel;
 
 @property (nonatomic) int type;
 @property (nonatomic) int sub_type;

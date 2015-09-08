@@ -33,6 +33,10 @@
 	[self setupData];
 }
 
+-(IBAction)topSegmentChanged:(id)sender {
+	[self setupData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Portfolio List"];
@@ -52,6 +56,12 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addNewItem)];
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
+	
+	self.topSegment.layer.backgroundColor = [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0].CGColor;
+	self.topSegment.layer.cornerRadius = 7;
+	BOOL displayChangeFlg = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
+	self.topSegment.selectedSegmentIndex = !displayChangeFlg;
+
 
 }
 
@@ -82,7 +92,18 @@
 	[self.assetArray removeAllObjects];
 	[self.amountArray removeAllObjects];
 	
-	self.graphTitleLabel.text = [NSString stringWithFormat:@"Net Worth Changes in %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
+//	BOOL displayChangeFlg = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
+	BOOL displayChangeFlg = self.topSegment.selectedSegmentIndex==0;
+	
+	if(displayChangeFlg) {
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"Net Worth Changes in %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
+		self.topRightLabel.text = @"Changes This Month";
+		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:YES revFlg:NO];
+	} else {
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"Equity as of %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
+		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:YES revFlg:NO];
+		self.topRightLabel.text = @"Total Net Worth";
+	}
 
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	
@@ -101,7 +122,12 @@
 				yellowCount++;
 			if(obj.status==2)
 				redCount++;
-			double amount = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
+			double amount=0;
+			if(displayChangeFlg)
+				amount = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
+			else
+				amount = [ObjectiveCScripts amountForItem:[obj.rowId intValue] month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:i+1];
+			
 			if(abs(amount) > 0) {
 				GraphObject *graphObject = [[GraphObject alloc] init];
 				graphObject.name=obj.name;
@@ -131,7 +157,6 @@
 	[self.amountArray addObject:[NSString stringWithFormat:@"%d", (int)[ObjectiveCScripts changedEquityLast30ForItem:-3 context:self.managedObjectContext]]];
 	[self.amountArray addObject:[NSString stringWithFormat:@"%d", (int)[ObjectiveCScripts changedEquityLast30ForItem:-4 context:self.managedObjectContext]]];
 	
-	[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:YES revFlg:NO];
 	self.nextItemDue=[self nextItemDue];
 	
 	self.topImageView.image = (self.displayPieFlg)?[GraphLib pieChartWithItems:graphArray]:[GraphLib graphBarsWithItems:graphArray];
@@ -365,18 +390,26 @@
 	headerLabel.frame = CGRectMake(10.0, 0.0, screenWidth/2, cellHeight);
 	headerLabel.text = headerText;
 	[customView addSubview:headerLabel];
-	
+
+	UILabel * amountTopLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth/2, -9, screenWidth/2-20, cellHeight)];
+	amountTopLabel.backgroundColor = [UIColor clearColor];
+	amountTopLabel.textAlignment = NSTextAlignmentRight;
+	amountTopLabel.textColor = [UIColor whiteColor];
+	amountTopLabel.font = [UIFont systemFontOfSize:10];
+	amountTopLabel.text = @"Change This Month";
+	[customView addSubview:amountTopLabel];
+
 	UILabel * amountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	amountLabel.backgroundColor = [UIColor clearColor];
 	amountLabel.opaque = NO;
 	amountLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:(double)amount lightFlg:YES];
 	amountLabel.highlightedTextColor = [UIColor whiteColor];
-	amountLabel.font = [UIFont boldSystemFontOfSize:20];
+	amountLabel.font = [UIFont boldSystemFontOfSize:18];
 	amountLabel.shadowColor = [UIColor blackColor];
 	amountLabel.textAlignment = NSTextAlignmentRight;
 	amountLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 	amountLabel.numberOfLines = 0;
-	amountLabel.frame = CGRectMake(screenWidth/2, 0.0, screenWidth/2-20, cellHeight);
+	amountLabel.frame = CGRectMake(screenWidth/2, 5, screenWidth/2-20, cellHeight);
 	if(amount>0)
 		amountLabel.text = [NSString stringWithFormat:@"+%@", [ObjectiveCScripts convertNumberToMoneyString:amount]];
 	else

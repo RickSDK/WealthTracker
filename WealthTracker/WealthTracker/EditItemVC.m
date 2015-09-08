@@ -59,8 +59,10 @@
 
 	[self setupData];
 	
-	if(!self.managedObj)
+	if(!self.managedObj) {
 		self.deleteButton.enabled=NO;
+		self.deleteButton.hidden=YES;
+	}
 	
 	self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonPressed)];
 
@@ -129,21 +131,23 @@
 	NSString *statement_day = (self.itemObject.statement_day.length==0)?@"15":self.itemObject.statement_day;
 	switch (self.type) {
   case 0: // profile
+			self.topDescLabel.text = @"Profile: This is your basic financial information.";
 			if(self.sub_type==0) {
-			[self insertObjectWithTitle:@"annual_income" desc:@"Total annual gross household income including rental income and all sources." value:self.profileObj.income flag:@"N" fieldType:1 listNumber:0];
-			[self insertObjectWithTitle:@"emergency_fund" desc:@"Approx how much is left in your bank account this month after paying bills?" value:self.profileObj.emergency_fund flag:@"N" fieldType:1 listNumber:0];
-			[self insertObjectWithTitle:@"retirement_payments" desc:@"Approx how much per month do you currently pay into retirement accounts?" value:self.profileObj.retirement_payments flag:@"N" fieldType:1 listNumber:0];
-			[self insertObjectWithTitle:@"age" desc:@"What is your age?" value:self.profileObj.age flag:@"N" fieldType:2 listNumber:0];
+			[self insertObjectWithTitle:@"annual_income" desc:@"Approx what is your total annual gross household income this year? Include rental income if you own rental property." value:self.profileObj.income flag:@"N" fieldType:1 listNumber:0];
+			[self insertObjectWithTitle:@"emergency_fund" desc:@"Approx how much is left in your bank account this month after paying bills? We will call this your 'Emergency Fund'." value:self.profileObj.emergency_fund flag:@"N" fieldType:1 listNumber:0];
+			[self insertObjectWithTitle:@"retirement_payments" desc:@"Are you paying into retirement? If so, approx how much per month are you putting into retirement accounts?" value:self.profileObj.retirement_payments flag:@"N" fieldType:1 listNumber:0];
+			[self insertObjectWithTitle:@"age" desc:@"What is your age? (This is only needed to calculate your projected retirement analysis)." value:self.profileObj.age flag:@"N" fieldType:2 listNumber:0];
 			} else {
 				[self insertObjectWithTitle:@"monthly_rent" desc:@"What do you pay per month in rent?" value:self.profileObj.monthly_rent flag:@"N" fieldType:1 listNumber:0];
 			}
 			break;
   case 1: // real estate
-			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: Home" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
+			self.topDescLabel.text = @"Real Estate: Enter information related to this property.";
+			[self insertObjectWithTitle:@"name" desc:@"Choose a nickname for this property. It can be anything. Enter 'Home' if nothing else." value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			
 			if([self showThisEntry]) {
-				[self insertObjectWithTitle:@"value" desc:@"What is your home currently worth? (Check zillow.com)" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
-				[self insertObjectWithTitle:@"loan_balance" desc:@"What is your current balance on the home loan?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"value" desc:@"Approx what is your home currently worth? (Check zillow.com)" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"loan_balance" desc:@"Approx what is your current balance on the home loan?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
 			}
 			[self insertObjectWithTitle:@"interest_rate" desc:@"What interest rate on the home loan?" value:self.itemObject.interest_rate flag:@"N" fieldType:3 listNumber:0];
 			[self insertObjectWithTitle:@"monthly_payment" desc:@"What is your monthly payment?" value:self.itemObject.monthly_payment flag:@"N" fieldType:1 listNumber:0];
@@ -153,6 +157,7 @@
 //			[self checkFieldsForTag:2 value:self.itemObject.loan_balance];
 			break;
   case 2: // vehicles
+			self.topDescLabel.text = @"Vehicle: Enter information related to this vehicle.";
 			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: Ford Explorer" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry]) {
 				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
@@ -174,6 +179,7 @@
 			break;
 			
   case 3: // debts
+			self.topDescLabel.text = @"Debt: Enter information related to this debt.";
 			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: Visa, Student Loan, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
 				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
@@ -182,6 +188,7 @@
 			
 			break;
   case 4: // assets
+			self.topDescLabel.text = @"Asset: Enter information related to this asset.";
 			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: 401k, Stocks, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
 				[self insertObjectWithTitle:@"value" desc:@"What is the current dollar value?" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
@@ -456,7 +463,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 110;
+	return 130;
 }
 
 -(IBAction)deleteButtonClicked:(id)sender {

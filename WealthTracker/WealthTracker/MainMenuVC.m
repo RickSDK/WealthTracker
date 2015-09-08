@@ -76,21 +76,22 @@
 	}
 	prevNetWorth = (prevValue-prevBalance);
 	
-	double assetChange=0;
-	double debtChange=0;
+	double assetChange = 0;
+	double debtChange = 0;
+	int numMonthsConfirmed = 0;
 	
-	for(int month=1; month<=12; month++) {
+	for(int month = 1; month <= 12; month++) {
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", self.nowYear, month];
 		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 		NSString *valFlag = @"N";
 		NSString *balFlag = @"N";
-		int last30=0;
-		double value=0;
-		double balance=0;
+		int last30 = 0;
+		double value = 0;
+		double balance = 0;
 		NSString *futureFlag = (month>self.nowMonth)?@"Y":@"N";
 		
 		for(NSManagedObject *mo in updateItems) {
-			value+=[[mo valueForKey:@"asset_value"] doubleValue];
+			value += [[mo valueForKey:@"asset_value"] doubleValue];
 			balance += [[mo valueForKey:@"balance_owed"] doubleValue];
 			
 			if([[mo valueForKey:@"val_confirm_flg"] boolValue])
@@ -98,15 +99,18 @@
 			if([[mo valueForKey:@"bal_confirm_flg"] boolValue])
 				balFlag=@"Y";
 		}
+		
+		if([@"Y" isEqualToString:valFlag] || [@"Y" isEqualToString:balFlag])
+			numMonthsConfirmed++;
+		
 		last30 = (value-balance)-prevNetWorth;
-		if(month==self.nowMonth) {
-			//			netWorthChange=(value-balance)-prevNetWorth;
+		if(month == self.nowMonth) {
 			assetChange=value-prevValue;
 			debtChange=balance-prevBalance;
 		}
 		prevNetWorth = (value-balance);
-		prevValue=value;
-		prevBalance=balance;
+		prevValue = value;
+		prevBalance = balance;
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
 		
@@ -114,6 +118,23 @@
 		
 	} //<-- for month
 	
+	self.initStep=-1;
+	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"financesFlg"]]) {
+		self.portfolioButton.enabled = NO;
+		self.myPlanButton.enabled = NO;
+		self.chartsButton.enabled = NO;
+		self.analysisButton.enabled = NO;
+		self.showChartFlg = NO;
+		self.displaySwitch.on=NO;
+		self.displaySwitch.enabled=NO;
+		self.initStep=0;
+		self.graphImageView.hidden=YES;
+		self.showChartFlg=NO;
+	} else
+		self.financesButton.enabled=NO;
+	
+	self.currentYearLabel.hidden =! self.showChartFlg;
+	self.financesButton.hidden = self.showChartFlg;
 
 	[self displayBottomLabels];
 	
@@ -245,6 +266,9 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
 	
+	self.messageView.hidden=YES;
+	self.arrowImage.hidden=YES;
+
 	[self checkNextItemDue];
 	
 }
@@ -294,6 +318,9 @@
 	UITouch *touch = [[event allTouches] anyObject];
 	CGPoint startTouchPosition = [touch locationInView:self.view];
 	
+	if(self.initStep>=0) // intro phase
+		return;
+	
 	if(CGRectContainsPoint(self.netWorthView.frame, startTouchPosition)) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
@@ -318,6 +345,9 @@
 }
 
 -(void)displayPopup:(CGPoint)point {
+	if(self.initStep>=0) // intro phase
+		return;
+	
 	if(CGRectContainsPoint(self.graphImageView.frame, point)) {
 		float x=point.x;
 		if(x>[[UIScreen mainScreen] bounds].size.width-80)
@@ -385,21 +415,99 @@
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
+
 -(IBAction)updateButtonClicked:(id)sender {
 	UpdateVC *detailViewController = [[UpdateVC alloc] initWithNibName:@"UpdateVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.expiredFlg=self.expiredFlg;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
+
 -(IBAction)chartsButtonClicked:(id)sender {
 	ChartsVC *detailViewController = [[ChartsVC alloc] initWithNibName:@"ChartsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
+
 -(IBAction)analysisButtonClicked:(id)sender {
 	AnalysisVC *detailViewController = [[AnalysisVC alloc] initWithNibName:@"AnalysisVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)financesButtonClicked:(id)sender {
+	if([@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"financesFlg"]])
+		return;
+	
+	self.initStep=0;
+	self.financesButton.hidden=YES;
+	self.messageView.hidden=NO;
+	self.arrowImage.hidden=NO;
+	
+	self.arrowImage.center = CGPointMake(self.netWorthView.frame.origin.x+20, self.netWorthView.frame.origin.y-55);
+	self.messageView.center = CGPointMake(self.netWorthView.center.x, self.netWorthView.center.y-220);
+	self.messageLabel.text = @"Wealth Tracker!\n\nThe first thing to understand about finances, is to know your net worth. Which is simply the total of all your assets minus what you owe in debts.";
+}
+
+-(IBAction)okButtonClicked:(id)sender {
+	self.initStep++;
+	switch (self.initStep) {
+  case 1:
+			self.messageLabel.text = @"Your goal is to get this number as high as possible. This app will help you achieve that!";
+			break;
+  case 2:
+			[self.arrowImage setImage:[UIImage imageNamed:@"blueArrowUp.png"]];
+			self.arrowImage.center = CGPointMake(self.portfolioButton.frame.origin.x+50, self.portfolioButton.frame.origin.y+100);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+220);
+			self.messageLabel.text = @"Use the 'Portfolio' button to track all your assets and debts. Once each month you will enter their values. This only takes a few seconds to update and will help track where your money is going.";
+			break;
+  case 3:
+			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+50, self.myPlanButton.frame.origin.y+100);
+			self.messageLabel.text = @"Follow the plan here to get yourself out of debt, build wealth and plan for retirement. We call it going from Broke to Baron.";
+			break;
+  case 4:
+			self.arrowImage.center = CGPointMake(self.chartsButton.frame.origin.x+50, self.chartsButton.frame.origin.y+100);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
+			self.messageLabel.text = @"View the 'Charts' button to see month by month tracking of your money.";
+			break;
+  case 5:
+			self.arrowImage.center = CGPointMake(self.analysisButton.frame.origin.x+50, self.analysisButton.frame.origin.y+100);
+			self.messageLabel.text = @"Under 'Analysis' you will get a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
+			break;
+  case 6:
+			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+100, self.myPlanButton.frame.origin.y+40);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
+			self.messageLabel.text = @"There are more options and features for this app if you click on the 'Options' button.";
+			break;
+  case 7:
+			[self.arrowImage setImage:[UIImage imageNamed:@"blueArrowDown.png"]];
+			self.graphImageView.hidden=NO;
+			self.arrowImage.center = CGPointMake(self.netWorthView.center.x, self.analysisButton.frame.origin.y+30);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
+			self.messageLabel.text = @"The graph on the main menu tracks your debts and assets on a monthly basis. This chart will start making more sense once you have been using Wealth Tracker for a few months.";
+			break;
+  case 8:
+			self.arrowImage.hidden=YES;
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
+			self.messageLabel.text = @"Congratulations! You are ready to start using Wealth Tracker. Contact us if you have any questions or suggestions for this app.";
+			break;
+  case 9:
+			self.initStep=-1;
+			self.financesButton.hidden=YES;
+			self.messageView.hidden=YES;
+			self.arrowImage.hidden=YES;
+			self.portfolioButton.enabled=YES;
+			self.myPlanButton.enabled=YES;
+			self.chartsButton.enabled=YES;
+			self.analysisButton.enabled=YES;
+			self.showChartFlg=YES;
+			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"financesFlg"];
+			break;
+			
+			
+  default:
+			break;
+	}
 }
 
 

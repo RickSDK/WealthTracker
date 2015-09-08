@@ -49,6 +49,16 @@
 //-----------In APP Purchase
 #pragma mark - In App Purchase
 
+-(IBAction)restorePurchaseButtonClicked:(id)sender {
+	[self requestProUpgradeProductData];
+//	NSSet *productIdentifiers = [NSSet setWithObject:kInAppPurchaseProUpgradeProductId];
+//	SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
+//	request.delegate = self;
+//	[request start];
+//	self.productsRequest = request; // <<<--- This will retain the request object
+}
+
+
 -(IBAction)upgradeButtonClicked:(id)sender {
 	[self.webServiceView showCancelButton];
 	[self.webServiceView startWithTitle:@"Working..."];

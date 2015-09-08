@@ -290,12 +290,7 @@
 		[self addNetChangeLineWithName:@"Balance This Month" amount:balToday-bal30 revFlg:YES];
 		[self addNetChangeLineWithName:@"Balance Last 3 Months" amount:balToday-bal90 revFlg:YES];
 		
-		int principalPaid = (balLastYear-balToday)/12;
-		if((bal30-balToday)>principalPaid)
-			principalPaid = bal30-balToday;
-		if((bal90-balToday)>principalPaid)
-			principalPaid = (bal90-balToday)/3;
-
+		int principalPaid = [ObjectiveCScripts calculatePaydownRate:balToday balLastYear:balLastYear bal30:bal30 bal90:bal90];
 		if(principalPaid>0) {
 
 			[self.namesArray addObject:@"Debt Reduction Rate"];

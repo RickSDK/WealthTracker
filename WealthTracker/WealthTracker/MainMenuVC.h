@@ -37,17 +37,32 @@
 @property (nonatomic, strong) IBOutlet UILabel *percentUpdatedLabel;
 @property (nonatomic, strong) IBOutlet UILabel *netWorthNameLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *displaySwitch;
+@property (nonatomic, strong) IBOutlet UIButton *financesButton;
+
+@property (nonatomic, strong) IBOutlet UIButton *portfolioButton;
+@property (nonatomic, strong) IBOutlet UIButton *myPlanButton;
+@property (nonatomic, strong) IBOutlet UIButton *chartsButton;
+@property (nonatomic, strong) IBOutlet UIButton *analysisButton;
+
+@property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
+@property (nonatomic, strong) IBOutlet UIView *messageView;
+@property (nonatomic, strong) IBOutlet UILabel *messageLabel;
+
 
 
 @property (nonatomic, strong) NSMutableArray *popupArray;
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
+@property (nonatomic) int initStep;
 @property (nonatomic) BOOL expiredFlg;
+@property (nonatomic) BOOL showChartFlg;
 
 -(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)updateButtonClicked:(id)sender;
 -(IBAction)chartsButtonClicked:(id)sender;
 -(IBAction)analysisButtonClicked:(id)sender;
 -(IBAction)displaySwitchChanged:(id)sender;
+-(IBAction)financesButtonClicked:(id)sender;
+-(IBAction)okButtonClicked:(id)sender;
 
 @end

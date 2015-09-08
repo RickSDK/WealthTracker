@@ -52,6 +52,12 @@
 	
 	self.step = self.myStep;
 	
+	if(self.myStep==1) {
+		double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
+		if(amount>=500)
+			[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You already have step one completed! Press the 'Completed' switch and move on to step 2."];
+	}
+	
 	[self displayProgressLabel];
 	
 	[self displayButtons];

@@ -15,6 +15,7 @@
 #import "GraphObject.h"
 #import "GraphCell.h"
 #import "BreakdownSingleMonthVC.h"
+#import "PayoffVC.h"
 
 @interface BreakdownByMonthVC ()
 
@@ -58,6 +59,7 @@
 	if(self.tag==3 || self.type==3 || self.fieldType==1) {
 		self.topSegmentControl.selectedSegmentIndex=1;
 		self.topSegmentControl.enabled=NO;
+		self.fieldType=1;
 	}
 	if(self.tag==4 || self.type==4 || self.tag==99 || self.fieldType==3)
 		self.topSegmentControl.enabled=NO;
@@ -65,12 +67,20 @@
 	if(self.fieldType==0 && self.type==0)
 		self.topSegmentControl.enabled=NO;
 	
-	if(self.tag==11) // show debts
-		self.topSegmentControl.selectedSegmentIndex=1;
-
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
+	
+	if(self.row_id>0)
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Payoff" style:UIBarButtonItemStyleBordered target:self action:@selector(payoffDay)];
+
 
 	[self setupData];
+}
+
+-(void)payoffDay {
+	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.row_id=self.row_id;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 
@@ -100,11 +110,9 @@
 		
 		NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
 		NSString *field = [fieldTypes objectAtIndex:self.fieldType];
-		double amount = [ObjectiveCScripts changedForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:self.type];
+		double amount = [ObjectiveCScripts changedForItem:self.row_id month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:self.type];
 
-		double total = [ObjectiveCScripts amountForItem:0 month:i year:self.displayYear field:field context:self.managedObjectContext type:self.type];
-		
-		NSLog(@"+++total: %f", total);
+		double total = [ObjectiveCScripts amountForItem:self.row_id month:i year:self.displayYear field:field context:self.managedObjectContext type:self.type];
 		
 		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
 		
