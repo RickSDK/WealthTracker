@@ -9,6 +9,8 @@
 #import "ItemCell.h"
 #import "ObjectiveCScripts.h"
 
+#define kleftEdge	60
+
 @implementation ItemCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -23,33 +25,28 @@
 		self.bgView.layer.borderWidth = 1.;
 		[self.contentView addSubview:self.bgView];
 		
-		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
+		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 50, 50)];
 		self.valStatusImage.image = [UIImage imageNamed:@"red.png"];
 		self.valStatusImage.alpha=1;
 		[self.contentView addSubview:self.valStatusImage];
 		
-		self.balStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(30, 5, 25, 25)];
-		self.balStatusImage.image = [UIImage imageNamed:@"red.png"];
-		self.balStatusImage.alpha=1;
-		[self.contentView addSubview:self.balStatusImage];
-		
-		self.typeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(17, 30, 25, 25)];
+		self.typeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 17, 25, 25)];
 		self.typeImageView.image = [UIImage imageNamed:@"asset.png"];
 		self.typeImageView.alpha=1;
 		[self.contentView addSubview:self.typeImageView];
 
 		
-		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(66, 1, 163, 22)];
+		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, 1, 150, 22)];
 		self.nameLabel.font = [UIFont boldSystemFontOfSize:20];
 		self.nameLabel.adjustsFontSizeToFitWidth = YES;
-		self.nameLabel.minimumScaleFactor = .8;
+		self.nameLabel.minimumScaleFactor = .7;
 		self.nameLabel.text = @"Name";
 		self.nameLabel.textAlignment = NSTextAlignmentLeft;
 		self.nameLabel.textColor = [UIColor blackColor];
 		self.nameLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.nameLabel];
 
-		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(66, 19, 100, 22)];
+		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, 19, 100, 22)];
 		self.subTypeLabel.font = [UIFont boldSystemFontOfSize:14];
 		self.subTypeLabel.adjustsFontSizeToFitWidth = YES;
 		self.subTypeLabel.minimumScaleFactor = .8;
@@ -59,7 +56,7 @@
 		self.subTypeLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.subTypeLabel];
 
-		UILabel * amountLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(66, 36, 163, 22)];
+		UILabel * amountLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, 36, 163, 22)];
 		amountLabel1.backgroundColor = [UIColor clearColor];
 		amountLabel1.textAlignment = NSTextAlignmentLeft;
 		amountLabel1.textColor = [UIColor grayColor];
@@ -67,7 +64,7 @@
 		amountLabel1.text = @"Equity:";
 		[self.contentView addSubview:amountLabel1];
 
-		self.amountLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 36, 163, 22)];
+		self.amountLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge+44, 36, 163, 22)];
 		self.amountLabel.font = [UIFont boldSystemFontOfSize:15];
 		self.amountLabel.adjustsFontSizeToFitWidth = YES;
 		self.amountLabel.minimumScaleFactor = .8;
@@ -77,7 +74,7 @@
 		self.amountLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.amountLabel];
 		
-		UILabel * amountTopLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, -2, 140, 22)];
+		UILabel *amountTopLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, -2, 140, 22)];
 		amountTopLabel.backgroundColor = [UIColor clearColor];
 		amountTopLabel.textAlignment = NSTextAlignmentRight;
 		amountTopLabel.textColor = [UIColor grayColor];
@@ -120,6 +117,7 @@
 	}
 	return self;
 }
+
 - (void)awakeFromNib {
     // Initialization code
 }

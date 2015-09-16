@@ -16,6 +16,7 @@
 #import "GraphCell.h"
 #import "BreakdownSingleMonthVC.h"
 #import "PayoffVC.h"
+#import "RateVC.h"
 
 @interface BreakdownByMonthVC ()
 
@@ -69,8 +70,11 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-	if(self.row_id>0)
+	if(self.row_id>0) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Payoff" style:UIBarButtonItemStyleBordered target:self action:@selector(payoffDay)];
+	} else if(self.type==0 && self.fieldType==2) {
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
+	}
 
 
 	[self setupData];
@@ -80,6 +84,12 @@
 	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.row_id=self.row_id;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(void)rateVC {
+	RateVC *detailViewController = [[RateVC alloc] initWithNibName:@"RateVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
@@ -117,10 +127,13 @@
 		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
 		
 	}
-
-	self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
 	
-	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType];
+	if(self.displayTotalFlg)
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Totals by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
+	else
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
+	
+	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.displayTotalFlg];
 	
 	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 	int width = [[UIScreen mainScreen] bounds].size.width;
@@ -233,6 +246,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section==0) {
+		self.displayTotalFlg=!self.displayTotalFlg;
+		[self setupData];
+	}
 	if(indexPath.section==1 && self.row_id==0) {
 		BreakdownSingleMonthVC *detailViewController = [[BreakdownSingleMonthVC alloc] initWithNibName:@"BreakdownSingleMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;

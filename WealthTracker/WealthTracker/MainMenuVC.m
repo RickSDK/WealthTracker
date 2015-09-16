@@ -76,8 +76,6 @@
 	}
 	prevNetWorth = (prevValue-prevBalance);
 	
-	double assetChange = 0;
-	double debtChange = 0;
 	int numMonthsConfirmed = 0;
 	
 	for(int month = 1; month <= 12; month++) {
@@ -104,10 +102,6 @@
 			numMonthsConfirmed++;
 		
 		last30 = (value-balance)-prevNetWorth;
-		if(month == self.nowMonth) {
-			assetChange=value-prevValue;
-			debtChange=balance-prevBalance;
-		}
 		prevNetWorth = (value-balance);
 		prevValue = value;
 		prevBalance = balance;
@@ -118,7 +112,6 @@
 		
 	} //<-- for month
 	
-	self.initStep=-1;
 	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"financesFlg"]]) {
 		self.portfolioButton.enabled = NO;
 		self.myPlanButton.enabled = NO;
@@ -130,11 +123,14 @@
 		self.initStep=0;
 		self.graphImageView.hidden=YES;
 		self.showChartFlg=NO;
-	} else
-		self.financesButton.enabled=NO;
+	} else {
+		self.initStep=-1;
+		self.showChartFlg=YES;
+	}
 	
-	self.currentYearLabel.hidden =! self.showChartFlg;
+	self.currentYearLabel.hidden =!self.showChartFlg;
 	self.financesButton.hidden = self.showChartFlg;
+	self.financesButton.enabled = !self.showChartFlg;
 
 	[self displayBottomLabels];
 	

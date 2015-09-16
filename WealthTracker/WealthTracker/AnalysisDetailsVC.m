@@ -795,8 +795,8 @@
 		
 	} else { // positive net worth
 		if(detbToAssets>75) {
-			line1 = @"The good news is that you have a net positive net worth.";
-			line4 = @"The bad news is that is isn't by much. Follow the plan on the main menu screen to get your finances in better shape.";
+			line1 = @"The good news is that you have a positive net worth.";
+			line4 = @"The bad news is that your debts are far too high. Follow the plan on the main menu screen to get your finances in better shape.";
 		} else if(detbToAssets>50) {
 			line1 = @"Your assets are worth more than your debts, but more work is needed to pay off those debts.";
 			line4 = @"Follow the plan on the main menu screen to improve your finances situation.";

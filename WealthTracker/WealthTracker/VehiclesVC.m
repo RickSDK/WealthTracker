@@ -85,7 +85,7 @@
 			break;
   case 4:
 			self.titleLabel.text = @"Number of assets";
-			self.descLabel.text = @"Total number of investment accounts (401k, retirement, stocks, valuable art, rental property).";
+			self.descLabel.text = @"Total number of investment accounts (401k, retirement, stocks, valuable art, bank accounts, etc).";
 			break;
 			
   default:
@@ -145,7 +145,6 @@
 		cell.last30Label.text = @"";
 		cell.statement_dayLabel.text = obj.statement_day;
 		cell.valStatusImage.image=[UIImage imageNamed:@"green.png"];
-		cell.balStatusImage.image=[UIImage imageNamed:@"green.png"];
 	} else {
 		cell.nameLabel.text=[NSString stringWithFormat:@"%@ #%d", [ObjectiveCScripts typeNameForType:self.type], (int)indexPath.row+1];
 		cell.amountLabel.text = @"";
@@ -153,7 +152,6 @@
 		cell.last30Label.text = @"";
 		cell.statement_dayLabel.text = @"";
 		cell.valStatusImage.image=[UIImage imageNamed:@"red.png"];
-		cell.balStatusImage.image=[UIImage imageNamed:@"red.png"];
 	}
 	
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:[ObjectiveCScripts typeNameForType:self.type]];

@@ -11,7 +11,6 @@
 @interface ItemCell : UITableViewCell
 
 @property (nonatomic, retain) UIImageView *valStatusImage;
-@property (nonatomic, retain) UIImageView *balStatusImage;
 @property (nonatomic, retain) UIImageView *typeImageView;
 @property (nonatomic, retain) UIView *bgView;
 @property (nonatomic, retain) UILabel *nameLabel;

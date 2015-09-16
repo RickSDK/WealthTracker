@@ -35,6 +35,7 @@
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int fieldType;
+@property (nonatomic) BOOL displayTotalFlg;
 
 -(IBAction)topSegmentChanged:(id)sender;
 -(IBAction)prevYearButtonPressed:(id)sender;

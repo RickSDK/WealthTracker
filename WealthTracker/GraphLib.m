@@ -1250,7 +1250,7 @@
 	CGContextStrokePath(c);
 }
 
-+(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType {
++(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType displayTotalFlg:(BOOL)displayTotalFlg {
 	
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	month-=5;
@@ -1273,8 +1273,11 @@
 		double amount=[self getAmountForMonth:month year:year type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id fieldType:fieldType];
 		double prevAmount=[self getAmountForMonth:prevMonth year:prevYear type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id fieldType:fieldType];
 		
-		NSLog(@"+++%d %f", i, amount);
-		graphObject.amount=amount-prevAmount;
+		if(displayTotalFlg)
+			graphObject.amount=amount;
+		else
+			graphObject.amount=amount-prevAmount;
+		
 		graphObject.reverseColorFlg = reverseColorFlg;
 		[graphArray addObject:graphObject];
 		prevYear=year;

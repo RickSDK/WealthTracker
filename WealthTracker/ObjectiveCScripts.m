@@ -757,6 +757,26 @@
 	return @"Error";
 }
 
++(UIImage *)imageForStatus:(int)status {
+	if(status == 1)
+		return [UIImage imageNamed:@"yellow.png"];
+	else if(status == 2)
+		return [UIImage imageNamed:@"red.png"];
+	
+	return [UIImage imageNamed:@"green.png"];
+}
+
++(int)nowYear {
+	return [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+}
+
++(int)nowMonth {
+	return [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+}
+
+
+
+
 
 
 

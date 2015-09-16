@@ -158,9 +158,9 @@
 			break;
   case 2: // vehicles
 			self.topDescLabel.text = @"Vehicle: Enter information related to this vehicle.";
-			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: Ford Explorer" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
+			[self insertObjectWithTitle:@"name" desc:@"Enter a name. Can be anything. Ex: Ford Explorer" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry]) {
-				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance? (approx amount if you don't know for sure)" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
 			}
 			[self insertObjectWithTitle:@"payment_type" desc:@"Own and paid for, Finance or Lease?" value:self.itemObject.payment_type flag:@"N" fieldType:0 listNumber:2];
 			BOOL carHasBalance=YES;
@@ -180,16 +180,16 @@
 			
   case 3: // debts
 			self.topDescLabel.text = @"Debt: Enter information related to this debt.";
-			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: Visa, Student Loan, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
+			[self insertObjectWithTitle:@"name" desc:@"Enter a name. Can be anything. Ex: Visa, Student Loan, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
-				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"loan_balance" desc:@"What is the current Loan balance? (approx amount if you don't know for sure)" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"interest_rate" desc:@"What is the interest Rate?" value:self.itemObject.interest_rate flag:@"N" fieldType:3 listNumber:0];
 			[self insertObjectWithTitle:@"statement_day" desc:@"What day of the month does your statement arrive?" value:statement_day flag:@"Y" fieldType:2 listNumber:0];
 			
 			break;
   case 4: // assets
 			self.topDescLabel.text = @"Asset: Enter information related to this asset.";
-			[self insertObjectWithTitle:@"name" desc:@"Enter a name. ex: 401k, Stocks, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
+			[self insertObjectWithTitle:@"name" desc:@"Enter a name. Can be anything. Ex: 401k, Stocks, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
 				[self insertObjectWithTitle:@"value" desc:@"What is the current dollar value?" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"statement_day" desc:@"What day of the month does your statement arrive?" value:statement_day flag:@"Y" fieldType:2 listNumber:0];

@@ -92,7 +92,6 @@
 	[self.assetArray removeAllObjects];
 	[self.amountArray removeAllObjects];
 	
-//	BOOL displayChangeFlg = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
 	BOOL displayChangeFlg = self.topSegment.selectedSegmentIndex==0;
 	
 	if(displayChangeFlg) {
@@ -262,7 +261,7 @@
 	return obj;
 }
 
-
+/*
 -(UIImage *)statusImageForObj:(ItemObject *)obj valCheck:(BOOL)valCheck {
 	if(obj.status==1)
 		return [UIImage imageNamed:@"yellow.png"];
@@ -278,7 +277,7 @@
 			return [UIImage imageNamed:@"red.png"];
 	}
 }
-
+*/
 
 
 -(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj {
@@ -287,9 +286,6 @@
 	
 	double amount = [obj.value doubleValue]-[obj.loan_balance doubleValue];
 	double last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-//	if(amount==0) {
-//		last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-//	}
 	
 	if(last30>0 && obj.status==0)
 		cell.bgView.layer.borderColor = [UIColor colorWithRed:0 green:.6 blue:0 alpha:1].CGColor;
@@ -299,8 +295,7 @@
 	[ObjectiveCScripts displayMoneyLabel:cell.amountLabel amount:amount lightFlg:NO revFlg:NO];
 	[ObjectiveCScripts displayNetChangeLabel:cell.last30Label amount:last30 lightFlg:NO revFlg:NO];
 
-	cell.valStatusImage.image = [self statusImageForObj:obj valCheck:YES];
-	cell.balStatusImage.image = [self statusImageForObj:obj valCheck:NO];
+	cell.valStatusImage.image = [ObjectiveCScripts imageForStatus:obj.status];
 	
 	if([obj.statement_day intValue]==0) {
 		cell.statement_dayLabel.text=@"";
@@ -310,12 +305,6 @@
 		cell.statement_dayLabel2.text = @"Statement Day";
 	}
 	
-	BOOL hideAssetFlg = [@"Asset" isEqualToString:obj.type];
-	cell.balStatusImage.hidden=hideAssetFlg;
-	
-	BOOL hideDebtFlg = [@"Debt" isEqualToString:obj.type];
-	cell.valStatusImage.hidden=hideDebtFlg;
-
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:obj.type];
 	
 }

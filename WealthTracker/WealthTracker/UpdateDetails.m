@@ -153,12 +153,7 @@
 -(void)displayTopBar {
 	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMMM"];
 	
-	if(self.itemObject.status==1)
-		self.statusImageView.image=[UIImage imageNamed:@"yellow.png"];
-	else if(self.itemObject.status==2)
-		self.statusImageView.image=[UIImage imageNamed:@"red.png"];
-	else
-		self.statusImageView.image=[UIImage imageNamed:@"green.png"];
+	self.statusImageView.image=[ObjectiveCScripts imageForStatus:self.itemObject.status];
 	
 	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:self.nowMonth year:self.nowYear field:nil context:self.managedObjectContext numMonths:1 type:0];
 	[ObjectiveCScripts displayNetChangeLabel:self.amountLabel amount:equityChange lightFlg:YES revFlg:NO];
@@ -422,7 +417,7 @@
 			if(type==3)
 				reverseColorFlg=YES; // debt
 
-			NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0];
+			NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0 displayTotalFlg:NO];
 			
 			cell.graphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 		} else {

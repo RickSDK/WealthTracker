@@ -67,6 +67,8 @@
 		6B416F261B50CF81009C9834 /* MoneyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B416F251B50CF81009C9834 /* MoneyCell.m */; };
 		6B416F2A1B519211009C9834 /* VehiclesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B416F281B519211009C9834 /* VehiclesVC.m */; };
 		6B416F2B1B519211009C9834 /* VehiclesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B416F291B519211009C9834 /* VehiclesVC.xib */; };
+		6B42B0021BA8BBEA00CC649C /* RateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42B0001BA8BBEA00CC649C /* RateVC.m */; };
+		6B42B0031BA8BBEA00CC649C /* RateVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B0011BA8BBEA00CC649C /* RateVC.xib */; };
 		6B5B87F01B668EF600BBE741 /* asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EC1B668EF600BBE741 /* asset.png */; };
 		6B5B87F11B668EF600BBE741 /* debt.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87ED1B668EF600BBE741 /* debt.png */; };
 		6B5B87F21B668EF600BBE741 /* real_estate.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EE1B668EF600BBE741 /* real_estate.png */; };
@@ -243,6 +245,9 @@
 		6B416F271B519211009C9834 /* VehiclesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VehiclesVC.h; sourceTree = "<group>"; };
 		6B416F281B519211009C9834 /* VehiclesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VehiclesVC.m; sourceTree = "<group>"; };
 		6B416F291B519211009C9834 /* VehiclesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VehiclesVC.xib; sourceTree = "<group>"; };
+		6B42AFFF1BA8BBEA00CC649C /* RateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RateVC.h; sourceTree = "<group>"; };
+		6B42B0001BA8BBEA00CC649C /* RateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RateVC.m; sourceTree = "<group>"; };
+		6B42B0011BA8BBEA00CC649C /* RateVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RateVC.xib; sourceTree = "<group>"; };
 		6B5B87EC1B668EF600BBE741 /* asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = asset.png; sourceTree = "<group>"; };
 		6B5B87ED1B668EF600BBE741 /* debt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = debt.png; sourceTree = "<group>"; };
 		6B5B87EE1B668EF600BBE741 /* real_estate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = real_estate.png; sourceTree = "<group>"; };
@@ -453,6 +458,9 @@
 				6BDCEF161B5FFCD500DDA3AC /* BreakdownByMonthVC.h */,
 				6BDCEF171B5FFCD500DDA3AC /* BreakdownByMonthVC.m */,
 				6BDCEF181B5FFCD500DDA3AC /* BreakdownByMonthVC.xib */,
+				6B42AFFF1BA8BBEA00CC649C /* RateVC.h */,
+				6B42B0001BA8BBEA00CC649C /* RateVC.m */,
+				6B42B0011BA8BBEA00CC649C /* RateVC.xib */,
 				6BC306591B8FDEEF00E10C9F /* PayoffVC.h */,
 				6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */,
 				6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */,
@@ -748,6 +756,7 @@
 				6B644CB41B68201800483F98 /* LoginVC.xib in Resources */,
 				6B5B87F01B668EF600BBE741 /* asset.png in Resources */,
 				6B416EDA1B506D53009C9834 /* LaunchScreen.xib in Resources */,
+				6B42B0031BA8BBEA00CC649C /* RateVC.xib in Resources */,
 				6BB354E71B744C1F0003987A /* pieChart.png in Resources */,
 				6B5B87F21B668EF600BBE741 /* real_estate.png in Resources */,
 				6B3C18061B6FEE170039733B /* CashFlowEditItemVC.xib in Resources */,
@@ -842,6 +851,7 @@
 				6BE6B2F31B6A855000C434BA /* InfoVC.m in Sources */,
 				6B8EB98B1B51D75A00F8A20B /* ItemObject.m in Sources */,
 				6B2E24091B58268E00CC2851 /* GraphCell.m in Sources */,
+				6B42B0021BA8BBEA00CC649C /* RateVC.m in Sources */,
 				6B416F181B509FC2009C9834 /* WebServiceView.m in Sources */,
 				6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */,
 				6B416EF21B506E0B009C9834 /* MainMenuVC.m in Sources */,
