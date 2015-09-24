@@ -101,7 +101,7 @@
                     <color key="backgroundColor" red="0.82178730870000005" green="0.82178730870000005" blue="0.82178730870000005" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="31a-3c-T3c">
-                    <rect key="frame" x="23" y="0.0" width="275" height="29"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
                         <segment title="Net Change"/>

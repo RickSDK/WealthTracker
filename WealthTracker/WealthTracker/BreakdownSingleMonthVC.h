@@ -15,6 +15,8 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *topSegmentControl;
 @property (nonatomic, strong) IBOutlet UILabel *typeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *fieldTypeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *monthLabel;
+@property (nonatomic, strong) IBOutlet UIButton *nextButton;
 
 @property (nonatomic, strong) NSMutableArray *fieldNamesArray;
 @property (nonatomic, strong) NSMutableArray *fieldValuesArray;
@@ -31,5 +33,7 @@
 @property (nonatomic) BOOL pieChartFlg;
 
 -(IBAction)topSegmentChanged:(id)sender;
+-(IBAction)prevButtonClicked:(id)sender;
+-(IBAction)nextButtonClicked:(id)sender;
 
 @end

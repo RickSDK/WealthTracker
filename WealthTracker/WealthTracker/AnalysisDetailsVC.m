@@ -16,6 +16,7 @@
 #import "GraphLib.h"
 #import "GraphObject.h"
 #import "ValueObj.h"
+#import "TipsVC.h"
 
 #define kProportionList	0.5
 #define kProportionAnalysis	0.6
@@ -72,7 +73,7 @@
 	self.displayYear=self.nowYear;
 	self.displayMonth=self.nowMonth;
 
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Breakdown" style:UIBarButtonItemStyleBordered target:self action:@selector(breakdownButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Strategy" style:UIBarButtonItemStyleBordered target:self action:@selector(tipsButtonPressed)];
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
@@ -88,6 +89,12 @@
 
 -(IBAction)segmentChanged:(id)sender {
 	[self setupData];
+}
+
+-(void)tipsButtonPressed {
+	TipsVC *detailViewController = [[TipsVC alloc] initWithNibName:@"TipsVC" bundle:nil];
+	detailViewController.type=self.tag;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(void)breakdownButtonPressed {

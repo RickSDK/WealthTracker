@@ -69,6 +69,10 @@
 		6B416F2B1B519211009C9834 /* VehiclesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B416F291B519211009C9834 /* VehiclesVC.xib */; };
 		6B42B0021BA8BBEA00CC649C /* RateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42B0001BA8BBEA00CC649C /* RateVC.m */; };
 		6B42B0031BA8BBEA00CC649C /* RateVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B0011BA8BBEA00CC649C /* RateVC.xib */; };
+		6B42B0071BAA2ACB00CC649C /* RetirementVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42B0051BAA2ACB00CC649C /* RetirementVC.m */; };
+		6B42B0081BAA2ACB00CC649C /* RetirementVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B0061BAA2ACB00CC649C /* RetirementVC.xib */; };
+		6B42B00C1BAB309400CC649C /* TipsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42B00A1BAB309400CC649C /* TipsVC.m */; };
+		6B42B00D1BAB309400CC649C /* TipsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B00B1BAB309400CC649C /* TipsVC.xib */; };
 		6B5B87F01B668EF600BBE741 /* asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EC1B668EF600BBE741 /* asset.png */; };
 		6B5B87F11B668EF600BBE741 /* debt.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87ED1B668EF600BBE741 /* debt.png */; };
 		6B5B87F21B668EF600BBE741 /* real_estate.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EE1B668EF600BBE741 /* real_estate.png */; };
@@ -248,6 +252,12 @@
 		6B42AFFF1BA8BBEA00CC649C /* RateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RateVC.h; sourceTree = "<group>"; };
 		6B42B0001BA8BBEA00CC649C /* RateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RateVC.m; sourceTree = "<group>"; };
 		6B42B0011BA8BBEA00CC649C /* RateVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RateVC.xib; sourceTree = "<group>"; };
+		6B42B0041BAA2ACB00CC649C /* RetirementVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetirementVC.h; sourceTree = "<group>"; };
+		6B42B0051BAA2ACB00CC649C /* RetirementVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetirementVC.m; sourceTree = "<group>"; };
+		6B42B0061BAA2ACB00CC649C /* RetirementVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RetirementVC.xib; sourceTree = "<group>"; };
+		6B42B0091BAB309400CC649C /* TipsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TipsVC.h; sourceTree = "<group>"; };
+		6B42B00A1BAB309400CC649C /* TipsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TipsVC.m; sourceTree = "<group>"; };
+		6B42B00B1BAB309400CC649C /* TipsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TipsVC.xib; sourceTree = "<group>"; };
 		6B5B87EC1B668EF600BBE741 /* asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = asset.png; sourceTree = "<group>"; };
 		6B5B87ED1B668EF600BBE741 /* debt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = debt.png; sourceTree = "<group>"; };
 		6B5B87EE1B668EF600BBE741 /* real_estate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = real_estate.png; sourceTree = "<group>"; };
@@ -470,12 +480,18 @@
 				6B2E23F51B556FAB00CC2851 /* AnalysisVC.h */,
 				6B2E23F61B556FAB00CC2851 /* AnalysisVC.m */,
 				6B2E23F71B556FAB00CC2851 /* AnalysisVC.xib */,
+				6B42B0041BAA2ACB00CC649C /* RetirementVC.h */,
+				6B42B0051BAA2ACB00CC649C /* RetirementVC.m */,
+				6B42B0061BAA2ACB00CC649C /* RetirementVC.xib */,
 				6B2E23FA1B55733000CC2851 /* MyPlanVC.h */,
 				6B2E23FB1B55733000CC2851 /* MyPlanVC.m */,
 				6B2E23FC1B55733000CC2851 /* MyPlanVC.xib */,
 				6B2E23FF1B55BB2200CC2851 /* AnalysisDetailsVC.h */,
 				6B2E24001B55BB2200CC2851 /* AnalysisDetailsVC.m */,
 				6B2E24011B55BB2200CC2851 /* AnalysisDetailsVC.xib */,
+				6B42B0091BAB309400CC649C /* TipsVC.h */,
+				6B42B00A1BAB309400CC649C /* TipsVC.m */,
+				6B42B00B1BAB309400CC649C /* TipsVC.xib */,
 				6B04442B1B58973A001E7007 /* ChartsVC.h */,
 				6B04442C1B58973A001E7007 /* ChartsVC.m */,
 				6B04442D1B58973A001E7007 /* ChartsVC.xib */,
@@ -766,6 +782,7 @@
 				6B416EF81B507031009C9834 /* yellowButton.png in Resources */,
 				6B9674001B6B2A5900641C7F /* profile.jpg in Resources */,
 				6B2E23E21B54372B00CC2851 /* MainMenuVC.xib in Resources */,
+				6B42B00D1BAB309400CC649C /* TipsVC.xib in Resources */,
 				6B644CC51B6828C100483F98 /* activityPopup.png in Resources */,
 				6BB354E61B744C1F0003987A /* lineChart.png in Resources */,
 				6B2E23F91B556FAB00CC2851 /* AnalysisVC.xib in Resources */,
@@ -774,6 +791,7 @@
 				6B416F041B508DFB009C9834 /* yellow.png in Resources */,
 				6B416F051B508DFB009C9834 /* red.png in Resources */,
 				6BC3065D1B8FDEEF00E10C9F /* PayoffVC.xib in Resources */,
+				6B42B0081BAA2ACB00CC649C /* RetirementVC.xib in Resources */,
 				6BFE31BB1B73E143002F2343 /* checkMark.jpg in Resources */,
 				6B63899F1B7BA2A100260656 /* Icon-152.png in Resources */,
 				6B38E3E01B6C678900EF8D40 /* karma.png in Resources */,
@@ -855,6 +873,7 @@
 				6B416F181B509FC2009C9834 /* WebServiceView.m in Sources */,
 				6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */,
 				6B416EF21B506E0B009C9834 /* MainMenuVC.m in Sources */,
+				6B42B00C1BAB309400CC649C /* TipsVC.m in Sources */,
 				6B2E23EB1B545B0B00CC2851 /* UpdateDetails.m in Sources */,
 				6BC3065C1B8FDEEF00E10C9F /* PayoffVC.m in Sources */,
 				6BE8EAF61B618B66005510F6 /* UpdateSalaryVC.m in Sources */,
@@ -863,6 +882,7 @@
 				6B8EB99C1B52272A00F8A20B /* NSDate+ATTDate.m in Sources */,
 				6B38E3DB1B6C565000EF8D40 /* CreditScoreTracker.m in Sources */,
 				6B416EC61B506D52009C9834 /* main.m in Sources */,
+				6B42B0071BAA2ACB00CC649C /* RetirementVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

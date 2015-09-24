@@ -35,11 +35,9 @@
 	self.fieldColorsArray = [[NSMutableArray alloc] init];
 	self.dataArray = [[NSMutableArray alloc] init];
 	
-//	NSLog(@"+++type: %d, fieldType: %d", self.type, self.fieldType);
-	[self setTitle:[NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear]];
-	self.typeLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
-	self.fieldTypeLabel.text = [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType];
-	
+	self.nowYear = [ObjectiveCScripts nowYear];
+	self.nowMonth = [ObjectiveCScripts nowMonth];
+	[self setTitle:@"By Month"];
 	[self setupData];
 }
 
@@ -49,6 +47,11 @@
 	[self.fieldColorsArray removeAllObjects];
 	[self.dataArray removeAllObjects];
 	
+	self.nextButton.enabled = (self.displayYear<self.nowYear || self.displayMonth < self.nowMonth);
+	self.monthLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+	self.typeLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
+	self.fieldTypeLabel.text = [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType];
+
 	NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
 	NSString *field = [fieldTypes objectAtIndex:self.fieldType];
 	
@@ -86,6 +89,23 @@
 
 	
 	[self.mainTableView reloadData];
+}
+
+-(IBAction)prevButtonClicked:(id)sender {
+	self.displayMonth--;
+	if(self.displayMonth<1) {
+		self.displayMonth=12;
+		self.displayYear--;
+	}
+	[self setupData];
+}
+-(IBAction)nextButtonClicked:(id)sender {
+	self.displayMonth++;
+	if(self.displayMonth>12) {
+		self.displayMonth=1;
+		self.displayYear++;
+	}
+	[self setupData];
 }
 
 

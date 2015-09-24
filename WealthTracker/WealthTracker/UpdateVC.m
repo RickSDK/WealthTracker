@@ -261,25 +261,6 @@
 	return obj;
 }
 
-/*
--(UIImage *)statusImageForObj:(ItemObject *)obj valCheck:(BOOL)valCheck {
-	if(obj.status==1)
-		return [UIImage imageNamed:@"yellow.png"];
-	if(valCheck) {
-		if(obj.val_confirm_flg)
-			return [UIImage imageNamed:@"green.png"];
-		else
-			return [UIImage imageNamed:@"red.png"];
-	} else {
-		if(obj.bal_confirm_flg)
-			return [UIImage imageNamed:@"green.png"];
-		else
-			return [UIImage imageNamed:@"red.png"];
-	}
-}
-*/
-
-
 -(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj {
 	cell.nameLabel.text = obj.name;
 	cell.subTypeLabel.text = obj.sub_type;

@@ -11,6 +11,7 @@
 #import "AnalysisDetailsVC.h"
 #import "CoreDataLib.h"
 #import "ObjectiveCScripts.h"
+#import "RetirementVC.h"
 
 @interface AnalysisVC ()
 
@@ -42,7 +43,15 @@
 	self.ButtonsView.layer.borderColor = [UIColor blackColor].CGColor;
 	self.ButtonsView.layer.borderWidth = 3.0;
 	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retirement" style:UIBarButtonItemStyleBordered target:self action:@selector(retirementButtonPressed)];
+
 	[self checkStatusLights];
+}
+
+-(void)retirementButtonPressed {
+	RetirementVC *detailViewController = [[RetirementVC alloc] initWithNibName:@"RetirementVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(void)checkStatusLights {
