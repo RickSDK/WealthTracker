@@ -57,6 +57,11 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
+	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+																					 action:@selector(handleSwipeLeft:)];
+	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+	[self.mainTableView addGestureRecognizer:recognizer];
+
 	self.topSegment.layer.backgroundColor = [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0].CGColor;
 	self.topSegment.layer.cornerRadius = 7;
 	BOOL displayChangeFlg = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
@@ -66,7 +71,29 @@
 }
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
-	[self.navigationController popViewControllerAnimated:YES];
+	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
+	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
+	if(indexPath.section==0)
+		[self.navigationController popViewControllerAnimated:YES];
+	else {
+		self.swipeIndexPath=indexPath;
+		self.swipePos++;
+		if(self.swipePos>1)
+			self.swipePos=1;
+		[self.mainTableView reloadData];
+	}
+}
+
+-(void)handleSwipeLeft:(UISwipeGestureRecognizer *)gestureRecognizer {
+	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
+	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
+	if(indexPath.section>0) {
+		self.swipeIndexPath=indexPath;
+		self.swipePos--;
+		if(self.swipePos<-1)
+			self.swipePos=-1;
+		[self.mainTableView reloadData];
+	}
 }
 
 
@@ -227,10 +254,23 @@
 			cell.bgView.backgroundColor = [UIColor yellowColor];
 		
 		cell.textLabel.textColor = [UIColor blackColor];
-		cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
 		
 		
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+		
+		int offset=0;
+		if(self.swipeIndexPath.section==indexPath.section && self.swipeIndexPath.row==indexPath.row ) {
+			if(self.swipePos>0) {
+				offset=40;
+			}
+			if(self.swipePos<0) {
+				offset=-40;
+			}
+			cell.bgView.frame = CGRectMake(2+offset, 2, 316, 55);
+		}
+
+		cell.accessoryType = (offset==0)?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
+
 		return cell;
 	}
 }
@@ -315,6 +355,13 @@
 		[self setupData];
 		return;
 	}
+	
+	if(self.swipePos!=0) {
+		self.swipePos=0;
+		[self.mainTableView reloadData];
+		return;
+	}
+	
 	if(self.expiredFlg)
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {

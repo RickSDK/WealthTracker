@@ -15,7 +15,7 @@
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
 		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, 316, 106)];
-		self.bgView.backgroundColor = [UIColor colorWithWhite:.4 alpha:1];
+		self.bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
 		self.bgView.layer.cornerRadius = 8.0;
 		self.bgView.layer.masksToBounds = YES;
 		self.bgView.layer.borderColor = [UIColor blackColor].CGColor;
@@ -33,7 +33,7 @@
 		self.titleLabel.minimumScaleFactor = .8;
 		self.titleLabel.text = @"Title";
 		self.titleLabel.textAlignment = NSTextAlignmentLeft;
-		self.titleLabel.textColor = [UIColor yellowColor];
+		self.titleLabel.textColor = [UIColor blackColor];
 		self.titleLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.titleLabel];
 		
@@ -43,7 +43,7 @@
 		self.amountLabel.minimumScaleFactor = .8;
 		self.amountLabel.text = @"Amount";
 		self.amountLabel.textAlignment = NSTextAlignmentLeft;
-		self.amountLabel.textColor = [UIColor greenColor];
+		self.amountLabel.textColor = [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
 		self.amountLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.amountLabel];
 		
@@ -54,7 +54,7 @@
 		self.descLabel.text = @"Desc";
 		self.descLabel.numberOfLines=3;
 		self.descLabel.textAlignment = NSTextAlignmentLeft;
-		self.descLabel.textColor = [UIColor whiteColor];
+		self.descLabel.textColor = [UIColor colorWithRed:0 green:.2 blue:.6 alpha:1];
 		self.descLabel.backgroundColor = [UIColor clearColor];
 		[self.contentView addSubview:self.descLabel];
 		

@@ -34,6 +34,8 @@
 @property (nonatomic) int nowMonth;
 @property (nonatomic) int nowDay;
 @property (nonatomic) int nextItemDue;
+@property (nonatomic) int swipePos;
+@property (nonatomic, strong) NSIndexPath *swipeIndexPath;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL displayPieFlg;
 

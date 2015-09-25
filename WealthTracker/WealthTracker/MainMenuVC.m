@@ -45,6 +45,7 @@
 	self.displaySwitch.on = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
 	
 	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
+	self.percentUpdatedLabel.hidden = (status==0);
 	
 	self.updateNumberLabel.text=@"";
 	
@@ -55,6 +56,9 @@
 		self.updateStatusImageView.image = [UIImage imageNamed:@"green.png"];
 	else
 		self.updateStatusImageView.image = [UIImage imageNamed:@"red.png"];
+	
+	if(status==0)
+		self.updateStatusImageView.hidden=YES;
 	
 	self.needsUpdatingLabel.text = [NSString stringWithFormat:@"%d", status];
 	
@@ -243,6 +247,7 @@
 	}
 	
 	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMMM, yyyy"];
+	self.monthLabel.text = @"";
 	self.netWorthView.backgroundColor=[ObjectiveCScripts mediumkColor];
 	self.botView.backgroundColor=[ObjectiveCScripts mediumkColor];
 
