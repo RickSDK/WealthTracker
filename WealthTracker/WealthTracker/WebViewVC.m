@@ -107,10 +107,11 @@
 	if(urlString.length>3 && [@"www" isEqualToString:[urlString substringToIndex:3]]) {
 		urlString = [NSString stringWithFormat:@"http://%@", urlString];
 	}
+	urlString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@""];
 	NSLog(@"Go! %@", urlString);
 	NSURL *url = [NSURL URLWithString:urlString];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
-	[self.mainWebView loadRequest:request];
+
 	[self.urlTextField resignFirstResponder];
 	self.messageLabel.hidden=YES;
 	[self.activityIndicator startAnimating];
@@ -129,6 +130,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 
 {
+	NSLog(@"shouldStartLoadWithRequest");
 	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
 		NSString *urlString = [request.mainDocumentURL absoluteString];
 		NSLog(@"link clicked = %@", urlString);
@@ -137,11 +139,13 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
+	NSLog(@"webViewDidStartLoad");
 	if([webView.request mainDocumentURL])
 		NSLog(@"Requst url: %@", [webView.request mainDocumentURL]);
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+	NSLog(@"webViewDidFinishLoad");
 	[self.activityIndicator stopAnimating];
 	self.webGoButton.enabled=YES;
 	if([webView.request mainDocumentURL]) {

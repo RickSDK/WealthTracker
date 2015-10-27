@@ -44,8 +44,6 @@
 		[self.graphSegmentIndexes addObject:@"0"];
 	}
 
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
-
 	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
 																					 action:@selector(handleSwipeLeft:)];
 	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
@@ -246,12 +244,32 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	int index = [[self.graphSegmentIndexes objectAtIndex:indexPath.section] intValue];
-	index++;
-	if(index>2)
-		index=0;
-	[self.graphSegmentIndexes replaceObjectAtIndex:indexPath.section withObject:[NSString stringWithFormat:@"%d", index]];
-	[self.mainTableView reloadData];
+	int type=(int)indexPath.section;
+	int fieldType=0;
+	if(type==3) {
+		type=0;
+		fieldType=3;
+	}
+	if(type==4) {
+		type=0;
+		fieldType=1;
+	}
+	
+	NSArray *dates = [[self.graphDates objectAtIndex:indexPath.section] componentsSeparatedByString:@"|"];
+	int displayYear = [[dates objectAtIndex:0] intValue];
+	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.type=type;
+	detailViewController.fieldType=fieldType;
+	detailViewController.displayYear=displayYear;
+	if(indexPath.section==3)
+		detailViewController.tag = 99; // interest
+	else if(indexPath.section==4)
+		detailViewController.tag=3; // debt
+	else
+		detailViewController.tag = (int)indexPath.section;
+	
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -260,8 +278,10 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-	return 10;
+	return 1;
 }
+
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return [ObjectiveCScripts chartHeightForSize:290];

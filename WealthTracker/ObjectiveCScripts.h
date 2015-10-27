@@ -62,5 +62,6 @@
 +(UIImage *)imageForStatus:(int)status;
 +(int)nowYear;
 +(int)nowMonth;
++(UIColor *)colorForType:(int)type;
 
 @end

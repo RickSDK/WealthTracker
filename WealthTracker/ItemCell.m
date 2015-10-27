@@ -18,13 +18,17 @@
 {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
-		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, 316, 55)];
+		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, 316, 60)];
 		self.bgView.backgroundColor=[UIColor whiteColor];
 		self.bgView.layer.cornerRadius = 7.0;
 		self.bgView.layer.masksToBounds = YES;				// clips background images to rounded corners
 		self.bgView.layer.borderColor = [ObjectiveCScripts mediumkColor].CGColor;
 		self.bgView.layer.borderWidth = 1.;
 		[self.contentView addSubview:self.bgView];
+		
+		self.redLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 316, 5)];
+		self.redLineView.backgroundColor=[UIColor redColor];
+		[self.bgView addSubview:self.redLineView];
 		
 		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 50, 50)];
 		self.valStatusImage.image = [UIImage imageNamed:@"red.png"];

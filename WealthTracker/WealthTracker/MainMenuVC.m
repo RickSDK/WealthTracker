@@ -20,7 +20,7 @@
 #import "OptionsVC.h"
 #import "InfoVC.h"
 #import "MyPlanVC.h"
-
+#import "GraphObject.h"
 
 @interface MainMenuVC ()
 
@@ -82,6 +82,8 @@
 	
 	int numMonthsConfirmed = 0;
 	
+	NSMutableArray *graphObjects = [[NSMutableArray alloc] init];
+	
 	for(int month = 1; month <= 12; month++) {
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", self.nowYear, month];
 		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
@@ -111,6 +113,7 @@
 		prevBalance = balance;
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
+		[graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO]];
 		
 		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, self.nowYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
 		
@@ -152,26 +155,31 @@
 	
 	
 	self.currentYearLabel.text = [NSString stringWithFormat:@"%d", self.nowYear];
-	self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:self.nowMonth];
+	self.graphImageView.image = [GraphLib graphBarsWithItems:graphObjects];
+//	self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:self.nowMonth];
 }
 
 -(void)displayBottomLabels {
-	if(self.displaySwitch.on) {
-		self.netWorthNameLabel.text = @"Change This Month";
-		double asset_value = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext numMonths:1 type:0];
-		double balance_owed = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
-		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
-		[ObjectiveCScripts displayNetChangeLabel:self.assetsLabel amount:asset_value lightFlg:YES revFlg:NO];
-		[ObjectiveCScripts displayNetChangeLabel:self.debtsLabel amount:balance_owed lightFlg:YES revFlg:YES];
-	} else {
-		self.netWorthNameLabel.text = @"Net Worth";
-		double asset_value = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext type:0];
-		double balance_owed = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext type:0];
-		
-		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
-		[ObjectiveCScripts displayMoneyLabel:self.assetsLabel amount:asset_value lightFlg:YES revFlg:NO];
-		[ObjectiveCScripts displayMoneyLabel:self.debtsLabel amount:balance_owed lightFlg:YES revFlg:YES];
-	}
+	
+	self.netWorthNameLabel.text = @"Net Worth";
+	self.assetNameLabel.text = @"Assets";
+	self.debtNameLabel.text = @"Debts";
+	double asset_value1 = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext type:0];
+	double balance_owed1 = [ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext type:0];
+	
+	[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:asset_value1-balance_owed1 lightFlg:YES revFlg:NO];
+	[ObjectiveCScripts displayMoneyLabel:self.assetsLabel amount:asset_value1 lightFlg:YES revFlg:NO];
+	[ObjectiveCScripts displayMoneyLabel:self.debtsLabel amount:balance_owed1 lightFlg:YES revFlg:YES];
+
+	
+	double asset_value = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"asset_value" context:self.managedObjectContext numMonths:1 type:0];
+	double balance_owed = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
+	[ObjectiveCScripts displayNetChangeLabel:self.netWorthChangeLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
+
+	self.monthBotLabel.text = [NSString stringWithFormat:@"(%@)", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
+	
+	[ObjectiveCScripts displayNetChangeLabel:self.assetChangeLabel amount:asset_value lightFlg:YES revFlg:NO];
+	[ObjectiveCScripts displayNetChangeLabel:self.debtChangeLabel amount:balance_owed lightFlg:YES revFlg:YES];
 }
 
 -(NSString *)boolToString:(BOOL)flag {
@@ -392,7 +400,7 @@
 		else
 			self.popUpView.backgroundColor=[UIColor colorWithWhite:.9 alpha:1];
 
-		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:month];
+//		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:month];
 
 		self.popUpView.center=CGPointMake(x, point.y-150);
 		self.popUpView.hidden=NO;
@@ -485,7 +493,7 @@
 			self.graphImageView.hidden=NO;
 			self.arrowImage.center = CGPointMake(self.netWorthView.center.x, self.analysisButton.frame.origin.y+30);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
-			self.messageLabel.text = @"The graph on the main menu tracks your debts and assets on a monthly basis. This chart will start making more sense once you have been using Wealth Tracker for a few months.";
+			self.messageLabel.text = @"The graph on the main menu tracks your net worth on a monthly basis. This chart will start making more sense once you have been using Wealth Tracker for a few months.";
 			break;
   case 8:
 			self.arrowImage.hidden=YES;

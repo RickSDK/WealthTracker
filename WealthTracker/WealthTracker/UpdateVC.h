@@ -35,6 +35,7 @@
 @property (nonatomic) int nowDay;
 @property (nonatomic) int nextItemDue;
 @property (nonatomic) int swipePos;
+@property (nonatomic) double maxBalance;
 @property (nonatomic, strong) NSIndexPath *swipeIndexPath;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL displayPieFlg;

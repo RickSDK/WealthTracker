@@ -16,6 +16,7 @@
 #import "NSDate+ATTDate.h"
 #import "GraphLib.h"
 #import "GraphObject.h"
+#import "BreakdownByMonthVC.h"
 
 @interface UpdateVC ()
 
@@ -49,6 +50,7 @@
 	
 	self.topImageView = [[UIImageView alloc] init];
 	
+
 	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM, YYYY"];
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -64,10 +66,19 @@
 
 	self.topSegment.layer.backgroundColor = [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0].CGColor;
 	self.topSegment.layer.cornerRadius = 7;
-	BOOL displayChangeFlg = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
-	self.topSegment.selectedSegmentIndex = !displayChangeFlg;
+	self.topSegment.selectedSegmentIndex = 0;
 
+	[self setMaxWidth];
+}
 
+-(void)setMaxWidth {
+	self.maxBalance = 0;
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:nil mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *mo in items) {
+		double loan_balance = [[mo valueForKey:@"loan_balance"] doubleValue];
+		if(loan_balance>self.maxBalance)
+			self.maxBalance = loan_balance;
+	}
 }
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
@@ -269,7 +280,13 @@
 			cell.bgView.frame = CGRectMake(2+offset, 2, 316, 55);
 		}
 
+		float width=0;
+		if(self.maxBalance>0)
+			width = [obj.loan_balance floatValue]*316/self.maxBalance;
+		cell.redLineView.frame=CGRectMake(0, 55, width, 5);
+		cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
 		cell.accessoryType = (offset==0)?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
+		cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section];
 
 		return cell;
 	}
@@ -365,10 +382,18 @@
 	if(self.expiredFlg)
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {
-		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+		
+		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.itemObject = [self itemObjectForRow:indexPath];
+		detailViewController.displayYear=self.nowYear;
 		[self.navigationController pushViewController:detailViewController animated:YES];
+		
+		
+//		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+//		detailViewController.managedObjectContext = self.managedObjectContext;
+//		detailViewController.itemObject = [self itemObjectForRow:indexPath];
+//		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 }
 
@@ -386,14 +411,14 @@
 		return nil;
 	
 	NSArray *titles = [NSArray arrayWithObjects:@"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
-	return [self viewForHeaderWithText:[titles objectAtIndex:section-1] cellHeight:30 amount:[[self.amountArray objectAtIndex:section-1] doubleValue]];
+	return [self viewForHeaderWithText:[titles objectAtIndex:section-1] cellHeight:30 amount:[[self.amountArray objectAtIndex:section-1] doubleValue] section:(int)section];
 }
 
-- (UIView *)viewForHeaderWithText:(NSString *)headerText cellHeight:(float)cellHeight amount:(double)amount
+- (UIView *)viewForHeaderWithText:(NSString *)headerText cellHeight:(float)cellHeight amount:(double)amount section:(int)section
 {
 	float screenWidth = [[UIScreen mainScreen] bounds].size.width;
 	UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, screenWidth, 44.0)];
-	customView.backgroundColor = [ObjectiveCScripts mediumkColor];
+	customView.backgroundColor = [ObjectiveCScripts colorForType:section];
 	// create the button object
 	UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	headerLabel.backgroundColor = [UIColor clearColor];
@@ -447,7 +472,7 @@
 	if(indexPath.section==0)
 		return [ObjectiveCScripts chartHeightForSize:190];
 	else
-		return 60;
+		return 65;
 }
 
 @end

@@ -17,6 +17,7 @@
 #import "BreakdownSingleMonthVC.h"
 #import "PayoffVC.h"
 #import "RateVC.h"
+#import "UpdateDetails.h"
 
 @interface BreakdownByMonthVC ()
 
@@ -71,7 +72,7 @@
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
 	if(self.row_id>0) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Payoff" style:UIBarButtonItemStyleBordered target:self action:@selector(payoffDay)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details" style:UIBarButtonItemStyleBordered target:self action:@selector(payoffDay)];
 	} else if(self.type==0 && self.fieldType==2) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
 	}
@@ -81,10 +82,16 @@
 }
 
 -(void)payoffDay {
-	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
+	
+	UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.row_id=self.row_id;
+	detailViewController.itemObject = self.itemObject;
 	[self.navigationController pushViewController:detailViewController animated:YES];
+
+//	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
+//	detailViewController.managedObjectContext = self.managedObjectContext;
+//	detailViewController.row_id=self.row_id;
+//	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(void)rateVC {

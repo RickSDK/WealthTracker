@@ -15,6 +15,10 @@
 @property (nonatomic, strong) IBOutlet UILabel *assetsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *debtsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *netWorthLabel;
+@property (nonatomic, strong) IBOutlet UILabel *netWorthChangeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *monthBotLabel;
+@property (nonatomic, strong) IBOutlet UILabel *assetChangeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *debtChangeLabel;
 @property (nonatomic, strong) IBOutlet UIView *netWorthView;
 @property (nonatomic, strong) IBOutlet UIView *botView;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
@@ -36,6 +40,8 @@
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
 @property (nonatomic, strong) IBOutlet UILabel *percentUpdatedLabel;
 @property (nonatomic, strong) IBOutlet UILabel *netWorthNameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *assetNameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *debtNameLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *displaySwitch;
 @property (nonatomic, strong) IBOutlet UIButton *financesButton;
 

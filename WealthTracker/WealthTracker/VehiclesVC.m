@@ -154,6 +154,7 @@
 		cell.valStatusImage.image=[UIImage imageNamed:@"red.png"];
 	}
 	
+	cell.redLineView.alpha=0;
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:[ObjectiveCScripts typeNameForType:self.type]];
 	cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -254,7 +255,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 60;
+	return 65;
 }
 
 @end

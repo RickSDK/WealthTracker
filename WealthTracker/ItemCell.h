@@ -13,6 +13,7 @@
 @property (nonatomic, retain) UIImageView *valStatusImage;
 @property (nonatomic, retain) UIImageView *typeImageView;
 @property (nonatomic, retain) UIView *bgView;
+@property (nonatomic, retain) UIView *redLineView;
 @property (nonatomic, retain) UILabel *nameLabel;
 @property (nonatomic, retain) UILabel *subTypeLabel;
 @property (nonatomic, retain) UILabel *amountLabel;

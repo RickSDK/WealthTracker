@@ -386,7 +386,7 @@
 	int leftEdgeOfChart=totalWidth/12.8;
 	int bottomEdgeOfChart=totalHeight-(totalWidth/25.6);
 	
-	int maxItems=10;
+	int maxItems=12;
 	if(itemList.count>maxItems) {
 		NSMutableArray *newArray = [[NSMutableArray alloc] init];
 		int i=0;
@@ -437,7 +437,6 @@
 	[GraphLib drawBarChartForContext:c itemArray:itemList leftEdgeOfChart:leftEdgeOfChart mainGoal:0 zeroLoc:zeroLoc yMultiplier:yMultiplier totalWidth:totalWidth];
 	
 	UIGraphicsPopContext();
-//	UIImage *dynamicChartImage = [[UIImage alloc] init];
 	UIImage *dynamicChartImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	
@@ -518,7 +517,7 @@
 	int XCord = leftEdgeOfChart+spacing/2-10;
 	CGContextSetRGBFillColor(c, 0, 0, 0, 1); // black
 	
-	int lenMax = 14-(int)labels.count;
+	int lenMax = 15-(int)labels.count;
 	if(lenMax<1)
 		lenMax=1;
 	

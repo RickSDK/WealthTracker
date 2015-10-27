@@ -15,9 +15,9 @@
 #import "ObjectiveCScripts.h"
 #import "GraphCell.h"
 #import "GraphLib.h"
-#import "BreakdownByMonthVC.h"
 #import "UpdateWebCell.h"
 #import "WebViewVC.h"
+#import "PayoffVC.h"
 
 @interface UpdateDetails ()
 
@@ -53,7 +53,9 @@
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
 	self.graphYear = self.nowYear;
-	
+
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
+
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
 																					 action:@selector(handleSwipeLeft:)];
@@ -62,6 +64,10 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
+}
+
+-(void)mainMenuButtonClicked {
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
@@ -73,11 +79,7 @@
 	//Get the corresponding index path within the table view
 	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
 	if(indexPath.section==0) {
-		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.itemObject = self.itemObject;
-		detailViewController.displayYear=self.displayYear;
-		[self.navigationController pushViewController:detailViewController animated:YES];
+		[self drillDown];
 	}
 }
 
@@ -93,18 +95,17 @@
 	if(textFieldlocal.text.length>=20)
 		return NO;
 	
-		if(string.length==0) // backspace
-			return YES;
-		if([@"." isEqualToString:string])
-			return YES;
-		
-		NSString *value = [NSString stringWithFormat:@"%@%@", textFieldlocal.text, string];
-		value = [value stringByReplacingOccurrencesOfString:@"$" withString:@""];
-		value = [value stringByReplacingOccurrencesOfString:@"," withString:@""];
-		value = [ObjectiveCScripts convertNumberToMoneyString:[value doubleValue]];
-		textFieldlocal.text = value;
-		return NO;
-//	return YES;
+	if(string.length==0) // backspace
+		return YES;
+	if([@"." isEqualToString:string])
+		return YES;
+	
+	NSString *value = [NSString stringWithFormat:@"%@%@", textFieldlocal.text, string];
+	value = [value stringByReplacingOccurrencesOfString:@"$" withString:@""];
+	value = [value stringByReplacingOccurrencesOfString:@"," withString:@""];
+	value = [ObjectiveCScripts convertNumberToMoneyString:[value doubleValue]];
+	textFieldlocal.text = value;
+	return NO;
 }
 
 
@@ -424,26 +425,12 @@
 			
 			cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] year:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth];
 		}
+		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
 
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if((self.itemObject.status==0 && indexPath.section==2) || (self.itemObject.status>0 && indexPath.section==3)) {
-		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray.count labelProportion:0.6];
-		
-		cell.mainTitle = self.itemObject.name;
-		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
-		
-		cell.titleTextArray = self.namesArray;
-		cell.fieldTextArray = self.valuesArray;
-		cell.fieldColorArray = self.colorsArray;
-		
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
 	} else if(indexPath.section==1) {
-//		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
 		UpdateCell *cell = [[UpdateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
 		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
@@ -494,11 +481,10 @@
 			double value = [[mo valueForKey:@"asset_value"] doubleValue];
 			double balance = [[mo valueForKey:@"balance_owed"] doubleValue];
 			
-			if(value==0)
+			if(value==0 || [self.itemObject.statement_day intValue] == self.nowDay)
 				self.updateValueButton.enabled=YES;
-			if(balance==0)
+			if(balance==0 || [self.itemObject.statement_day intValue] == self.nowDay)
 				self.updateBalanceButton.enabled=YES;
-			
 			
 			bal_confirm_flg = [[mo valueForKey:@"bal_confirm_flg"] boolValue];
 			val_confirm_flg = [[mo valueForKey:@"val_confirm_flg"] boolValue];
@@ -546,13 +532,13 @@
 			cell.loanAmountTextField.enabled=NO;
 			cell.loanAmountTextField.backgroundColor=[UIColor grayColor];
 		}
+		
+		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
 
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else {
-//		UpdateWebCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
+	} else if (indexPath.section==2) {
 		UpdateWebCell *cell = [[UpdateWebCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
 		if(indexPath.row==1 || [@"Debt" isEqualToString:self.itemObject.type]) {
@@ -567,7 +553,20 @@
 		}
 		
 		cell.iconImageView.image = [ObjectiveCScripts imageIconForType:self.itemObject.type];
-
+		
+		cell.accessoryType= UITableViewCellAccessoryNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		return cell;
+	} else  {
+		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray.count labelProportion:0.6];
+		
+		cell.mainTitle = self.itemObject.name;
+		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
+		
+		cell.titleTextArray = self.namesArray;
+		cell.fieldTextArray = self.valuesArray;
+		cell.fieldColorArray = self.colorsArray;
+		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
@@ -698,14 +697,11 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if(self.itemObject.status==0)
-		return 3;
-	else
-		return 4;
+	return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(section==2 && self.itemObject.status>0 && ([@"Vehicle" isEqualToString:self.itemObject.type] || [@"Real Estate" isEqualToString:self.itemObject.type]))
+	if(section==2 && ([@"Vehicle" isEqualToString:self.itemObject.type] || [@"Real Estate" isEqualToString:self.itemObject.type]))
 		return 2;
 	else
 		return 1;
@@ -716,13 +712,17 @@
 		self.displayBarsFlg=!self.displayBarsFlg;
 		[self setupData];
 	}
-	if((self.itemObject.status==0 && indexPath.section==2) || (self.itemObject.status>0 && indexPath.section==3)) {
-		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.itemObject = self.itemObject;
-		detailViewController.displayYear=self.displayYear;
-		[self.navigationController pushViewController:detailViewController animated:YES];
+	if((self.itemObject.status>0 && indexPath.section==3)) {
+		
+		[self drillDown];
 	}
+}
+
+-(void)drillDown {
+	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.row_id=[self.itemObject.rowId intValue];
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -773,7 +773,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
 		return [ObjectiveCScripts chartHeightForSize:254];
-	else if((indexPath.section==3 && self.itemObject.status>0) || (indexPath.section==2 && self.itemObject.status==0))
+	else if(indexPath.section==3)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
 																			  tableView:self.mainTableView
 																   labelWidthProportion:0.6]+20;

@@ -9,6 +9,8 @@
 #import "ObjectiveCScripts.h"
 #import "NSDate+ATTDate.h"
 #import "CoreDataLib.h"
+#import "UIColor+ATTColor.h"
+
 
 @implementation ObjectiveCScripts
 
@@ -740,6 +742,20 @@
 		return 0; // green status
 	
 }
+
++(UIColor *)colorForType:(int)type {
+	if(type==1)
+		return [UIColor colorWithRed:.5 green:.4 blue:.3 alpha:1];
+	if(type==2)
+		return [ObjectiveCScripts mediumkColor];
+	if(type==3)
+		return [UIColor colorWithRed:.6 green:.4 blue:.4 alpha:1];
+	if(type==4)
+		return [UIColor colorWithRed:.4 green:.55 blue:.4 alpha:1];
+	
+	return [UIColor blackColor];
+}
+
 
 +(NSString *)typeLabelForType:(int)type fieldType:(int)fieldType {
 	if(type==0) {
