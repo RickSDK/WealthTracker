@@ -15,9 +15,9 @@
 
 @interface GraphLib : NSObject
 
-+(UIImage *)pieChartWithItems:(NSArray *)itemList;
++(UIImage *)pieChartWithItems:(NSArray *)itemList startDegree:(float)startDegree;
 +(UIImage *)graphBarsWithItems:(NSArray *)itemList;
-+(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg;
++(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg currentMonthFlg:(BOOL)currentMonthFlg;
 +(CGContextRef)contextRefForGraphofWidth:(int)totalWidth totalHeight:(int)totalHeight;
 +(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type year:(int)year item_id:(int)item_id displayMonth:(int)displayMonth;
 +(int)drawZeroLineForContext:(CGContextRef)c min:(float)min max:(float)max bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth;
@@ -28,5 +28,6 @@
 +(void)drawGraphForContext:(CGContextRef)c itemArray:(NSArray *)itemArray leftEdgeOfChart:(int)leftEdgeOfChart zeroLoc:(int)zeroLoc yMultiplier:(float)yMultiplier totalWidth:(int)totalWidth bottomEdgeOfChart:(int)bottomEdgeOfChart shadingFlg:(BOOL)shadingFlg;
 +(NSString *)smallLabelForMoney:(double)money totalMoneyRange:(double)totalMoneyRange;
 +(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType displayTotalFlg:(BOOL)displayTotalFlg;
++(int)spinPieChart:(UIImageView *)imageView startTouchPosition:(CGPoint)startTouchPosition newTouchPosition:(CGPoint)newTouchPosition startDegree:(float)startDegree barGraphObjects:(NSMutableArray *)barGraphObjects;
 
 @end

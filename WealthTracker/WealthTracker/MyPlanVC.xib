@@ -10,11 +10,14 @@
                 <outlet property="bgView" destination="Psc-lT-9OK" id="9Tx-Hm-hCc"/>
                 <outlet property="completedSwitch" destination="ixC-2k-dL1" id="bGg-YM-LTV"/>
                 <outlet property="currentStepLabel" destination="iaZ-86-TOP" id="zGB-mf-hhZ"/>
+                <outlet property="debtView" destination="yOi-3o-Jm7" id="FbZ-av-kim"/>
                 <outlet property="descLabel" destination="Boz-uK-aOm" id="ObP-aC-wky"/>
                 <outlet property="myStepLabel" destination="B4d-OQ-Tua" id="SDr-lx-bgl"/>
                 <outlet property="nextButton" destination="hJJ-ym-szs" id="k0o-CY-Hg6"/>
+                <outlet property="percentLabel" destination="sUZ-Yg-uo1" id="er7-l9-5Yc"/>
                 <outlet property="prevButton" destination="jB8-Gc-YIe" id="tYo-YV-O4G"/>
                 <outlet property="progressLabel" destination="tuT-YE-M4q" id="L24-UX-MPU"/>
+                <outlet property="remainingDebtView" destination="QhE-kk-QtD" id="QRd-W8-IdB"/>
                 <outlet property="scrollView" destination="kP1-bz-rGb" id="uGC-kM-o0g"/>
                 <outlet property="stepView" destination="WjW-OB-xT5" id="Ny4-mk-n5f"/>
                 <outlet property="tipsButton" destination="52B-qU-eIB" id="gix-Uy-4Y3"/>
@@ -177,8 +180,28 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
+                <view contentMode="scaleToFill" id="yOi-3o-Jm7" customClass="CustomView">
+                    <rect key="frame" x="8" y="399" width="302" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" id="QhE-kk-QtD">
+                            <rect key="frame" x="0.0" y="0.0" width="100" height="21"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35% Remaining" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sUZ-Yg-uo1">
+                            <rect key="frame" x="152" y="0.0" width="116" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                            <color key="shadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
                 <view contentMode="scaleToFill" id="Wgf-fq-nbu" customClass="CustomView">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="502"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="kP1-bz-rGb">

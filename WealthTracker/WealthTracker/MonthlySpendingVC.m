@@ -168,7 +168,7 @@
 	
 	if(indexPath.section==1) {
 	if(self.pieChartFlg)
-		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib pieChartWithItems:self.graphArray]];
+		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib pieChartWithItems:self.graphArray startDegree:0]];
 	else
 		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib graphBarsWithItems:self.graphArray]];
 	}

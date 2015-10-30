@@ -22,12 +22,13 @@
 	return width;
 }
 
-+(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg {
++(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg currentMonthFlg:(BOOL)currentMonthFlg {
 	GraphObject *obj = [[GraphObject alloc] init];
 	obj.name=name;
 	obj.amount=amout;
 	obj.rowId=rowId;
 	obj.reverseColorFlg=reverseColorFlg;
+	obj.currentMonthFlg=currentMonthFlg;
 	return obj;
 }
 
@@ -42,7 +43,7 @@
 	[self addGradientToPath:aPath3 context:context color1:[UIColor yellowColor] color2:(UIColor *)[UIColor whiteColor] lineWidth:(int)1 imgWidth:botRight.x-topLeft.x imgHeight:botRight.y-topLeft.y];
 }
 
-+(UIImage *)pieChartWithItems:(NSArray *)itemList {
++(UIImage *)pieChartWithItems:(NSArray *)itemList startDegree:(float)startDegree {
 	
 	int totalWidth=[self totalWidth];
 	int totalHeight=totalWidth/2;
@@ -66,41 +67,44 @@
 		itemList=newArray;
 	}
 	
+	
 	NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
 	double totalPieSize=0;
 	for (GraphObject *graphObj in itemList) {
 		totalPieSize+=abs(graphObj.amount);
 		[sortedArray addObject:graphObj];
 	}
-
-	double min = 0;
 	
-	NSMutableArray *finalSortedArray = [[NSMutableArray alloc] init]; // sort from smallest to biggest
-	for(int i=0; i<itemList.count; i++) {
-		min = [self minAmountOfList:itemList min:totalPieSize prevMin:min];
+	if(itemList.count>3) { // sort and stagger
+		double min = 0;
 		
-		for (GraphObject *graphObj in itemList) {
-			if(abs(graphObj.amount)==min)
-				[finalSortedArray addObject:graphObj];
+		NSMutableArray *finalSortedArray = [[NSMutableArray alloc] init]; // sort from smallest to biggest
+		for(int i=0; i<itemList.count; i++) {
+			min = [self minAmountOfList:itemList min:totalPieSize prevMin:min];
+			
+			for (GraphObject *graphObj in itemList) {
+				if(abs(graphObj.amount)==min)
+					[finalSortedArray addObject:graphObj];
+			}
 		}
-	}
-	
-	NSMutableArray *finalSortedArray2 = [[NSMutableArray alloc] init]; // now stagger
-	int i=0;
-	BOOL topFlag=YES;
-	while (finalSortedArray.count>0) {
-		topFlag=!topFlag;
-		if(topFlag) {
-			[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:0]];
-			[finalSortedArray removeObjectAtIndex:0];
-		} else {
-			[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:finalSortedArray.count-1]];
-			[finalSortedArray removeObjectAtIndex:finalSortedArray.count-1];
+		
+		NSMutableArray *finalSortedArray2 = [[NSMutableArray alloc] init]; // now stagger
+		int i=0;
+		BOOL topFlag=YES;
+		while (finalSortedArray.count>0) {
+			topFlag=!topFlag;
+			if(topFlag) {
+				[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:0]];
+				[finalSortedArray removeObjectAtIndex:0];
+			} else {
+				[finalSortedArray2 addObject:[finalSortedArray objectAtIndex:finalSortedArray.count-1]];
+				[finalSortedArray removeObjectAtIndex:finalSortedArray.count-1];
+			}
+			i++;
 		}
-		i++;
+		
+		itemList=finalSortedArray2;
 	}
-
-	itemList=finalSortedArray2;
 	
 	CGContextRef c = [GraphLib contextRefForGraphofWidth:totalWidth totalHeight:totalHeight];
 	
@@ -112,7 +116,6 @@
 		float startAngle = - M_PI_2;
 		CGFloat radius = (totalHeight-50)/2;
 		
-		float startDegree = 0;
 		float endDegree = 0;
 
 		CGPoint startPoint = [self pointFromCenter:center radius:radius degrees:startDegree];
@@ -142,10 +145,13 @@
 			if(kDebugPieChart)
 				NSLog(@"+++%@: Wedge from %d to %d (of 360)", graphObj.name, (int)startDegree, (int)endDegree);
 			
+			NSString *percentStr = [NSString stringWithFormat:@"%.1f%%", percentage];
+			percentStr = [ObjectiveCScripts convertNumberToMoneyString:value];
+			
 			if(percentage>25) { // place label inside
-				[self centerTextAtPoint:midPoint name:shortName percentage:percentage color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
+				[self centerTextAtPoint:midPoint name:shortName percentStr:percentStr color:[self colorForObject:graphObj.rowId] context:c rowId:graphObj.rowId];
 			} else {
-				NSString *name = [NSString stringWithFormat:@"%@ %.1f%%", shortName, percentage];
+				NSString *name = [NSString stringWithFormat:@"%@ %@", shortName, percentStr];
 				[name drawAtPoint:CGPointMake(namePoint.x, namePoint.y) withFont:[UIFont boldSystemFontOfSize:trunc(totalWidth/29.09)]];
 			}
 
@@ -178,9 +184,7 @@
 	return min;
 }
 
-+(void)centerTextAtPoint:(CGPoint)midPoint name:(NSString *)name percentage:(float)percentage color:(UIColor *)color context:(CGContextRef)context rowId:(int)rowId {
-
-	NSString *percentStr = [NSString stringWithFormat:@"%.1f%%", percentage];
++(void)centerTextAtPoint:(CGPoint)midPoint name:(NSString *)name percentStr:(NSString *)percentStr color:(UIColor *)color context:(CGContextRef)context rowId:(int)rowId {
 
 	int totalWidth = [self totalWidth];
 	int letterSpacing = trunc(totalWidth/80);
@@ -591,6 +595,11 @@
 		UIColor *mainColor = (showGreen)?[UIColor colorWithRed:0 green:.8 blue:0 alpha:1]:[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
 		UIColor *topColor = (showGreen)?[UIColor colorWithRed:0 green:.5 blue:0 alpha:1]:[UIColor colorWithRed:.5 green:0 blue:0 alpha:1];
 		UIColor *sideColor = (showGreen)?[UIColor colorWithRed:.7 green:1 blue:.7 alpha:1]:[UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+		if(graphObject.currentMonthFlg) {
+			mainColor = [ObjectiveCScripts mediumkColor];
+			topColor = [ObjectiveCScripts darkColor];
+			sideColor = [ObjectiveCScripts lightColor];
+		}
 		
 		int top = zeroLoc-value*yMultiplier;
 		int bot = zeroLoc;
@@ -1310,6 +1319,21 @@
 	}
 	return amount;
 }
+
++(int)spinPieChart:(UIImageView *)imageView startTouchPosition:(CGPoint)startTouchPosition newTouchPosition:(CGPoint)newTouchPosition startDegree:(float)startDegree barGraphObjects:(NSMutableArray *)barGraphObjects {
+	
+	float changeX = (startTouchPosition.y>imageView.center.y)?startTouchPosition.x-newTouchPosition.x:newTouchPosition.x-startTouchPosition.x;
+	
+	float changeY = (startTouchPosition.x<imageView.center.x)?startTouchPosition.y-newTouchPosition.y:newTouchPosition.y-startTouchPosition.y;
+	
+	float newStartDegree = abs(changeX)>abs(changeY)?changeX:changeY;
+	startDegree += newStartDegree;
+	imageView.image = [GraphLib pieChartWithItems:barGraphObjects startDegree:startDegree];
+	
+	return startDegree;
+}
+
+
 
 
 

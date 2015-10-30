@@ -166,7 +166,7 @@
 				amount = [[mo valueForKey:@"balance_owed"] doubleValue];
 			
 			if(amount>0)
-				[chartValuesArray addObject:[GraphLib graphObjectWithName:name amount:amount rowId:rowId reverseColorFlg:(indexPath.section==4)]];
+				[chartValuesArray addObject:[GraphLib graphObjectWithName:name amount:amount rowId:rowId reverseColorFlg:(indexPath.section==4) currentMonthFlg:NO]];
 		}
 	}
 	
@@ -175,7 +175,7 @@
 	if(segment==1)
 		cell.graphImageView.image =[GraphLib graphBarsWithItems:chartValuesArray];
 	if(segment==2)
-		cell.graphImageView.image =[GraphLib pieChartWithItems:chartValuesArray];
+		cell.graphImageView.image =[GraphLib pieChartWithItems:chartValuesArray startDegree:0];
 	
 	if(displayYear==self.nowYear && displayMonth==self.nowMonth)
 		cell.nextYearButton.enabled=NO;

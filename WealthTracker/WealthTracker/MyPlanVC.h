@@ -30,6 +30,11 @@
 
 @property (nonatomic, strong) IBOutlet UILabel *progressLabel;
 
+@property (nonatomic, strong) IBOutlet UIView *debtView;
+@property (nonatomic, strong) IBOutlet UIView *remainingDebtView;
+@property (nonatomic, strong) IBOutlet UILabel *percentLabel;
+
+
 @property (nonatomic) int step;
 @property (nonatomic) int myStep;
 

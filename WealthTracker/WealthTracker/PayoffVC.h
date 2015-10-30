@@ -18,15 +18,21 @@
 @property (nonatomic, strong) IBOutlet UILabel *displayPaydownLabel;
 @property (nonatomic, strong) IBOutlet UILabel *monthsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *dateLabel;
+@property (nonatomic, strong) IBOutlet UILabel *monthlyPaymnetLabel;
 @property (nonatomic, strong) IBOutlet UILabel *interestLabel;
 @property (nonatomic, strong) IBOutlet UISlider *amountSlider;
+@property (nonatomic, strong) IBOutlet UIImageView *imageView;
 
 @property (nonatomic, strong) ItemObject *itemObject;
+@property (nonatomic, strong) NSMutableArray *barGraphObjects;
 @property (nonatomic) int row_id;
 @property (nonatomic) double totalAmount;
 @property (nonatomic) float currentPaydownAmount;
 @property (nonatomic) float interestRate;
 @property (nonatomic) int displayPaydownAmount;
+
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
 
 -(IBAction)sliderChanged:(id)sender;
 

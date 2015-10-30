@@ -68,7 +68,21 @@
 	
 }
 
+-(double)classADebtForYear:(int)year month:(int)month {
+	double totalDebt = [ObjectiveCScripts amountForItem:0 month:month year:year field:@"balance_owed" context:self.managedObjectContext type:0];
+	double realDebt = [ObjectiveCScripts amountForItem:0 month:month year:year field:@"balance_owed" context:self.managedObjectContext type:1];
+	return totalDebt-realDebt;
+}
+
+-(double)findMaxForYear:(int)year month:(int)month max:(double)max {
+	double classAMax = [self classADebtForYear:year month:month];
+	if(classAMax>max)
+		max=classAMax;
+	return max;
+}
+
 -(void)displayProgressLabel {
+	self.debtView.hidden=YES;
 	self.myStepLabel.text = [NSString stringWithFormat:@"%d", self.step];
 
 	int year = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
@@ -81,15 +95,22 @@
 			break;
   }
   case 2: {
-	  double amount=0;
-	  NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
-	  NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	  for(NSManagedObject *mo in items) {
-		  NSManagedObject *itemObj = [CoreDataLib managedObjFromId:[mo valueForKey:@"item_id"] managedObjectContext:self.managedObjectContext];
-		  if(![@"Real Estate" isEqualToString:[itemObj valueForKey:@"type"]])
-			  amount += [[mo valueForKey:@"balance_owed"] doubleValue];
+	  self.debtView.hidden=NO;
+	  
+	  double classA = [self classADebtForYear:year month:month];
+	  double classAMax=classA;
+	  for(int i=1; i<=5; i++)
+		  classAMax = [self findMaxForYear:year-i month:month max:classAMax];
+	  
+
+	  if(classAMax>0) {
+		  float width = self.debtView.frame.size.width;
+		  int percent = classA*100/classAMax;
+		  self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", percent];
+		  self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
 	  }
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 2 Progress:  %@ of Class A debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:amount]];
+	  
+			self.progressLabel.text = [NSString stringWithFormat:@"Step 2 Progress:  %@ of Class A debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:classA]];
 			break;
   }
   case 3: {

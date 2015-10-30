@@ -33,6 +33,10 @@
 	return [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0];
 }
 
++(UIColor *)lightColor {
+	return [UIColor colorWithRed:(58/255.0) green:(165/255.0) blue:(220/255.0) alpha:1.0];
+}
+
 +(void)showAlertPopup:(NSString *)title message:(NSString *)message
 {
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
@@ -670,6 +674,10 @@
 
 +(double)changedEquityLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context {
 	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:nil context:context numMonths:1 type:0];
+}
+
++(double)changedBalanceLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context {
+	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:@"balance_owed" context:context numMonths:1 type:0];
 }
 
 +(double)changedEquityLast30:(NSManagedObjectContext *)context {

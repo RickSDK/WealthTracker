@@ -23,6 +23,7 @@
 @property (nonatomic, strong) UIButton *updateValueButton;
 @property (nonatomic, strong) UIButton *updateBalanceButton;
 
+@property (nonatomic, strong) IBOutlet UIButton *payoffButton;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
 @property (nonatomic, strong) IBOutlet UILabel *amountLabel;
@@ -41,5 +42,7 @@
 
 -(void)updateValue:(NSString *)value;
 -(void)updateBalance:(NSString *)value;
+-(IBAction)payoffButtonPressed:(id)sender;
+-(IBAction)menuButtonPressed:(id)sender;
 
 @end

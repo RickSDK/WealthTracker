@@ -120,7 +120,7 @@
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
 		if(self.pieChartFlg)
-			cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib pieChartWithItems:self.dataArray]];
+			cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib pieChartWithItems:self.dataArray startDegree:0]];
 		else
 			cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib graphBarsWithItems:self.dataArray]];
 		

@@ -196,7 +196,7 @@
 	
 	self.nextItemDue=[self nextItemDue];
 	
-	self.topImageView.image = (self.displayPieFlg)?[GraphLib pieChartWithItems:graphArray]:[GraphLib graphBarsWithItems:graphArray];
+	self.topImageView.image = (self.displayPieFlg)?[GraphLib pieChartWithItems:graphArray startDegree:0]:[GraphLib graphBarsWithItems:graphArray];
 
 	[self.mainTableView reloadData];
 }

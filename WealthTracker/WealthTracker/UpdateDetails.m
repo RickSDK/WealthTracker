@@ -54,7 +54,7 @@
 	self.displayMonth = self.nowMonth;
 	self.graphYear = self.nowYear;
 
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
+//	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
 
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
@@ -64,6 +64,10 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
+}
+
+-(IBAction)menuButtonPressed:(id)sender {
+	[self mainMenuButtonClicked];
 }
 
 -(void)mainMenuButtonClicked {
@@ -180,6 +184,10 @@
 		balance = [[mo valueForKey:@"balance_owed"] doubleValue];
 		interest = [[mo valueForKey:@"interest"] doubleValue];
 	}
+	
+	if(balance<=0)
+		self.payoffButton.enabled=NO;
+	
 	int type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 	if(type!=3) {
 		[self.namesArray addObject:@"Value"];
@@ -716,6 +724,10 @@
 		
 		[self drillDown];
 	}
+}
+
+-(IBAction)payoffButtonPressed:(id)sender {
+	[self drillDown];
 }
 
 -(void)drillDown {

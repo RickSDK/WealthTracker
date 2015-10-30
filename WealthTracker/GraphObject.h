@@ -16,5 +16,6 @@
 @property (nonatomic) BOOL reverseColorFlg;
 @property (nonatomic) BOOL confirmFlg;
 @property (nonatomic) BOOL existsFlg;
+@property (nonatomic) BOOL currentMonthFlg;
 
 @end

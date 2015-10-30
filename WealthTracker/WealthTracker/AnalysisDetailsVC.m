@@ -650,7 +650,7 @@
 				[self.colorsArray0 addObject:[UIColor grayColor]];
 				totalNotCompleted++;
 			}
-			[self.chartValuesArray addObject:[GraphLib graphObjectWithName:obj.name amount:amount rowId:[obj.rowId intValue] reverseColorFlg:reverseColorFlg]];
+			[self.chartValuesArray addObject:[GraphLib graphObjectWithName:obj.name amount:amount rowId:[obj.rowId intValue] reverseColorFlg:reverseColorFlg currentMonthFlg:NO]];
 			if(self.topSegment.selectedSegmentIndex==0) {
 				if(tag==4) {
 					float changePercent = 100;
@@ -948,7 +948,7 @@
 		if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
 			dynamicChartImage = [GraphLib graphBarsWithItems:self.chartValuesArray];
 		else
-			dynamicChartImage = [GraphLib pieChartWithItems:self.chartValuesArray];
+			dynamicChartImage = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:0];
 		
 		cell.backgroundView = [[UIImageView alloc] initWithImage:dynamicChartImage];
 		

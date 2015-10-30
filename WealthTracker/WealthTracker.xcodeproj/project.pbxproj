@@ -79,6 +79,7 @@
 		6B5B87F31B668EF600BBE741 /* vehicle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EF1B668EF600BBE741 /* vehicle.png */; };
 		6B5B87F71B681C0D00BBE741 /* OptionsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B87F51B681C0D00BBE741 /* OptionsVC.m */; };
 		6B5B87F81B681C0D00BBE741 /* OptionsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87F61B681C0D00BBE741 /* OptionsVC.xib */; };
+		6B5E92CB1BE2839A00D546F5 /* CustomSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5E92CA1BE2839A00D546F5 /* CustomSegment.m */; };
 		6B6389971B7BA2A000260656 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B6389891B7BA2A000260656 /* Icon-29.png */; };
 		6B6389981B7BA2A100260656 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B63898A1B7BA2A000260656 /* Icon-40.png */; };
 		6B6389991B7BA2A100260656 /* Icon-58.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B63898B1B7BA2A000260656 /* Icon-58.png */; };
@@ -265,6 +266,8 @@
 		6B5B87F41B681C0D00BBE741 /* OptionsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsVC.h; sourceTree = "<group>"; };
 		6B5B87F51B681C0D00BBE741 /* OptionsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsVC.m; sourceTree = "<group>"; };
 		6B5B87F61B681C0D00BBE741 /* OptionsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptionsVC.xib; sourceTree = "<group>"; };
+		6B5E92C91BE2839A00D546F5 /* CustomSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegment.h; sourceTree = "<group>"; };
+		6B5E92CA1BE2839A00D546F5 /* CustomSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSegment.m; sourceTree = "<group>"; };
 		6B6389891B7BA2A000260656 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
 		6B63898A1B7BA2A000260656 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
 		6B63898B1B7BA2A000260656 /* Icon-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-58.png"; sourceTree = "<group>"; };
@@ -590,6 +593,8 @@
 				6B416F131B509FC2009C9834 /* CustomButton.m */,
 				6B9673FC1B6B286400641C7F /* CustomImageView.h */,
 				6B9673FD1B6B286400641C7F /* CustomImageView.m */,
+				6B5E92C91BE2839A00D546F5 /* CustomSegment.h */,
+				6B5E92CA1BE2839A00D546F5 /* CustomSegment.m */,
 				6B3C180A1B70381E0039733B /* CustomView.h */,
 				6B3C180B1B70381E0039733B /* CustomView.m */,
 				6B416F141B509FC2009C9834 /* WebServiceView.h */,
@@ -838,6 +843,7 @@
 				6B04442E1B58973A001E7007 /* ChartsVC.m in Sources */,
 				6BD0D8E11B83D9D70062E152 /* MonthlySpendingVC.m in Sources */,
 				6B644CBD1B68204900483F98 /* PrivacyPolicyVC.m in Sources */,
+				6B5E92CB1BE2839A00D546F5 /* CustomSegment.m in Sources */,
 				6B3C18001B6FED7A0039733B /* CashFlowVC.m in Sources */,
 				6B2E24061B56BD6700CC2851 /* UpdateCell.m in Sources */,
 				6B2E23F21B54699500CC2851 /* UIColor+ATTColor.m in Sources */,

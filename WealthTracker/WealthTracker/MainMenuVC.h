@@ -53,15 +53,21 @@
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
 @property (nonatomic, strong) IBOutlet UIView *messageView;
 @property (nonatomic, strong) IBOutlet UILabel *messageLabel;
+@property (nonatomic, strong) IBOutlet UILabel *chartLabel;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *chartSegmentControl;
 
 
 
 @property (nonatomic, strong) NSMutableArray *popupArray;
+@property (nonatomic, strong) NSMutableArray *graphObjects;
+@property (nonatomic, strong) NSMutableArray *barGraphObjects;
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
 @property (nonatomic) int initStep;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL showChartFlg;
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
 
 -(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)updateButtonClicked:(id)sender;
@@ -70,5 +76,6 @@
 -(IBAction)displaySwitchChanged:(id)sender;
 -(IBAction)financesButtonClicked:(id)sender;
 -(IBAction)okButtonClicked:(id)sender;
+-(IBAction)segmentClicked:(id)sender;
 
 @end

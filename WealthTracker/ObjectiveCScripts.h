@@ -18,6 +18,7 @@
 +(NSString *)getProjectDisplayVersion;
 +(UIColor *)darkColor;
 +(UIColor *)mediumkColor;
++(UIColor *)lightColor;
 +(void)showAlertPopup:(NSString *)title message:(NSString *)message;
 +(void)showConfirmationPopup:(NSString *)title message:(NSString *)message delegate:(id)delegate tag:(int)tag;
 +(NSString *)convertNumberToMoneyString:(double)money;
@@ -48,6 +49,7 @@
 
 +(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths type:(int)type;
 +(double)changedEquityLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
++(double)changedBalanceLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
 +(double)changedEquityLast30:(NSManagedObjectContext *)context;
 +(float)chartHeightForSize:(float)height;
 +(UIImage *)imageIconForType:(NSString *)typeStr;
