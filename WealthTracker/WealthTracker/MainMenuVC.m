@@ -47,7 +47,10 @@
 	
 	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
 	self.percentUpdatedLabel.hidden = (status==0);
-	if([[UIScreen mainScreen] bounds].size.height <= 480) {// iPhone 4
+	
+	self.chartSegmentControl.center = CGPointMake(self.graphImageView.center.x, self.graphImageView.center.y+self.graphImageView.frame.size.height/2+15);
+	
+	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
 		self.percentUpdatedLabel.center = CGPointMake(self.percentUpdatedLabel.center.x, self.botView.frame.origin.y-25);
 		self.netWorthView.center = CGPointMake(self.self.botView.center.x, self.self.botView.center.y-60);
 		self.chartSegmentControl.hidden=YES;
@@ -518,6 +521,7 @@
 	
 	self.initStep=0;
 	self.financesButton.hidden=YES;
+	self.chartSegmentControl.hidden=YES;
 	self.messageView.hidden=NO;
 	self.arrowImage.hidden=NO;
 	

@@ -56,6 +56,18 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="CustomSegment">
+                    <rect key="frame" x="10" y="343" width="300" height="29"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Bars"/>
+                        <segment title="Line Graph"/>
+                        <segment title="Pie Chart"/>
+                    </segments>
+                    <connections>
+                        <action selector="segmentClicked:" destination="-1" eventType="valueChanged" id="dEY-9K-OVf"/>
+                    </connections>
+                </segmentedControl>
                 <view contentMode="scaleToFill" id="hnj-jM-8sa" customClass="CustomView">
                     <rect key="frame" x="10" y="5" width="302" height="120"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -74,7 +86,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ndZ-m8-Fb8">
-                            <rect key="frame" x="165" y="5" width="120" height="50"/>
+                            <rect key="frame" x="165.00000012665987" y="5" width="120" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -100,7 +112,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R0A-1V-g3a">
-                            <rect key="frame" x="165.00000026087488" y="60" width="120" height="50"/>
+                            <rect key="frame" x="165.00000012665984" y="60" width="120" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -364,18 +376,6 @@
                     <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="CustomSegment">
-                    <rect key="frame" x="10" y="343" width="300" height="29"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <segments>
-                        <segment title="Bars"/>
-                        <segment title="Line Graph"/>
-                        <segment title="Pie Chart"/>
-                    </segments>
-                    <connections>
-                        <action selector="segmentClicked:" destination="-1" eventType="valueChanged" id="dEY-9K-OVf"/>
-                    </connections>
-                </segmentedControl>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
