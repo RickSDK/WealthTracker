@@ -41,6 +41,7 @@
 	[self setupData];
 }
 
+
 -(void)setupData {
 	self.displaySwitch.on = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
 	
@@ -75,8 +76,9 @@
 	[self.barGraphObjects removeAllObjects];
 	
 	[self.popupArray addObject:@"empty"];
-	double prevNetWorth=0;
 	
+	
+	double prevNetWorth=0;
 	double prevValue=0;
 	double prevBalance=0;
 	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = 12", self.nowYear-1];

@@ -32,7 +32,7 @@
 {
 	[self setTintColor:[UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0]];
 	
-	self.layer.backgroundColor = [UIColor colorWithRed:.8 green:.8 blue:.8 alpha:1].CGColor;
+	self.layer.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1].CGColor;
 	self.layer.cornerRadius = 7;
 	
 	UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:12];

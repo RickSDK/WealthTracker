@@ -37,6 +37,8 @@
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int monthOffset;
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
 
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
@@ -44,8 +46,10 @@
 @property (nonatomic, strong) IBOutlet UILabel *topLeftlabel;
 @property (nonatomic, strong) IBOutlet UILabel *topRightlabel;
 @property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
 
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
+@property (nonatomic, strong) IBOutlet UILabel *netChangeLabel;
 @property (nonatomic, strong) IBOutlet UIButton *prevButton;
 @property (nonatomic, strong) IBOutlet UIButton *nextButton;
 

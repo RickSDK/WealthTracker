@@ -161,7 +161,6 @@
 	
 	self.nextButton.enabled = !(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
 
-	
 	if(self.topSegment.selectedSegmentIndex==0 && self.tag>2)
 		self.topLeftlabel.text = @"This Month";
 	else
@@ -677,8 +676,17 @@
 		[self.valuesArray0 addObject:[ObjectiveCScripts convertNumberToMoneyString:totalAmount]];
 		[self.colorsArray0 addObject:[ObjectiveCScripts colorBasedOnNumber:totalAmount*reverseNum lightFlg:NO]];
 	}
+	self.netChangeLabel.hidden=YES;
+	if(month==self.nowMonth && year==self.nowYear && self.topSegment.selectedSegmentIndex==0)
+		[self createBarGraph];
 
 	return totalValueObj;
+}
+
+-(void)createBarGraph {
+	self.netChangeLabel.hidden=NO;
+	[self.chartValuesArray removeAllObjects];
+	self.chartValuesArray = [self barItemsForMonth:self.nowMonth nowYear:self.nowYear type:self.tag];
 }
 
 -(NSString *)netChangeForAmount:(double)amount {
@@ -899,6 +907,11 @@
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
+	if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
+		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
+	else
+		self.graphImageView.image = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
+
 	if(indexPath.section==0) {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
@@ -939,23 +952,6 @@
 
 		return cell;
 	} else if(indexPath.section==1) {
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if(cell==nil)
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		UIImage *dynamicChartImage = nil;
-		if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
-			dynamicChartImage = [GraphLib graphBarsWithItems:self.chartValuesArray];
-		else
-			dynamicChartImage = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:0];
-		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:dynamicChartImage];
-		
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
-	} else if(indexPath.section==2) {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.namesArray0.count labelProportion:kProportionList];
 
 		cell.mainTitle = self.title0;
@@ -968,7 +964,7 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if (indexPath.section==3) {
+	} else if (indexPath.section==2) {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray1.count labelProportion:kProportionAnalysis];
 		cell.mainTitle = self.title1;
 		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
@@ -1018,7 +1014,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -1026,11 +1022,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section<=1) {
-		self.topSegment.selectedSegmentIndex=!self.topSegment.selectedSegmentIndex;
-		[self setupData];
-	} else
-		[self breakdownButtonPressed];
+	[self breakdownButtonPressed];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -1047,12 +1039,10 @@
 	if(indexPath.section==0)
 		return 20;
 	if(indexPath.section==1)
-		return [ObjectiveCScripts chartHeightForSize:170];
-	if(indexPath.section==2)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray0
 																   tableView:self.mainTableView
 														labelWidthProportion:kProportionList]+20;
-	if(indexPath.section==3)
+	if(indexPath.section==2)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray1
 																   tableView:self.mainTableView
 														labelWidthProportion:kProportionAnalysis]+20;
@@ -1061,5 +1051,120 @@
 															   tableView:self.mainTableView
 													labelWidthProportion:0]+20;
 }
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	self.startTouchPosition = [touch locationInView:self.view];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	CGPoint newTouchPosition = [touch locationInView:self.view];
+	
+	if(self.topSegment.selectedSegmentIndex==1) {
+		
+		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.chartValuesArray];
+		self.startTouchPosition=newTouchPosition;
+		
+		return; // pie chart
+	} else {
+		float width = self.graphImageView.frame.size.width;
+		int month=0;
+		if(width>0) {
+			int leftEdge = self.graphImageView.center.x-width/2;
+			month = (10+newTouchPosition.x-leftEdge)*12/width;
+			if(month>12)
+				month=12;
+		}
+		[self.chartValuesArray removeAllObjects];
+		self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
+		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
+
+	}
+}
+
+-(NSMutableArray *)barItemsForMonth:(int)nowMonth nowYear:(int)nowYear type:(int)type {
+	double prevNetWorth=0;
+	double prevValue=0;
+	double prevBalance=0;
+	
+	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = 12", nowYear-1];
+	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	for (NSManagedObject *mo in itemsPre) {
+		double asset_value = [[mo valueForKey:@"asset_value"] doubleValue];
+		double balance_owed = [[mo valueForKey:@"balance_owed"] doubleValue];
+
+		int itemType = [[mo valueForKey:@"type"] intValue];
+		if(type==1 && itemType!=1) {
+			asset_value=0;
+			balance_owed=0;
+		}
+		if(type==2 && itemType!=2) {
+			asset_value=0;
+			balance_owed=0;
+		}
+
+		prevValue += asset_value;
+		prevBalance += balance_owed;
+	}
+	prevNetWorth = (prevValue-prevBalance);
+	
+	int numMonthsConfirmed = 0;
+	
+	NSMutableArray *graphObjects = [[NSMutableArray alloc] init];
+	for(int month = 1; month <= 12; month++) {
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", nowYear, month];
+		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+		NSString *valFlag = @"N";
+		NSString *balFlag = @"N";
+		int last30 = 0;
+		double value = 0;
+		double balance = 0;
+		
+		for(NSManagedObject *mo in updateItems) {
+			double itemValue = [[mo valueForKey:@"asset_value"] doubleValue];
+			double itemBalance = [[mo valueForKey:@"balance_owed"] doubleValue];
+			
+			if([[mo valueForKey:@"val_confirm_flg"] boolValue])
+				valFlag=@"Y";
+			if([[mo valueForKey:@"bal_confirm_flg"] boolValue])
+				balFlag=@"Y";
+			
+			int itemType = [[mo valueForKey:@"type"] intValue];
+			if(type==1 && itemType!=1) {
+				itemValue=0;
+				itemBalance=0;
+			}
+			if(type==2 && itemType!=2) {
+				itemValue=0;
+				itemBalance=0;
+			}
+			
+			value += itemValue;
+			balance += itemBalance;
+			
+		}
+		
+		if([@"Y" isEqualToString:valFlag] || [@"Y" isEqualToString:balFlag])
+			numMonthsConfirmed++;
+		
+		last30 = (value-balance)-prevNetWorth;
+		if(type==3)
+			last30=balance-prevBalance;
+		
+		prevNetWorth = (value-balance);
+		prevValue = value;
+		prevBalance = balance;
+		
+		if(month==nowMonth)
+			[ObjectiveCScripts displayNetChangeLabel:self.netChangeLabel amount:last30 lightFlg:NO revFlg:type==3];
+		
+		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
+		[graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:type==3 currentMonthFlg:month==nowMonth]];
+		
+	}
+	return graphObjects;
+}
+
 
 @end

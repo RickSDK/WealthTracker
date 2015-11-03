@@ -137,6 +137,11 @@
 			CGContextSetRGBFillColor(c, 0, 0, 0, 1); // text black
 			
 			int midDegree = (int)(endDegree+startDegree)/2;
+			if(midDegree<0)
+				midDegree+=360;
+			if(midDegree>360)
+				midDegree-=360;
+			
 			namePoint = [self startingPointForString:graphObj.name midDegree:midDegree size:(endDegree-startDegree) midPoint:longPoint prevPoint:namePoint];
 			NSString *shortName = [self smartStringForName:graphObj.name max:11];
 			float percentage = value*100/totalPieSize;
@@ -1320,7 +1325,7 @@
 	return amount;
 }
 
-+(int)spinPieChart:(UIImageView *)imageView startTouchPosition:(CGPoint)startTouchPosition newTouchPosition:(CGPoint)newTouchPosition startDegree:(float)startDegree barGraphObjects:(NSMutableArray *)barGraphObjects {
++(float)spinPieChart:(UIImageView *)imageView startTouchPosition:(CGPoint)startTouchPosition newTouchPosition:(CGPoint)newTouchPosition startDegree:(float)startDegree barGraphObjects:(NSMutableArray *)barGraphObjects {
 	
 	float changeX = (startTouchPosition.y>imageView.center.y)?startTouchPosition.x-newTouchPosition.x:newTouchPosition.x-startTouchPosition.x;
 	
@@ -1329,6 +1334,11 @@
 	float newStartDegree = abs(changeX)>abs(changeY)?changeX:changeY;
 	startDegree += newStartDegree;
 	imageView.image = [GraphLib pieChartWithItems:barGraphObjects startDegree:startDegree];
+	
+	if(startDegree<0)
+		startDegree+=360;
+	if(startDegree>360)
+		startDegree-=360;
 	
 	return startDegree;
 }

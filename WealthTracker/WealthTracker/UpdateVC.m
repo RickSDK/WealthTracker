@@ -49,6 +49,7 @@
 	self.amountArray = [[NSMutableArray alloc] init];
 	
 	self.topImageView = [[UIImageView alloc] init];
+	self.graphArray = [[NSMutableArray alloc] init];
 	
 
 	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM, YYYY"];
@@ -63,10 +64,6 @@
 																					 action:@selector(handleSwipeLeft:)];
 	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
 	[self.mainTableView addGestureRecognizer:recognizer];
-
-	self.topSegment.layer.backgroundColor = [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0].CGColor;
-	self.topSegment.layer.cornerRadius = 7;
-	self.topSegment.selectedSegmentIndex = 0;
 
 	[self setMaxWidth];
 }
@@ -129,20 +126,22 @@
 	[self.debtArray removeAllObjects];
 	[self.assetArray removeAllObjects];
 	[self.amountArray removeAllObjects];
-	
+	[self.graphArray removeAllObjects];
+
+	self.netWorthLabel.hidden=self.pieSegment.selectedSegmentIndex==1;
+
 	BOOL displayChangeFlg = self.topSegment.selectedSegmentIndex==0;
 	
 	if(displayChangeFlg) {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Net Worth Changes in %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
 		self.topRightLabel.text = @"Changes This Month";
-		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
 	} else {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Equity as of %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
-		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
 		self.topRightLabel.text = @"Total Net Worth";
 	}
 
-	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	
 	NSArray *arrayOfArrays = [NSArray arrayWithObjects:self.propertyArray, self.vehicleArray, self.debtArray, self.assetArray, nil];
 	int greenCount=0;
@@ -168,9 +167,9 @@
 			if(abs(amount) > 0) {
 				GraphObject *graphObject = [[GraphObject alloc] init];
 				graphObject.name=obj.name;
-				graphObject.amount=(self.displayPieFlg)?abs(amount):amount;
+				graphObject.amount=(self.pieSegment.selectedSegmentIndex==1)?abs(amount):amount;
 				graphObject.rowId = [obj.rowId intValue];
-				[graphArray addObject:graphObject];
+				[self.graphArray addObject:graphObject];
 			}
 			[[arrayOfArrays objectAtIndex:i] addObject:obj];
 		}
@@ -195,8 +194,7 @@
 	[self.amountArray addObject:[NSString stringWithFormat:@"%d", (int)[ObjectiveCScripts changedEquityLast30ForItem:-4 context:self.managedObjectContext]]];
 	
 	self.nextItemDue=[self nextItemDue];
-	
-	self.topImageView.image = (self.displayPieFlg)?[GraphLib pieChartWithItems:graphArray startDegree:0]:[GraphLib graphBarsWithItems:graphArray];
+	self.graphImageView.image = (self.pieSegment.selectedSegmentIndex==1)?[GraphLib pieChartWithItems:self.graphArray startDegree:self.startDegree]:[GraphLib graphBarsWithItems:self.graphArray];
 
 	[self.mainTableView reloadData];
 }
@@ -224,18 +222,6 @@
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
-	if(indexPath.section==0) {
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if(cell==nil)
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:self.topImageView.image];
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
-
-	} else {
 	ItemCell *cell=nil;
 	
 		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -244,13 +230,13 @@
 			cell = [[ItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		}
 		ItemObject *obj = nil;
-		if(indexPath.section==1)
+		if(indexPath.section==0)
 			obj = [self.propertyArray objectAtIndex:indexPath.row];
-		if(indexPath.section==2)
+		if(indexPath.section==1)
 			obj = [self.vehicleArray objectAtIndex:indexPath.row];
-		if(indexPath.section==3)
+		if(indexPath.section==2)
 			obj = [self.debtArray objectAtIndex:indexPath.row];
-		if(indexPath.section==4)
+		if(indexPath.section==3)
 			obj = [self.assetArray objectAtIndex:indexPath.row];
 		
 		cell.bgView.backgroundColor = [UIColor whiteColor];
@@ -286,28 +272,27 @@
 		cell.redLineView.frame=CGRectMake(0, 55, width, 5);
 		cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
 		cell.accessoryType = (offset==0)?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
-		cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section];
+		cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section+1];
 
 		return cell;
-	}
 }
 
 -(ItemObject *)itemObjectForRow:(NSIndexPath *)indexPath {
 	ItemObject *obj=nil;
 	switch (indexPath.section) {
-		case 1: {
+		case 0: {
 			obj = [self.propertyArray objectAtIndex:indexPath.row];
 		}
 			break;
-		case 2: {
+		case 1: {
 			obj = [self.vehicleArray objectAtIndex:indexPath.row];
 		}
 			break;
-		case 3: {
+		case 2: {
 			obj = [self.debtArray objectAtIndex:indexPath.row];
 		}
 			break;
-		case 4: {
+		case 3: {
 			obj = [self.assetArray objectAtIndex:indexPath.row];
 		}
 			break;
@@ -348,31 +333,27 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(section==0)
-		return 1;
-	if(section==1)
 		return self.propertyArray.count;
-	if(section==2)
+	if(section==1)
 		return self.vehicleArray.count;
-	if(section==3)
+	if(section==2)
 		return self.debtArray.count;
-	if(section==4)
+	if(section==3)
 		return self.assetArray.count;
 	
 	return 0;
 }
 
+-(IBAction)pieSegmentChanged:(id)sender {
+	[self setupData];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==0) {
-		self.displayPieFlg=!self.displayPieFlg;
-		[self setupData];
-		return;
-	}
-	
 	if(self.swipePos!=0) {
 		self.swipePos=0;
 		[self.mainTableView reloadData];
@@ -399,26 +380,20 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	if(section==0)
-		return CGFLOAT_MIN;
-	else
-		return 30;
+	return 30;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	if(section==0)
-		return nil;
-	
 	NSArray *titles = [NSArray arrayWithObjects:@"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
-	return [self viewForHeaderWithText:[titles objectAtIndex:section-1] cellHeight:30 amount:[[self.amountArray objectAtIndex:section-1] doubleValue] section:(int)section];
+	return [self viewForHeaderWithText:[titles objectAtIndex:section] cellHeight:30 amount:[[self.amountArray objectAtIndex:section] doubleValue] section:(int)section];
 }
 
 - (UIView *)viewForHeaderWithText:(NSString *)headerText cellHeight:(float)cellHeight amount:(double)amount section:(int)section
 {
 	float screenWidth = [[UIScreen mainScreen] bounds].size.width;
 	UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, screenWidth, 44.0)];
-	customView.backgroundColor = [ObjectiveCScripts colorForType:section];
+	customView.backgroundColor = [ObjectiveCScripts colorForType:section+1];
 	// create the button object
 	UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	headerLabel.backgroundColor = [UIColor clearColor];
@@ -469,10 +444,30 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==0)
-		return [ObjectiveCScripts chartHeightForSize:190];
-	else
-		return 65;
+	return 65;
 }
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	self.startTouchPosition = [touch locationInView:self.view];
+	if(self.pieSegment.selectedSegmentIndex==0) {
+		self.pieSegment.selectedSegmentIndex=1;
+		[self setupData];
+	}
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	CGPoint newTouchPosition = [touch locationInView:self.view];
+	
+	if(self.pieSegment.selectedSegmentIndex==1) {
+		
+		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.graphArray];
+		self.startTouchPosition=newTouchPosition;
+		
+		return; // pie chart
+	}
+}
+
 
 @end

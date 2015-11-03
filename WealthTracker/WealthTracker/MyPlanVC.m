@@ -99,10 +99,15 @@
 	  
 	  double classA = [self classADebtForYear:year month:month];
 	  double classAMax=classA;
-	  for(int i=1; i<=5; i++)
-		  classAMax = [self findMaxForYear:year-i month:month max:classAMax];
+	  for(int i=1; i<=5*12; i++) {
+		  month--;
+		  if(month<1) {
+			  month=12;
+			  year--;
+		  }
+		  classAMax = [self findMaxForYear:year month:month max:classAMax];
+	  }
 	  
-
 	  if(classAMax>0) {
 		  float width = self.debtView.frame.size.width;
 		  int percent = classA*100/classAMax;

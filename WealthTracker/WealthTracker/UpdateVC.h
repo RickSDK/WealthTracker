@@ -29,6 +29,10 @@
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
 @property (nonatomic, strong) IBOutlet UILabel *topRightLabel;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *pieSegment;
+@property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
+
+@property (nonatomic, strong) NSMutableArray *graphArray;
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
@@ -38,9 +42,11 @@
 @property (nonatomic) double maxBalance;
 @property (nonatomic, strong) NSIndexPath *swipeIndexPath;
 @property (nonatomic) BOOL expiredFlg;
-@property (nonatomic) BOOL displayPieFlg;
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
 
 -(IBAction)topSegmentChanged:(id)sender;
+-(IBAction)pieSegmentChanged:(id)sender;
 
 
 @end
