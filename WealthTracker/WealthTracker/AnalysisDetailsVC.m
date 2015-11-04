@@ -155,6 +155,8 @@
 
 -(void)setupData {
 	
+
+	
 	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Monthly Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
 	
 	self.monthLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
@@ -391,6 +393,11 @@
 			break;
 	}
 	
+	if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
+		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
+	else
+		self.graphImageView.image = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
+
 	[self.mainTableView reloadData];
 }
 
@@ -907,10 +914,6 @@
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
-	if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
-		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
-	else
-		self.graphImageView.image = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
 
 	if(indexPath.section==0) {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -1055,6 +1058,9 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
+	if(self.topSegment.selectedSegmentIndex==0) {
+		[self drawPieChartatPoint:self.startTouchPosition];
+	}
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1065,22 +1071,28 @@
 		
 		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.chartValuesArray];
 		self.startTouchPosition=newTouchPosition;
-		
-		return; // pie chart
 	} else {
-		float width = self.graphImageView.frame.size.width;
-		int month=0;
-		if(width>0) {
-			int leftEdge = self.graphImageView.center.x-width/2;
-			month = (10+newTouchPosition.x-leftEdge)*12/width;
-			if(month>12)
-				month=12;
-		}
-		[self.chartValuesArray removeAllObjects];
-		self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
-		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
-
+		[self drawPieChartatPoint:newTouchPosition];
 	}
+}
+
+-(void)drawPieChartatPoint:(CGPoint)point {
+	[self.chartValuesArray removeAllObjects];
+	int month = [self getMonthFromView:self.graphImageView point:point];
+	self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
+	self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
+}
+
+-(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point {
+	float width = imageView.frame.size.width;
+	int month=0;
+	if(width>0) {
+		int leftEdge = imageView.center.x-width/2;
+		month = (10+point.x-leftEdge)*12/width;
+		if(month>12)
+			month=12;
+	}
+	return month;
 }
 
 -(NSMutableArray *)barItemsForMonth:(int)nowMonth nowYear:(int)nowYear type:(int)type {

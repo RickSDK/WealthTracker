@@ -86,7 +86,10 @@
 	[self.fieldValuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:total]];
 	[self.fieldColorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:total lightFlg:NO]];
 
-
+	if(self.chartSegmentControl.selectedSegmentIndex==0)
+		self.graphImageView.image = [GraphLib graphBarsWithItems:self.dataArray];
+	else
+		self.graphImageView.image = [GraphLib pieChartWithItems:self.dataArray startDegree:self.startDegree];
 	
 	[self.mainTableView reloadData];
 }
@@ -113,21 +116,6 @@
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
-	if(indexPath.row==0) {
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if(cell==nil)
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		if(self.pieChartFlg)
-			cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib pieChartWithItems:self.dataArray startDegree:0]];
-		else
-			cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib graphBarsWithItems:self.dataArray]];
-		
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
-	} else {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.fieldValuesArray.count labelProportion:0.5];
 		
 		cell.mainTitle = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
@@ -140,7 +128,6 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	}
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -148,15 +135,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 2;
+	return 1;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.row==0) {
-		self.pieChartFlg=!self.pieChartFlg;
-		[self setupData];
-	}
-}
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -169,16 +150,32 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.row==0)
-		return [ObjectiveCScripts chartHeightForSize:190];
-	else
-		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.fieldValuesArray
+	return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.fieldValuesArray
 																   tableView:self.mainTableView
 														labelWidthProportion:0.6]+20;
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
 	[self setupData];
+}
+
+-(IBAction)segmentClicked:(id)sender {
+	[self setupData];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	self.startTouchPosition = [touch locationInView:self.view];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	CGPoint newTouchPosition = [touch locationInView:self.view];
+	
+	if(self.chartSegmentControl.selectedSegmentIndex==1) {
+		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.dataArray];
+		self.startTouchPosition=newTouchPosition;
+	}
 }
 
 @end

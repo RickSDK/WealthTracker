@@ -32,8 +32,15 @@
 @property (nonatomic) int displayMonth;
 @property (nonatomic) BOOL pieChartFlg;
 
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
+@property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *chartSegmentControl;
+
+
 -(IBAction)topSegmentChanged:(id)sender;
 -(IBAction)prevButtonClicked:(id)sender;
 -(IBAction)nextButtonClicked:(id)sender;
+-(IBAction)segmentClicked:(id)sender;
 
 @end

@@ -13,6 +13,7 @@
 		6B0444421B59DD48001E7007 /* redCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0444411B59DD48001E7007 /* redCircle.png */; };
 		6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */; };
 		6B2A7FD51B8149CE009AF987 /* BreakdownSingleMonthVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */; };
+		6B2D50EE1BEA6FA000703FC2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B2D50ED1BEA6FA000703FC2 /* LocalAuthentication.framework */; };
 		6B2E23E21B54372B00CC2851 /* MainMenuVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */; };
 		6B2E23E61B543E8700CC2851 /* UpdateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2E23E41B543E8700CC2851 /* UpdateVC.m */; };
 		6B2E23E71B543E8700CC2851 /* UpdateVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2E23E51B543E8700CC2851 /* UpdateVC.xib */; };
@@ -165,6 +166,7 @@
 		6B2A7FD11B8149CE009AF987 /* BreakdownSingleMonthVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakdownSingleMonthVC.h; sourceTree = "<group>"; };
 		6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreakdownSingleMonthVC.m; sourceTree = "<group>"; };
 		6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BreakdownSingleMonthVC.xib; sourceTree = "<group>"; };
+		6B2D50ED1BEA6FA000703FC2 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuVC.xib; sourceTree = "<group>"; };
 		6B2E23E31B543E8700CC2851 /* UpdateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateVC.h; sourceTree = "<group>"; };
 		6B2E23E41B543E8700CC2851 /* UpdateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateVC.m; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B2D50EE1BEA6FA000703FC2 /* LocalAuthentication.framework in Frameworks */,
 				6B3C180E1B72C6D30039733B /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -381,6 +384,7 @@
 		6B416EB71B506D52009C9834 = {
 			isa = PBXGroup;
 			children = (
+				6B2D50ED1BEA6FA000703FC2 /* LocalAuthentication.framework */,
 				6B3C180D1B72C6D30039733B /* StoreKit.framework */,
 				6B8EB9851B51D54C00F8A20B /* Entity */,
 				6B416F231B50CF52009C9834 /* cells */,

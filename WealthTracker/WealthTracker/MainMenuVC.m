@@ -21,6 +21,7 @@
 #import "InfoVC.h"
 #import "MyPlanVC.h"
 #import "GraphObject.h"
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @interface MainMenuVC ()
 
@@ -39,6 +40,7 @@
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	[self setupData];
+	
 }
 
 
@@ -328,6 +330,49 @@
 
 	[self checkNextItemDue];
 	
+	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0)
+		[self lockApp];
+	
+}
+
+-(void)lockApp {
+	LAContext *myContext = [[LAContext alloc] init];
+	NSError *authError = nil;
+	NSString *myLocalizedReasonString = @"Touch ID Test to show Touch ID working in a custom app";
+	
+	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
+		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+				  localizedReason:myLocalizedReasonString
+							reply:^(BOOL success, NSError *error) {
+								if (success) {
+									dispatch_async(dispatch_get_main_queue(), ^{
+										[self performSegueWithIdentifier:@"Success" sender:nil];
+									});
+								} else {
+									dispatch_async(dispatch_get_main_queue(), ^{
+										UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+																							message:error.description
+																						   delegate:self
+																				  cancelButtonTitle:@"OK"
+																				  otherButtonTitles:nil, nil];
+										[alertView show];
+										[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
+										// Rather than show a UIAlert here, use the error to determine if you should push to a keypad for PIN entry.
+									});
+								}
+							}];
+	} else {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+																message:authError.description
+															   delegate:self
+													  cancelButtonTitle:@"OK"
+													  otherButtonTitles:nil, nil];
+			[alertView show];
+			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
+			// Rather than show a UIAlert here, use the error to determine if you should push to a keypad for PIN entry.
+		});
+	}
 }
 
 -(BOOL)checkForExpiredFlg {
@@ -378,9 +423,6 @@
 	if(self.initStep>=0) // intro phase
 		return;
 	
-	if(self.chartSegmentControl.selectedSegmentIndex==2)
-		return; // pie chart
-	
 	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition)) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
@@ -408,6 +450,9 @@
 	if(self.initStep>=0) // intro phase
 		return;
 	
+	if(self.chartSegmentControl.selectedSegmentIndex==2)
+		return; // pie chart
+
 	if(CGRectContainsPoint(self.graphImageView.frame, point)) {
 		float x=point.x;
 		if(x>[[UIScreen mainScreen] bounds].size.width-80)
@@ -473,15 +518,13 @@
 	UITouch *touch = [[event allTouches] anyObject];
 	CGPoint newTouchPosition = [touch locationInView:self.view];
 	
-	if(self.chartSegmentControl.selectedSegmentIndex==2) {
+	if(self.chartSegmentControl.selectedSegmentIndex==2 && CGRectContainsPoint(self.graphImageView.frame, newTouchPosition)) {
 
 		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.barGraphObjects];
 		self.startTouchPosition=newTouchPosition;
 
-		return; // pie chart
-	}
-
-	[self displayPopup:newTouchPosition];
+	} else
+		[self displayPopup:newTouchPosition];
 
 }
 

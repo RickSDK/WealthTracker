@@ -33,6 +33,7 @@
 #define kMenu8	@"Monthly Spending"
 #define kMenu9	@"Manage Portfolio"
 #define kMenu10	@"Update Profile"
+#define kMenu11	@"Require Password"
 
 @interface OptionsVC ()
 
@@ -64,6 +65,7 @@
 					   kMenu9,
 					   kMenu6,
 					   kMenu7,
+					   kMenu11,
 					   nil];
 	self.menuItems=[[NSArray alloc] initWithArray:titles];
 	
@@ -88,7 +90,12 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
 	cell.textLabel.text=[self.menuItems objectAtIndex:indexPath.row];
-	if([kMenu7 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+	if([kMenu11 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+		if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length==0)
+			cell.accessoryType= UITableViewCellAccessoryNone;
+		else
+			cell.accessoryType= UITableViewCellAccessoryCheckmark;
+	} else if([kMenu7 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
 		if([ObjectiveCScripts getUserDefaultValue:@"allowDecFlg"].length==0)
 			cell.accessoryType= UITableViewCellAccessoryNone;
 		else
@@ -159,6 +166,13 @@
 			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"allowDecFlg"];
 		else
 			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"allowDecFlg"];
+		[self.mainTableView reloadData];
+	}
+	if([kMenu11 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
+		if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length==0)
+			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"lockAppFlg"];
+		else
+			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
 		[self.mainTableView reloadData];
 	}
 	if([kMenu8 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {

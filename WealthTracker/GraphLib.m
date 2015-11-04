@@ -1265,8 +1265,9 @@
 
 +(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType displayTotalFlg:(BOOL)displayTotalFlg {
 	
+	int timeFrame=12;
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
-	month-=5;
+	month-=(timeFrame-1);
 	if(month<1) {
 		month+=12;
 		year--;
@@ -1280,7 +1281,7 @@
 	}
 
 	NSArray *monthList = [ObjectiveCScripts monthListShort];
-	for(int i=1; i<=6; i++) {
+	for(int i=1; i<=timeFrame; i++) {
 		GraphObject *graphObject = [[GraphObject alloc] init];
 		graphObject.name=[monthList objectAtIndex:month-1];
 		double amount=[self getAmountForMonth:month year:year type:type context:context reverseColorFlg:reverseColorFlg row_id:row_id fieldType:fieldType];
