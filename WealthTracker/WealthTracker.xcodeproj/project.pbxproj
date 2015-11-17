@@ -125,6 +125,12 @@
 		6BB354E61B744C1F0003987A /* lineChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E41B744C1F0003987A /* lineChart.png */; };
 		6BB354E71B744C1F0003987A /* pieChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E51B744C1F0003987A /* pieChart.png */; };
 		6BB354E91B744C280003987A /* barChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E81B744C280003987A /* barChart.png */; };
+		6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE51BF3C47F001D372F /* vault.jpg */; };
+		6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */; };
+		6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */; };
+		6BBEDEEF1BF3C4DE001D372F /* UnLockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEED1BF3C4DE001D372F /* UnLockAppVC.m */; };
+		6BBEDEF01BF3C4DE001D372F /* UnLockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEEE1BF3C4DE001D372F /* UnLockAppVC.xib */; };
+		6BBEDEF21BF3C52A001D372F /* whiteChromeBut.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEF11BF3C52A001D372F /* whiteChromeBut.png */; };
 		6BC3065C1B8FDEEF00E10C9F /* PayoffVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */; };
 		6BC3065D1B8FDEEF00E10C9F /* PayoffVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */; };
 		6BC472281B6151D400F68341 /* UpdateWebCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC472271B6151D400F68341 /* UpdateWebCell.m */; };
@@ -330,6 +336,14 @@
 		6BB354E41B744C1F0003987A /* lineChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineChart.png; sourceTree = "<group>"; };
 		6BB354E51B744C1F0003987A /* pieChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pieChart.png; sourceTree = "<group>"; };
 		6BB354E81B744C280003987A /* barChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barChart.png; sourceTree = "<group>"; };
+		6BBEDEE51BF3C47F001D372F /* vault.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vault.jpg; sourceTree = "<group>"; };
+		6BBEDEE71BF3C4AC001D372F /* LockAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockAppVC.h; sourceTree = "<group>"; };
+		6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockAppVC.m; sourceTree = "<group>"; };
+		6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LockAppVC.xib; sourceTree = "<group>"; };
+		6BBEDEEC1BF3C4DE001D372F /* UnLockAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnLockAppVC.h; sourceTree = "<group>"; };
+		6BBEDEED1BF3C4DE001D372F /* UnLockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnLockAppVC.m; sourceTree = "<group>"; };
+		6BBEDEEE1BF3C4DE001D372F /* UnLockAppVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnLockAppVC.xib; sourceTree = "<group>"; };
+		6BBEDEF11BF3C52A001D372F /* whiteChromeBut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteChromeBut.png; sourceTree = "<group>"; };
 		6BC306591B8FDEEF00E10C9F /* PayoffVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayoffVC.h; sourceTree = "<group>"; };
 		6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayoffVC.m; sourceTree = "<group>"; };
 		6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PayoffVC.xib; sourceTree = "<group>"; };
@@ -421,6 +435,12 @@
 				6BE6B2F01B6A855000C434BA /* InfoVC.h */,
 				6BE6B2F11B6A855000C434BA /* InfoVC.m */,
 				6BE6B2F21B6A855000C434BA /* InfoVC.xib */,
+				6BBEDEE71BF3C4AC001D372F /* LockAppVC.h */,
+				6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */,
+				6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */,
+				6BBEDEEC1BF3C4DE001D372F /* UnLockAppVC.h */,
+				6BBEDEED1BF3C4DE001D372F /* UnLockAppVC.m */,
+				6BBEDEEE1BF3C4DE001D372F /* UnLockAppVC.xib */,
 				6B5B87F41B681C0D00BBE741 /* OptionsVC.h */,
 				6B5B87F51B681C0D00BBE741 /* OptionsVC.m */,
 				6B5B87F61B681C0D00BBE741 /* OptionsVC.xib */,
@@ -555,6 +575,7 @@
 				6B6389931B7BA2A000260656 /* Icon-1024.png */,
 				6B6389941B7BA2A000260656 /* Icon.png */,
 				6B6389951B7BA2A000260656 /* Icon@2x.png */,
+				6BBEDEE51BF3C47F001D372F /* vault.jpg */,
 				6B6389961B7BA2A000260656 /* iTunesArtwork */,
 				6BFECD4E1B7A7D4700F40961 /* greenTexture.jpg */,
 				6BA44F0E1B9CF71E00C7470C /* financesButton.png */,
@@ -577,6 +598,7 @@
 				6B5B87ED1B668EF600BBE741 /* debt.png */,
 				6B5B87EE1B668EF600BBE741 /* real_estate.png */,
 				6B5B87EF1B668EF600BBE741 /* vehicle.png */,
+				6BBEDEF11BF3C52A001D372F /* whiteChromeBut.png */,
 				6BA44F101B9E1ECE00C7470C /* blueArrowDown.png */,
 				6BA44F111B9E1ECE00C7470C /* blueArrowUp.png */,
 				6B38E3DF1B6C678900EF8D40 /* karma.png */,
@@ -746,6 +768,7 @@
 				6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */,
 				6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */,
 				6B63899C1B7BA2A100260656 /* Icon-80.png in Resources */,
+				6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */,
 				6B416ED51B506D53009C9834 /* Main.storyboard in Resources */,
 				6B644CBE1B68204900483F98 /* PrivacyPolicyVC.xib in Resources */,
 				6B0444421B59DD48001E7007 /* redCircle.png in Resources */,
@@ -762,6 +785,7 @@
 				6B63899E1B7BA2A100260656 /* Icon-144.png in Resources */,
 				6BE6B2F41B6A855000C434BA /* InfoVC.xib in Resources */,
 				6BA44F121B9E1ECE00C7470C /* blueArrowDown.png in Resources */,
+				6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */,
 				6BB354E91B744C280003987A /* barChart.png in Resources */,
 				6BFECD4F1B7A7D4700F40961 /* greenTexture.jpg in Resources */,
 				6B644CC31B68206000483F98 /* InAppPurchaseVC.xib in Resources */,
@@ -773,6 +797,7 @@
 				6B63899D1B7BA2A100260656 /* Icon-120.png in Resources */,
 				6B38E3DE1B6C595200EF8D40 /* blueButton.png in Resources */,
 				6B2E23F41B549D8E00CC2851 /* redButton.png in Resources */,
+				6BBEDEF21BF3C52A001D372F /* whiteChromeBut.png in Resources */,
 				6BFECD511B7A884300F40961 /* blueGrad.jpg in Resources */,
 				6B2E23EC1B545B0B00CC2851 /* UpdateDetails.xib in Resources */,
 				6B6389981B7BA2A100260656 /* Icon-40.png in Resources */,
@@ -790,6 +815,7 @@
 				6B2E23E71B543E8700CC2851 /* UpdateVC.xib in Resources */,
 				6B416EF81B507031009C9834 /* yellowButton.png in Resources */,
 				6B9674001B6B2A5900641C7F /* profile.jpg in Resources */,
+				6BBEDEF01BF3C4DE001D372F /* UnLockAppVC.xib in Resources */,
 				6B2E23E21B54372B00CC2851 /* MainMenuVC.xib in Resources */,
 				6B42B00D1BAB309400CC649C /* TipsVC.xib in Resources */,
 				6B644CC51B6828C100483F98 /* activityPopup.png in Resources */,
@@ -871,6 +897,7 @@
 				6BE6B2F71B6A90B700C434BA /* ValueObj.m in Sources */,
 				6B8EB98F1B51DF7F00F8A20B /* SelectListVC.m in Sources */,
 				6B8EB9A21B530EFB00F8A20B /* ItemCell.m in Sources */,
+				6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */,
 				6B6940F71B646C5D00088D55 /* GraphObject.m in Sources */,
 				6B2E23EF1B5468C400CC2851 /* MultiLineDetailCellWordWrap.m in Sources */,
 				6B416F161B509FC2009C9834 /* SoundsLib.m in Sources */,
@@ -879,6 +906,7 @@
 				6BE6B2F31B6A855000C434BA /* InfoVC.m in Sources */,
 				6B8EB98B1B51D75A00F8A20B /* ItemObject.m in Sources */,
 				6B2E24091B58268E00CC2851 /* GraphCell.m in Sources */,
+				6BBEDEEF1BF3C4DE001D372F /* UnLockAppVC.m in Sources */,
 				6B42B0021BA8BBEA00CC649C /* RateVC.m in Sources */,
 				6B416F181B509FC2009C9834 /* WebServiceView.m in Sources */,
 				6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */,

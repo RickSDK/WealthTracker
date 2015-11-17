@@ -36,12 +36,12 @@
 	self.myPlanView.layer.cornerRadius = 8.0;
 	self.myPlanView.layer.masksToBounds = YES;
 	self.myPlanView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.myPlanView.layer.borderWidth = 3.0;
+	self.myPlanView.layer.borderWidth = 2.0;
 
 	self.ButtonsView.layer.cornerRadius = 8.0;
 	self.ButtonsView.layer.masksToBounds = YES;
 	self.ButtonsView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.ButtonsView.layer.borderWidth = 3.0;
+	self.ButtonsView.layer.borderWidth = 2.0;
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retirement" style:UIBarButtonItemStyleBordered target:self action:@selector(retirementButtonPressed)];
 

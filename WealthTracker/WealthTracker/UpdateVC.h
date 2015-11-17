@@ -27,7 +27,7 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
-@property (nonatomic, strong) IBOutlet UILabel *topRightLabel;
+//@property (nonatomic, strong) IBOutlet UILabel *topRightLabel;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *pieSegment;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;

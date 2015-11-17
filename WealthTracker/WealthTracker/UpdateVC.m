@@ -81,27 +81,21 @@
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
 	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
 	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
-	if(indexPath.section==0)
-		[self.navigationController popViewControllerAnimated:YES];
-	else {
 		self.swipeIndexPath=indexPath;
 		self.swipePos++;
 		if(self.swipePos>1)
 			self.swipePos=1;
 		[self.mainTableView reloadData];
-	}
 }
 
 -(void)handleSwipeLeft:(UISwipeGestureRecognizer *)gestureRecognizer {
 	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
 	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
-	if(indexPath.section>0) {
 		self.swipeIndexPath=indexPath;
 		self.swipePos--;
 		if(self.swipePos<-1)
 			self.swipePos=-1;
 		[self.mainTableView reloadData];
-	}
 }
 
 
@@ -128,18 +122,14 @@
 	[self.amountArray removeAllObjects];
 	[self.graphArray removeAllObjects];
 
-	self.netWorthLabel.hidden=self.pieSegment.selectedSegmentIndex==1;
-
 	BOOL displayChangeFlg = self.topSegment.selectedSegmentIndex==0;
 	
 	if(displayChangeFlg) {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Net Worth Changes in %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
-		self.topRightLabel.text = @"Changes This Month";
 		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
 	} else {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Equity as of %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
 		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
-		self.topRightLabel.text = @"Total Net Worth";
 	}
 
 	
@@ -263,7 +253,7 @@
 			if(self.swipePos<0) {
 				offset=-40;
 			}
-			cell.bgView.frame = CGRectMake(2+offset, 2, 316, 55);
+			cell.bgView.frame = CGRectMake(2+offset, 2, cell.bgView.frame.size.width, cell.bgView.frame.size.height);
 		}
 
 		float width=0;

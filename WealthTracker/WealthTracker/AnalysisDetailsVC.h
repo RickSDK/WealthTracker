@@ -49,7 +49,7 @@
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
 
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
-@property (nonatomic, strong) IBOutlet UILabel *netChangeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *topLeftLabel;
 @property (nonatomic, strong) IBOutlet UIButton *prevButton;
 @property (nonatomic, strong) IBOutlet UIButton *nextButton;
 

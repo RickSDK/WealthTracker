@@ -56,17 +56,13 @@
 	self.valuesArray2 = [[NSMutableArray alloc] init];
 	self.colorsArray2 = [[NSMutableArray alloc] init];
 	
-	self.topSegment.layer.backgroundColor = [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0].CGColor;
-	self.topSegment.layer.cornerRadius = 7;
-
-	
 	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Auto", @"Debt", @"Wealth", nil];
 	[self setTitle:[titles objectAtIndex:self.tag]];
 
-	self.topView.layer.cornerRadius = 8.0;
-	self.topView.layer.masksToBounds = YES;
-	self.topView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.topView.layer.borderWidth = 3.0;
+	self.graphImageView.layer.cornerRadius = 8.0;
+	self.graphImageView.layer.masksToBounds = YES;
+	self.graphImageView.layer.borderColor = [UIColor blackColor].CGColor;
+	self.graphImageView.layer.borderWidth = 1.0;
 
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -77,9 +73,6 @@
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]])
-		self.topSegment.selectedSegmentIndex=1;
-
 	[self setupData];
 }
 
@@ -224,7 +217,7 @@
 	  
 	  [self addConclusionsForHome:percentOfIncome value:totalValueObj.value balance:totalValueObj.balance idealLoan:idealLoan equity:percentOfEquity];
 
-	  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:totalValueObj.monthlyPayment lightFlg:YES revFlg:NO];
+	  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:totalValueObj.monthlyPayment lightFlg:NO revFlg:NO];
   }
 			break;
 			
@@ -242,7 +235,7 @@
 	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income low:25 high:55 revFlg:NO];
 
 	  self.topRightlabel.text = [NSString stringWithFormat:@"%@", [ObjectiveCScripts convertNumberToMoneyString:valueToday]];
-	  self.topRightlabel.textColor = [ObjectiveCScripts colorBasedOnNumber:valueToday lightFlg:YES];
+	  self.topRightlabel.textColor = [ObjectiveCScripts colorBasedOnNumber:valueToday lightFlg:NO];
 	  
 	  [self addBlankLine];
 	  
@@ -326,9 +319,9 @@
 		  [self debtAnalysisWithDetbToAssets:detbToAssets badDebtToIncome:badDebtToIncome interestToIncome:interestToIncome];
 
 	  if(self.topSegment.selectedSegmentIndex==0)
-		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(debtToday-debtLastMonth) lightFlg:YES revFlg:YES];
+		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(debtToday-debtLastMonth) lightFlg:NO revFlg:YES];
 	  else
-		  [ObjectiveCScripts displayMoneyLabel:self.topRightlabel amount:debtToday lightFlg:YES revFlg:YES];
+		  [ObjectiveCScripts displayMoneyLabel:self.topRightlabel amount:debtToday lightFlg:NO revFlg:YES];
   }
 			break;
 			
@@ -383,9 +376,9 @@
 	  [self addConclusionsForWealth:annual_income estValuePerYear:(double)estValuePerYear netWorthToday:netWorthToday];
 
 	  if(self.topSegment.selectedSegmentIndex==0)
-		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(netWorthToday-netWorthLastMonth) lightFlg:YES revFlg:NO];
+		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(netWorthToday-netWorthLastMonth) lightFlg:NO revFlg:NO];
 	  else
-		  [ObjectiveCScripts displayMoneyLabel:self.topRightlabel amount:netWorthToday lightFlg:YES revFlg:NO];
+		  [ObjectiveCScripts displayMoneyLabel:self.topRightlabel amount:netWorthToday lightFlg:NO revFlg:NO];
   } // end wealth
 			break;
 			
@@ -397,6 +390,8 @@
 		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
 	else
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
+
+	[self displayLabels];
 
 	[self.mainTableView reloadData];
 }
@@ -683,7 +678,6 @@
 		[self.valuesArray0 addObject:[ObjectiveCScripts convertNumberToMoneyString:totalAmount]];
 		[self.colorsArray0 addObject:[ObjectiveCScripts colorBasedOnNumber:totalAmount*reverseNum lightFlg:NO]];
 	}
-	self.netChangeLabel.hidden=YES;
 	if(month==self.nowMonth && year==self.nowYear && self.topSegment.selectedSegmentIndex==0)
 		[self createBarGraph];
 
@@ -691,7 +685,6 @@
 }
 
 -(void)createBarGraph {
-	self.netChangeLabel.hidden=NO;
 	[self.chartValuesArray removeAllObjects];
 	self.chartValuesArray = [self barItemsForMonth:self.nowMonth nowYear:self.nowYear type:self.tag];
 }
@@ -766,8 +759,8 @@
 	NSString *monStr = [NSString stringWithFormat:@"%d months", 12-self.displayMonth];
 	if(self.displayMonth>6)
 		monStr = [NSString stringWithFormat:@"just %d months", 12-self.displayMonth];
-	if(self.displayMonth>12)
-		monStr = @"just one month";
+	if(self.displayMonth>10)
+		monStr = @"one more month";
 
 	int debtPerMonth = 0;
 	if(self.displayMonth>0)
@@ -910,6 +903,31 @@
 	return totalValue;
 }
 
+-(void)displayLabels {
+	NSString *monthName = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+	NSString *title = nil;
+	if(self.tag==1)
+		title = @"Real Estate Values";
+	if(self.tag==2)
+		title = @"Vehicle Values";
+	if(self.tag==3) {
+		if(self.topSegment.selectedSegmentIndex==0)
+			title = [NSString stringWithFormat:@"Debts Changes in %@", monthName];
+		else
+			title = @"Total Debts";
+	}
+	if(self.tag==4) {
+		if(self.topSegment.selectedSegmentIndex==0)
+			title = [NSString stringWithFormat:@"Changes in %@", monthName];
+		else
+			title = @"Total Net Worth";
+	}
+	
+	self.titleLabel.text = title;
+	self.topLeftLabel.text = title;
+	
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
@@ -932,23 +950,8 @@
 		self.titleLabel.adjustsFontSizeToFitWidth = YES;
 		self.titleLabel.minimumScaleFactor = .8;
 		
-		NSString *monthName = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
-		if(self.tag==1)
-			self.titleLabel.text = @"Real Estate Values";
-		if(self.tag==2)
-			self.titleLabel.text = @"Vehicle Values";
-		if(self.tag==3) {
-		if(self.topSegment.selectedSegmentIndex==0)
-			self.titleLabel.text = [NSString stringWithFormat:@"Debts Changes in %@", monthName];
-		else
-			self.titleLabel.text = [NSString stringWithFormat:@"Total Debt Amounts in %@", monthName];
-		}
-		if(self.tag==4) {
-			if(self.topSegment.selectedSegmentIndex==0)
-				self.titleLabel.text = [NSString stringWithFormat:@"Changes in %@", monthName];
-			else
-				self.titleLabel.text = @"Amount of Debts and Assets";
-		}
+		[self displayLabels];
+		
 		self.titleLabel.textAlignment = NSTextAlignmentCenter;
 		self.titleLabel.textColor = [UIColor blackColor];
 		self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -1169,7 +1172,7 @@
 		prevBalance = balance;
 		
 		if(month==nowMonth)
-			[ObjectiveCScripts displayNetChangeLabel:self.netChangeLabel amount:last30 lightFlg:NO revFlg:type==3];
+			[ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:last30 lightFlg:NO revFlg:type==3];
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
 		[graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:type==3 currentMonthFlg:month==nowMonth]];

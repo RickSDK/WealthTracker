@@ -17,6 +17,7 @@
 #import "CashFlowVC.h"
 #import "MonthlySpendingVC.h"
 #import "StartupVC.h"
+#import "LockAppVC.h"
 
 #define kExportAlert	1
 #define kImporttAlert	2
@@ -48,6 +49,8 @@
 		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 	
 	self.userLabel.text=[ObjectiveCScripts getUserDefaultValue:@"emailAddress"];
+	
+	[self.mainTableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -169,11 +172,8 @@
 		[self.mainTableView reloadData];
 	}
 	if([kMenu11 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
-		if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length==0)
-			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"lockAppFlg"];
-		else
-			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
-		[self.mainTableView reloadData];
+		LockAppVC *detailViewController = [[LockAppVC alloc] initWithNibName:@"LockAppVC" bundle:nil];
+		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 	if([kMenu8 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
 		MonthlySpendingVC *detailViewController = [[MonthlySpendingVC alloc] initWithNibName:@"MonthlySpendingVC" bundle:nil];

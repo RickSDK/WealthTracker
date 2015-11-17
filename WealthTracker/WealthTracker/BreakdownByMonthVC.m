@@ -35,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Breakdown"];
+	[self setTitle:self.itemObject?self.itemObject.name:[ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType]];
 	
 	NSLog(@"+++BreakdownByMonthVC type: %d, fieldType: %d", self.type, self.fieldType);
 
@@ -68,6 +68,10 @@
 	
 	if(self.fieldType==0 && self.type==0)
 		self.topSegmentControl.enabled=NO;
+	
+	if(self.fieldType==2)
+		self.topSegmentControl.selectedSegmentIndex=2;
+	
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
@@ -218,7 +222,7 @@
 }
 
 -(IBAction)prevYearButtonPressed:(id)sender {
-	self.displayMonth-=6;
+	self.displayMonth-=12;
 	if(self.displayMonth<1) {
 		self.displayMonth+=12;
 		self.displayYear--;
@@ -227,7 +231,7 @@
 }
 -(IBAction)nextYearButtonPressed:(id)sender {
 	self.prevYearButton.enabled=YES;
-	self.displayMonth+=6;
+	self.displayMonth+=12;
 	if(self.displayMonth>12) {
 		self.displayMonth-=12;
 		self.displayYear++;

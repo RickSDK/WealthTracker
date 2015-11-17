@@ -51,6 +51,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *analysisButton;
 
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
+@property (nonatomic, strong) IBOutlet UIImageView *vaultImageView;
 @property (nonatomic, strong) IBOutlet UIView *messageView;
 @property (nonatomic, strong) IBOutlet UILabel *messageLabel;
 @property (nonatomic, strong) IBOutlet UILabel *chartLabel;
@@ -66,6 +67,7 @@
 @property (nonatomic) int initStep;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL showChartFlg;
+@property (nonatomic) BOOL appLockedFlg;
 @property (nonatomic) CGPoint startTouchPosition;
 @property (nonatomic) float startDegree;
 

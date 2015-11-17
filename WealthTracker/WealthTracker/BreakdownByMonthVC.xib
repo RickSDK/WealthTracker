@@ -11,7 +11,6 @@
                 <outlet property="mainTableView" destination="9iM-dC-j8H" id="p67-QQ-3Nc"/>
                 <outlet property="nextYearButton" destination="vEV-Md-nLF" id="ICf-mO-dgq"/>
                 <outlet property="prevYearButton" destination="2Ne-U8-s5D" id="Fbu-Su-k9G"/>
-                <outlet property="titleLabel" destination="K46-Dh-LAl" id="3Wg-jB-KOO"/>
                 <outlet property="topSegmentControl" destination="8ue-eh-B6i" id="jjc-Rt-98e"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="yearLabel" destination="7G6-Qi-HYg" id="AL6-nb-KpM"/>
@@ -38,7 +37,7 @@
                                 <rect key="frame" x="0.0" y="-1" width="320" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -53,19 +52,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="K46-Dh-LAl">
-                            <rect key="frame" x="0.0" y="4" width="161" height="25"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                            <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="8ue-eh-B6i">
-                            <rect key="frame" x="160" y="3" width="157" height="29"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="8ue-eh-B6i" customClass="CustomSegment">
+                            <rect key="frame" x="8" y="3" width="304" height="29"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Value"/>
                                 <segment title="Balance"/>
+                                <segment title="Equity"/>
                             </segments>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -120,7 +113,7 @@
         </view>
     </objects>
     <resources>
-        <image name="greenTexture.jpg" width="640" height="1164"/>
+        <image name="greenTexture.jpg" width="800" height="1280"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -41,7 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Details"];
+	[self setTitle:self.itemObject.name];
 	
 	self.valuesArray = [[NSMutableArray alloc] init];
 	self.namesArray = [[NSMutableArray alloc] init];

@@ -21,6 +21,7 @@
 #import "InfoVC.h"
 #import "MyPlanVC.h"
 #import "GraphObject.h"
+#import "UnLockAppVC.h"
 #import <LocalAuthentication/LocalAuthentication.h>
 
 @interface MainMenuVC ()
@@ -39,6 +40,10 @@
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
+	if([ObjectiveCScripts getUserDefaultValue:@"appOpened"].length>0) {
+		self.vaultImageView.hidden=YES;
+		self.appLockedFlg=NO;
+	}
 	[self setupData];
 	
 }
@@ -330,23 +335,78 @@
 
 	[self checkNextItemDue];
 	
+	self.vaultImageView.hidden=YES;
+	self.appLockedFlg=NO;
 	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0)
 		[self lockApp];
 	
 }
 
+-(void)unlockApp {
+	self.vaultImageView.hidden=YES;
+	self.appLockedFlg=NO;
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
+}
+
 -(void)lockApp {
 	LAContext *myContext = [[LAContext alloc] init];
 	NSError *authError = nil;
-	NSString *myLocalizedReasonString = @"Touch ID Test to show Touch ID working in a custom app";
+	NSString *myLocalizedReasonString = @"Authenticate using TouchID";
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"appOpened"];
+
+	self.appLockedFlg=YES;
+	self.vaultImageView.hidden=NO;
+
 	
+	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
+		
+		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+				  localizedReason:myLocalizedReasonString
+							reply:^(BOOL succes, NSError *error) {
+								
+								if (succes) {
+									[self unlockApp];
+									NSLog(@"User is authenticated successfully");
+								} else {
+									switch (error.code) {
+										case LAErrorAuthenticationFailed:
+											[ObjectiveCScripts showAlertPopup:@"Authentication Failed" message:authError.description];
+											NSLog(@"Authentication Failed");
+											break;
+											
+										case LAErrorUserCancel:
+											NSLog(@"User pressed Cancel button");
+											break;
+											
+										case LAErrorUserFallback:
+											break;
+											
+										default:
+											[ObjectiveCScripts showAlertPopup:@"Touch ID is not configured" message:authError.description];
+											NSLog(@"Touch ID is not configured");
+											break;
+									}
+									UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+									[self.navigationController pushViewController:detailViewController animated:YES];
+									
+									NSLog(@"Authentication Fails");
+								}
+							}];
+	} else {
+		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+		[self.navigationController pushViewController:detailViewController animated:YES];
+		NSLog(@"Can not evaluate Touch ID");
+		
+	}
+	/*
 	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
 		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
 				  localizedReason:myLocalizedReasonString
 							reply:^(BOOL success, NSError *error) {
 								if (success) {
 									dispatch_async(dispatch_get_main_queue(), ^{
-										[self performSegueWithIdentifier:@"Success" sender:nil];
+										NSLog(@"Yes!");
+//										[self performSegueWithIdentifier:@"Success" sender:nil];
 									});
 								} else {
 									dispatch_async(dispatch_get_main_queue(), ^{
@@ -363,7 +423,7 @@
 							}];
 	} else {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"TouchID Error"
 																message:authError.description
 															   delegate:self
 													  cancelButtonTitle:@"OK"
@@ -373,6 +433,7 @@
 			// Rather than show a UIAlert here, use the error to determine if you should push to a keypad for PIN entry.
 		});
 	}
+	 */
 }
 
 -(BOOL)checkForExpiredFlg {

@@ -32,17 +32,17 @@
 	self.bgView.layer.cornerRadius = 8.0;
 	self.bgView.layer.masksToBounds = YES;
 	self.bgView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.bgView.layer.borderWidth = 3.0;
+	self.bgView.layer.borderWidth = 2.0;
 	
 	self.stepView.layer.cornerRadius = 8.0;
 	self.stepView.layer.masksToBounds = YES;
 	self.stepView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.stepView.layer.borderWidth = 3.0;
+	self.stepView.layer.borderWidth = 2.0;
 	
 	self.tipsView.layer.cornerRadius = 8.0;
 	self.tipsView.layer.masksToBounds = YES;
 	self.tipsView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.tipsView.layer.borderWidth = 3.0;
+	self.tipsView.layer.borderWidth = 2.0;
 
 	self.tipsView.hidden=YES;
 
