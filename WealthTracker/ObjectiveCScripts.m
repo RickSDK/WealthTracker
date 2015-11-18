@@ -535,7 +535,7 @@
 }
 
 +(NSArray *)monthListShort {
-	return [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", nil];
+	return [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", @"X", nil];
 }
 
 +(BOOL)isStatusGreen:(ItemObject *)obj {

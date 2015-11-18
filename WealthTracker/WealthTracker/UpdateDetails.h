@@ -44,5 +44,6 @@
 -(void)updateBalance:(NSString *)value;
 -(IBAction)payoffButtonPressed:(id)sender;
 -(IBAction)menuButtonPressed:(id)sender;
+-(IBAction)breakdownButtonPressed:(id)sender;
 
 @end

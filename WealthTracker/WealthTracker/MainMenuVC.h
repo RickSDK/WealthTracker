@@ -52,6 +52,7 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
 @property (nonatomic, strong) IBOutlet UIImageView *vaultImageView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, strong) IBOutlet UIView *messageView;
 @property (nonatomic, strong) IBOutlet UILabel *messageLabel;
 @property (nonatomic, strong) IBOutlet UILabel *chartLabel;

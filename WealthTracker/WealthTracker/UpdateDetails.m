@@ -18,6 +18,7 @@
 #import "UpdateWebCell.h"
 #import "WebViewVC.h"
 #import "PayoffVC.h"
+#import "BreakdownByMonthVC.h"
 
 @interface UpdateDetails ()
 
@@ -79,12 +80,14 @@
 }
 
 -(void)handleSwipeLeft:(UISwipeGestureRecognizer *)gestureRecognizer {
-	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
-	//Get the corresponding index path within the table view
-	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
-	if(indexPath.section==0) {
-		[self drillDown];
-	}
+	[self breakdownLink];
+
+//	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
+//	//Get the corresponding index path within the table view
+//	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
+//	if(indexPath.section==0) {
+//		[self breakdownLink];
+//	}
 }
 
 -(ItemObject *)refreshObjFromObj:(ItemObject *)obj {
@@ -296,6 +299,9 @@
 		
 		int principalPaid = [ObjectiveCScripts calculatePaydownRate:balToday balLastYear:balLastYear bal30:bal30 bal90:bal90];
 		if(principalPaid>0) {
+			
+			if(principalPaid>balToday)
+				self.payoffButton.enabled=NO;
 
 			[self.namesArray addObject:@"Debt Reduction Rate"];
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%@ / month", [ObjectiveCScripts convertNumberToMoneyString:principalPaid]]];
@@ -728,6 +734,18 @@
 
 -(IBAction)payoffButtonPressed:(id)sender {
 	[self drillDown];
+}
+
+-(void)breakdownLink {
+	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.itemObject = self.itemObject;
+	detailViewController.displayYear=self.nowYear;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)breakdownButtonPressed:(id)sender {
+	[self breakdownLink];
 }
 
 -(void)drillDown {

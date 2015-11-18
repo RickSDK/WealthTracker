@@ -16,6 +16,7 @@
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *topSegmentControl;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *changeSegmentControl;
 @property (nonatomic, strong) IBOutlet UIImageView *topGraphImageView;
 @property (nonatomic, strong) IBOutlet UILabel *graphTitleLabel;
 
@@ -35,9 +36,9 @@
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int fieldType;
-@property (nonatomic) BOOL displayTotalFlg;
 
 -(IBAction)topSegmentChanged:(id)sender;
+-(IBAction)changeSegmentChanged:(id)sender;
 -(IBAction)prevYearButtonPressed:(id)sender;
 -(IBAction)nextYearButtonPressed:(id)sender;
 

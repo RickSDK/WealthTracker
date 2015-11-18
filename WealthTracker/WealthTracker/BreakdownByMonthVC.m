@@ -75,9 +75,7 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-	if(self.row_id>0) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details" style:UIBarButtonItemStyleBordered target:self action:@selector(payoffDay)];
-	} else if(self.type==0 && self.fieldType==2) {
+	if(self.type==0 && self.fieldType==2) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
 	}
 
@@ -139,12 +137,12 @@
 		
 	}
 	
-	if(self.displayTotalFlg)
+	if(self.changeSegmentControl.selectedSegmentIndex==1)
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Totals by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
 	else
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
 	
-	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.displayTotalFlg];
+	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==1];
 	
 	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 	int width = [[UIScreen mainScreen] bounds].size.width;
@@ -258,7 +256,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0) {
-		self.displayTotalFlg=!self.displayTotalFlg;
+		self.changeSegmentControl.selectedSegmentIndex=(self.changeSegmentControl.selectedSegmentIndex==0);
 		[self setupData];
 	}
 	if(indexPath.section==1 && self.row_id==0) {
@@ -325,6 +323,10 @@
 		return [ObjectiveCScripts chartHeightForSize:190];
 	else
 		return 34;
+}
+
+-(IBAction)changeSegmentChanged:(id)sender {
+	[self setupData];
 }
 
 

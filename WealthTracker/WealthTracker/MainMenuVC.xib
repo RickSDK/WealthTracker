@@ -8,6 +8,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainMenuVC">
             <connections>
+                <outlet property="activityIndicatorView" destination="imv-dw-I3P" id="Oqe-2g-YcX"/>
                 <outlet property="analysisButton" destination="R0A-1V-g3a" id="RVy-O4-c3g"/>
                 <outlet property="arrowImage" destination="w81-b6-B82" id="dAq-lF-A7G"/>
                 <outlet property="assetChangeLabel" destination="NT0-b8-1eC" id="eN4-72-Koz"/>
@@ -381,6 +382,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" id="imv-dw-I3P">
+                    <rect key="frame" x="142" y="233" width="37" height="37"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

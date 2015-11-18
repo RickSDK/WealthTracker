@@ -354,17 +354,17 @@
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {
 		
-		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.itemObject = [self itemObjectForRow:indexPath];
-		detailViewController.displayYear=self.nowYear;
-		[self.navigationController pushViewController:detailViewController animated:YES];
-		
-		
-//		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+//		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 //		detailViewController.managedObjectContext = self.managedObjectContext;
 //		detailViewController.itemObject = [self itemObjectForRow:indexPath];
+//		detailViewController.displayYear=self.nowYear;
 //		[self.navigationController pushViewController:detailViewController animated:YES];
+		
+		
+		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		detailViewController.itemObject = [self itemObjectForRow:indexPath];
+		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 }
 

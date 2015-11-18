@@ -68,7 +68,7 @@
                     <items>
                         <barButtonItem style="plain" id="LCf-PA-dVL">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="u4t-OC-vPo" customClass="CustomButton">
-                                <rect key="frame" x="16" y="7" width="115" height="30"/>
+                                <rect key="frame" x="16" y="7" width="95" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Main Menu">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -78,12 +78,25 @@
                                 </connections>
                             </button>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Y3i-rU-Otx"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="PaA-6c-nbO"/>
+                        <barButtonItem style="plain" id="bpE-2F-Led">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gHc-vr-fLX" customClass="CustomButton">
+                                <rect key="frame" x="128" y="7" width="95" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Breakdown">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="breakdownButtonPressed:" destination="-1" eventType="touchDown" id="rWG-gT-7Gd"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="PcQ-Wt-Oc8"/>
                         <barButtonItem style="plain" id="r6X-Yv-jQC">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="azu-fu-Dk5" customClass="CustomButton">
-                                <rect key="frame" x="141" y="7" width="120" height="30"/>
+                                <rect key="frame" x="204" y="7" width="80" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Payoff Strategy">
+                                <state key="normal" title="Payoff">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>

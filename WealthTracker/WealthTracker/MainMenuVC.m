@@ -342,14 +342,10 @@
 	
 }
 
--(void)unlockApp {
-	self.vaultImageView.hidden=YES;
-	self.appLockedFlg=NO;
-	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
-}
 
 -(void)lockApp {
 	LAContext *myContext = [[LAContext alloc] init];
+	[self.activityIndicatorView startAnimating];
 	NSError *authError = nil;
 	NSString *myLocalizedReasonString = @"Authenticate using TouchID";
 	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"appOpened"];
@@ -365,9 +361,14 @@
 							reply:^(BOOL succes, NSError *error) {
 								
 								if (succes) {
-									[self unlockApp];
-									NSLog(@"User is authenticated successfully");
+									dispatch_async(dispatch_get_main_queue(), ^{
+										[self.activityIndicatorView stopAnimating];
+										self.vaultImageView.hidden=YES;
+										self.appLockedFlg=NO;
+										NSLog(@"User is authenticated successfully");
+									});
 								} else {
+									dispatch_async(dispatch_get_main_queue(), ^{
 									switch (error.code) {
 										case LAErrorAuthenticationFailed:
 											[ObjectiveCScripts showAlertPopup:@"Authentication Failed" message:authError.description];
@@ -386,16 +387,20 @@
 											NSLog(@"Touch ID is not configured");
 											break;
 									}
-									UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
-									[self.navigationController pushViewController:detailViewController animated:YES];
-									
-									NSLog(@"Authentication Fails");
+										[self.activityIndicatorView stopAnimating];
+										UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+										[self.navigationController pushViewController:detailViewController animated:YES];
+										NSLog(@"Authentication Fails");
+									});
 								}
 							}];
 	} else {
-		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
-		[self.navigationController pushViewController:detailViewController animated:YES];
-		NSLog(@"Can not evaluate Touch ID");
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.activityIndicatorView stopAnimating];
+			UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+			[self.navigationController pushViewController:detailViewController animated:YES];
+			NSLog(@"Can not evaluate Touch ID");
+		});
 		
 	}
 	/*
