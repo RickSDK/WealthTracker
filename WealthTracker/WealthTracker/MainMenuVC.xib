@@ -45,7 +45,6 @@
                 <outlet property="redCircleImageView" destination="sxs-4l-tZs" id="VYs-Rc-Zmo"/>
                 <outlet property="updateNumberLabel" destination="bPk-3K-G3t" id="KwC-5D-ydy"/>
                 <outlet property="updateStatusImageView" destination="79q-uJ-baH" id="fvc-mf-34I"/>
-                <outlet property="vaultImageView" destination="oLz-Tq-xvK" id="8tT-6S-8oM"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -58,7 +57,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="CustomSegment">
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="ChartSegmentControl">
                     <rect key="frame" x="10" y="335" width="300" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <segments>
@@ -378,10 +377,6 @@
                     <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vault.jpg" id="oLz-Tq-xvK">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                </imageView>
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" id="imv-dw-I3P">
                     <rect key="frame" x="142" y="233" width="37" height="37"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -401,7 +396,6 @@
         <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="red.png" width="300" height="300"/>
         <image name="redCircle.png" width="30" height="30"/>
-        <image name="vault.jpg" width="320" height="480"/>
         <image name="yellowButton.png" width="400" height="100"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

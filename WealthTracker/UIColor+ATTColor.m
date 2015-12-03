@@ -10,11 +10,11 @@
 @implementation UIColor (ATTColor)
 
 + (UIColor *)ATTBlue {
-	return [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0];
+	return [UIColor colorWithRed:(6/255.0) green:(122/255.0) blue:(180/255.0) alpha:1.0]; //#067ab4
 }
 
 + (UIColor *)ATTLightBlue {
-	return [UIColor colorWithRed:(58/255.0) green:(165/255.0) blue:(220/255.0) alpha:1.0];
+	return [UIColor colorWithRed:(58/255.0) green:(165/255.0) blue:(220/255.0) alpha:1.0]; //#3aA5DC
 }
 
 + (UIColor *)ATTDarkBlue {
@@ -66,7 +66,7 @@
 }
 
 + (UIColor *)ATTFaintBlue {
-	return [UIColor colorWithRed:237/255.0 green:243/255.0 blue:254/255.0 alpha:1.0];
+	return [UIColor colorWithRed:237/255.0 green:243/255.0 blue:254/255.0 alpha:1.0]; //#EDF3FE
 }
 
 //

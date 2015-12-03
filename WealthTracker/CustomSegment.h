@@ -10,4 +10,6 @@
 
 @interface CustomSegment : UISegmentedControl
 
+-(void)changeSegment;
+
 @end

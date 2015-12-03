@@ -29,11 +29,13 @@
 	
 	[self setTitle:@"New Item"];
 	
+	self.buttonArray = [[NSMutableArray alloc] init];
 	
-	self.bgView.layer.cornerRadius = 8.0;
-	self.bgView.layer.masksToBounds = YES;
-	self.bgView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.bgView.layer.borderWidth = 2.0;
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *item in items) {
+		[self.buttonArray addObject:[item valueForKey:@"name"]];
+	}
+	[self.buttonArray addObject:@"-other-"];
 
 	self.deleteButton.hidden=YES;
 	if(self.managedObject) {
@@ -51,6 +53,13 @@
 		self.confirmSwitch.on = [[self.managedObject valueForKey:@"confirmFlg"] boolValue];
 		self.deleteButton.hidden=NO;
 	}
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(textFieldDidChangeNotification:)
+												 name:UITextFieldTextDidBeginEditingNotification
+											   object:self.nameTextField];
+
+	
 	[self checkConfirmSwitch];
 	[self checkTypeSwitch];
 
@@ -58,6 +67,14 @@
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
 
+}
+
+-(void)textFieldDidChangeNotification:(id)sender {
+	
+	if(self.nameTextField.text.length==0 && self.typeSwitch.on && !self.okToEditFlg) {
+		[self.nameTextField resignFirstResponder];
+		[ObjectiveCScripts showAlertPopup:@"Press Select First" message:@""];
+	}
 }
 
 -(void)infoButtonPressed {
@@ -70,6 +87,7 @@
 	else
 		self.submitButton.enabled=YES;
 }
+
 
 -(BOOL)textField:(UITextField *)textFieldlocal shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -141,6 +159,7 @@
 		self.typeLabel.text = @"Income";
 		self.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
 	}
+	self.selectButton.enabled=self.typeSwitch.on;
 }
 
 - (IBAction) confirmSwitchPressed: (id) sender {
@@ -169,6 +188,27 @@
 	}
 }
 
+- (IBAction) selectButtonPressed: (id) sender {
+	self.okToEditFlg=NO;
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select this item type" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:nil];
+	
+	for(NSString *button in self.buttonArray)
+		[actionSheet addButtonWithTitle:button];
+
+	[actionSheet showInView:self.view];
+}
+
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if(buttonIndex != actionSheet.cancelButtonIndex && buttonIndex>0) {
+		self.nameTextField.text = [self.buttonArray objectAtIndex:buttonIndex-1];
+		if(buttonIndex==self.buttonArray.count) {
+			self.okToEditFlg=YES;
+			self.nameTextField.text = @"";
+			[self.nameTextField becomeFirstResponder];
+		}
+	}
+}
 
 
 

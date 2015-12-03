@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ChartSegmentControl.h"
 
 @interface MainMenuVC : UIViewController
 
@@ -56,7 +57,7 @@
 @property (nonatomic, strong) IBOutlet UIView *messageView;
 @property (nonatomic, strong) IBOutlet UILabel *messageLabel;
 @property (nonatomic, strong) IBOutlet UILabel *chartLabel;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *chartSegmentControl;
+@property (nonatomic, strong) IBOutlet ChartSegmentControl *chartSegmentControl;
 
 
 

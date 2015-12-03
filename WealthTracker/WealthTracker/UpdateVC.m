@@ -35,6 +35,7 @@
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
+	[self.topSegment changeSegment];
 	[self setupData];
 }
 
@@ -185,6 +186,8 @@
 	
 	self.nextItemDue=[self nextItemDue];
 	self.graphImageView.image = (self.pieSegment.selectedSegmentIndex==1)?[GraphLib pieChartWithItems:self.graphArray startDegree:self.startDegree]:[GraphLib graphBarsWithItems:self.graphArray];
+
+	[self.pieSegment changeSegment];
 
 	[self.mainTableView reloadData];
 }

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-@interface CashFlowEditItemVC : UIViewController
+@interface CashFlowEditItemVC : UIViewController <UIActionSheetDelegate>
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSManagedObject *managedObject;
@@ -24,10 +24,15 @@
 @property (nonatomic, strong) IBOutlet UILabel *confirmLabel;
 @property (nonatomic, strong) IBOutlet UIButton *submitButton;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
+@property (nonatomic, strong) IBOutlet UIButton *selectButton;
+
+@property (nonatomic, strong) NSMutableArray *buttonArray;
+@property (nonatomic) BOOL okToEditFlg;
 
 - (IBAction) submitButtonPressed: (id) sender;
 - (IBAction) typeSwitchPressed: (id) sender;
 - (IBAction) confirmSwitchPressed: (id) sender;
 - (IBAction) deleteButtonPressed: (id) sender;
+- (IBAction) selectButtonPressed: (id) sender;
 
 @end

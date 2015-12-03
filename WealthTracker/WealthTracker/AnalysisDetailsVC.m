@@ -81,6 +81,7 @@
 }
 
 -(IBAction)segmentChanged:(id)sender {
+	[self.topSegment changeSegment];
 	[self setupData];
 }
 
@@ -155,6 +156,8 @@
 	self.monthLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 	
 	self.nextButton.enabled = !(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
+	if(self.displayYear>self.nowYear)
+		self.nextButton.enabled = NO;
 
 	if(self.topSegment.selectedSegmentIndex==0 && self.tag>2)
 		self.topLeftlabel.text = @"This Month";
@@ -482,6 +485,62 @@
 
 }
 
+-(NSString *)wealthAnalysisByCategory {
+	NSString *line = @"";
+	double networth = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:0];
+	double realEstateEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:1];
+	double autoEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:2];
+	double debtEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:3];
+	double assetEquity = networth-realEstateEquity-autoEquity-debtEquity;
+
+	int max=realEstateEquity;
+	NSString *maxString = @"Real Estate equity";
+	if(autoEquity>max) {
+		max=autoEquity;
+		maxString = @"Auto equity";
+	}
+	if(debtEquity>max) {
+		max=debtEquity;
+		maxString = @"Debt equity";
+	}
+	if(assetEquity>max) {
+		max=assetEquity;
+		maxString = @"Assets";
+	}
+
+	NSString *minString = @"Real Estate equity";
+	int min=realEstateEquity;
+	if(autoEquity<min) {
+		min=autoEquity;
+		minString = @"Auto equity";
+	}
+	if(debtEquity<min) {
+		minString = @"Debt equity";
+		min=debtEquity;
+	}
+	if(assetEquity<min) {
+		minString = @"Assets";
+		min=assetEquity;
+	}
+	
+	NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1];
+
+	if(networth>0) {
+		if(min>0) {
+			line = [NSString stringWithFormat:@"%@ %d has been fantastic as all four categories of your portfolio are positive, led by %@ up %@ this month.", monthName, self.displayYear, maxString, [ObjectiveCScripts convertNumberToMoneyString:max]];
+		} else {
+			line = [NSString stringWithFormat:@"%@ %d has been mostly positive, led by %@ up %@, but %@ is down %@ on this month.", monthName, self.displayYear, maxString, [ObjectiveCScripts convertNumberToMoneyString:max], minString, [ObjectiveCScripts convertNumberToMoneyString:min*-1]];
+		}
+	} else {
+		if(max>0) {
+			line = [NSString stringWithFormat:@"%@ %d has been mostly negative, dragged down by %@ off %@, but %@ is actually up %@ on the month.", monthName, self.displayYear, minString, [ObjectiveCScripts convertNumberToMoneyString:min*-1], maxString, [ObjectiveCScripts convertNumberToMoneyString:max]];
+		} else {
+			line = [NSString stringWithFormat:@"You are getting hammered this month as all four categories of your portfolio are negative, led by %@ off %@ on the month.", minString, [ObjectiveCScripts convertNumberToMoneyString:min*-1]];
+		}
+	}
+	return line;
+}
+
 -(void)addConclusionsForWealth:(double)annual_income estValuePerYear:(double)estValuePerYear netWorthToday:(double)netWorthToday monthlyChange:(double)monthlyChange {
 	int idealNetWorth = [ObjectiveCScripts calculateIdealNetWorth:annual_income];
 	NSString *idealNetWorthString = [GraphLib smallLabelForMoney:idealNetWorth totalMoneyRange:idealNetWorth];
@@ -490,41 +549,63 @@
 	if(estValuePerYear>1000)
 		timeToReach = (idealNetWorth-netWorthToday)/estValuePerYear;
 	
-	NSString *line1=@"'Retirement Amount' is based on the calculation that you can live off 8% of your net worth if your income ends and you instead liquidate some of your assets.";
+	NSString *line0=[self percentComplateString];
+
 	
-	NSString *line2=@"";
+	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
+	int retirementAge = self.nowYear+timeToReach-yearBorn;
+	
+	
+	NSString *line1=@"";
 	if(monthlyChange<0) {
-		line2 = [NSString stringWithFormat:@"This has been a bad month for you seeing your Net Worth fall by %@.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange*-1]];
+		line1 = [NSString stringWithFormat:@"This has been a bad month for you seeing your Net Worth fall by %@.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange*-1]];
 	} else {
 		int percent = 0;
 		if(estValuePerYear>0)
 			percent = monthlyChange*100*12/estValuePerYear;
 		
 		if(percent>95)
-			line2 = [NSString stringWithFormat:@"This has been a fantastic month for you seeing your Net Worth rise by %@.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
+			line1 = [NSString stringWithFormat:@"This has been a fantastic month for you seeing your Net Worth rise by %@.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
 		else if(percent>75)
-			line2 = [NSString stringWithFormat:@"This has been a good month for you seeing your Net Worth rise by %@. Although it is off slightly from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
+			line1 = [NSString stringWithFormat:@"This has been a good month for you seeing your Net Worth rise by %@. Although it is off slightly from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
 		else
-			line2 = [NSString stringWithFormat:@"Your Net Worth has risen by %@ this month, although that is off from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
+			line1 = [NSString stringWithFormat:@"Your Net Worth has risen by %@ this month, although that is off from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
 	}
+
+	NSString *line2 = [self wealthAnalysisByCategory];
+	
+	NSString *line3 = @"";
+	if(monthlyChange>0) {
+		if(retirementAge<60) {
+			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a pretty good number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
+		} else {
+			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a little on the low side for this stage of your life.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
+		}
+	} else {
+		if(retirementAge<60) {
+			line3 = [NSString stringWithFormat:@"Your total net worth has now dropped to %@, but is still a pretty good number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
+		} else {
+			line3 = [NSString stringWithFormat:@"Your total net worth has now dropped to %@, pushing your retirement age even further behind.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
+		}
+	}
+
+	NSString *line4=@"'Retirement Amount' is based on the calculation that you can live off 8% of your net worth if your income ends and you instead liquidate some of your assets.";
 	
 	
-	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
-	int retirementAge = self.nowYear+timeToReach-yearBorn;
-	
-	NSString *line3=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, this will take you about %d years, allowing you to retire at age %d.", idealNetWorthString, timeToReach, retirementAge];
+
+	NSString *line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, this will take you about %d years, allowing you to retire at age %d.", idealNetWorthString, timeToReach, retirementAge];
 	
 	if(timeToReach>50)
-		line3=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];
+		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];
 	
 	if(netWorthToday<=0)
-		line3=@"You are currently broke, but you can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
+		line5=@"You are currently broke, but you can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
 	
 	if(netWorthToday>0 && estValuePerYear<0 && netWorthToday<idealNetWorth/2)
-		line3=@"You have a positive net worth, but this past year has not been good to you. You can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
+		line5=@"You have a positive net worth, but this past year has not been good to you. You can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
 	
 	[self.namesArray2 addObject:@""];
-	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@\n\n%@\n\n%@", line1, line2, line3]];
+	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, line4, line5]];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 }
 
@@ -676,7 +757,7 @@
 		totalValueObj.badDebt += valueObj.badDebt;
 		totalValueObj.monthlyPayment += [obj.monthly_payment doubleValue]+[obj.homeowner_dues doubleValue];
 		totalAmount+=amount;
-
+		
 		if(amount != 0) {
 			int reverseNum=(reverseColorFlg)?-1:1;
 			if(obj.status == 0 || month != self.nowMonth || year != self.nowYear) {
@@ -747,10 +828,7 @@
 	return valueObj;
 }
 
--(void)debtAnalysisMonthlyWithReduction:(int)reduction allDebt30:(double)allDebt30 classADebt:(double)classADebt classAReduction:(int)classAReduction debtThisYear:(double)debtThisYear debtString:(NSString *)debtString {
-	allDebt30*=-1;
-	[self.namesArray2 addObject:@""];
-	
+-(NSString *)percentComplateString {
 	int percentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
 	if(self.displayMonth != self.nowMonth || self.displayYear != self.displayYear)
 		percentComplete=100;
@@ -762,6 +840,16 @@
 		line0 = [NSString stringWithFormat:@"Note: You have only updated %d%% of your portfolio for this month, so the following analysis may not be entirely accurate.\n\n", percentComplete];
 	else if(percentComplete<100)
 		line0 = [NSString stringWithFormat:@"Note: You have only updated %d%% of your portfolio for this month, so the following analysis may still be subject to change.\n\n", percentComplete];
+	return line0;
+}
+
+-(void)debtAnalysisMonthlyWithReduction:(int)reduction allDebt30:(double)allDebt30 classADebt:(double)classADebt classAReduction:(int)classAReduction debtThisYear:(double)debtThisYear debtString:(NSString *)debtString {
+	allDebt30*=-1;
+	[self.namesArray2 addObject:@""];
+	
+	
+	NSString *line0=[self percentComplateString];
+	int percentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
 	
 	NSString *had = (percentComplete==100)?@"had":@"are having";
 	NSString *wereAble = (percentComplete==100)?@"were able":@"are on pace";
@@ -823,7 +911,7 @@
 			line3 = [NSString stringWithFormat:@"You haven't managed to reduce debt this year and have in fact added %@ in %d, with %@ left to start paying it down.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear], self.displayYear, monStr];
 	}
 
-	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, debtString, line1, line2, line3, line4]];
+	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, debtString, line4]];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 }
 
@@ -1049,7 +1137,7 @@
 -(IBAction)nextButtonPressed:(id)sender {
 	self.monthOffset++;
 	self.displayMonth++;
-	if(self.displayMonth>=12) {
+	if(self.displayMonth>12) {
 		self.displayMonth=1;
 		self.displayYear++;
 	}
@@ -1104,7 +1192,7 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
-	if(self.topSegment.selectedSegmentIndex==0) {
+	if(self.topSegment.selectedSegmentIndex==0 && CGRectContainsPoint(self.graphImageView.frame, self.startTouchPosition)) {
 		[self drawChartatPoint:self.startTouchPosition];
 	}
 }
@@ -1112,32 +1200,22 @@
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	CGPoint newTouchPosition = [touch locationInView:self.view];
-	if(self.topSegment.selectedSegmentIndex==1) {
-		
-		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.chartValuesArray];
-		self.startTouchPosition=newTouchPosition;
-	} else {
-		[self drawChartatPoint:newTouchPosition];
+	if(CGRectContainsPoint(self.graphImageView.frame, newTouchPosition)) {
+		if(self.topSegment.selectedSegmentIndex==1) {
+			
+			self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.chartValuesArray];
+			self.startTouchPosition=newTouchPosition;
+		} else {
+			[self drawChartatPoint:newTouchPosition];
+		}
 	}
 }
 
 -(void)drawChartatPoint:(CGPoint)point {
 	[self.chartValuesArray removeAllObjects];
-	int month = [self getMonthFromView:self.graphImageView point:point];
+	int month = [GraphLib getMonthFromView:self.graphImageView point:point];
 	self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
 	self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
-}
-
--(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point {
-	float width = imageView.frame.size.width;
-	int month=0;
-	if(width>0) {
-		int leftEdge = imageView.center.x-width/2;
-		month = (10+point.x-leftEdge)*12/width;
-		if(month>12)
-			month=12;
-	}
-	return month;
 }
 
 -(NSMutableArray *)barItemsForMonth:(int)nowMonth nowYear:(int)nowYear type:(int)type {
@@ -1160,6 +1238,8 @@
 			asset_value=0;
 			balance_owed=0;
 		}
+		if(type==2)
+			balance_owed=0; // only care about value
 
 		prevValue += asset_value;
 		prevBalance += balance_owed;
@@ -1175,6 +1255,7 @@
 		NSString *valFlag = @"N";
 		NSString *balFlag = @"N";
 		int last30 = 0;
+		double equity=0;
 		double value = 0;
 		double balance = 0;
 		
@@ -1196,11 +1277,14 @@
 				itemValue=0;
 				itemBalance=0;
 			}
+			if(type==2)
+				itemBalance=0; // only care about value
 			
 			value += itemValue;
 			balance += itemBalance;
 			
 		}
+		equity = value-balance;
 		
 		if([@"Y" isEqualToString:valFlag] || [@"Y" isEqualToString:balFlag])
 			numMonthsConfirmed++;

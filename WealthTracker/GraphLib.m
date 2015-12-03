@@ -1344,6 +1344,22 @@
 	return startDegree;
 }
 
++(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point {
+	float width = imageView.frame.size.width;
+	int month=1;
+	if(width>0) {
+		int leftEdge = imageView.center.x-width/2;
+		month = (10+point.x-leftEdge)*12/width;
+		if(month>12)
+			month=12;
+		if(month<1)
+			month=1;
+	}
+	return month;
+}
+
+
+
 
 
 

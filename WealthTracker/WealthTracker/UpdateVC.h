@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomSegment.h"
+#import "ChartSegmentControl.h"
 
 @interface UpdateVC : UIViewController <UIActionSheetDelegate>
 
@@ -27,9 +29,8 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
-//@property (nonatomic, strong) IBOutlet UILabel *topRightLabel;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *pieSegment;
+@property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
+@property (nonatomic, strong) IBOutlet ChartSegmentControl *pieSegment;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
 
 @property (nonatomic, strong) NSMutableArray *graphArray;

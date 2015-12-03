@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomSegment.h"
 
 @interface AnalysisDetailsVC : UIViewController
 
@@ -41,7 +42,7 @@
 @property (nonatomic) float startDegree;
 
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *topSegment;
+@property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
 @property (nonatomic, strong) IBOutlet UIView *topView;
 @property (nonatomic, strong) IBOutlet UILabel *topLeftlabel;
 @property (nonatomic, strong) IBOutlet UILabel *topRightlabel;

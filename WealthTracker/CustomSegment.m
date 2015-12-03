@@ -46,6 +46,19 @@
 	
 	[self setTitleTextAttributes:attribsNormal forState:UIControlStateNormal];
 	[self setTitleTextAttributes:attribsSelected forState:UIControlStateSelected];
+	
+	[self changeSegment];
+}
+
+-(void)changeSegment {
+	NSString *checkMark = [NSString stringWithFormat:@"%@ ", @"\u2705"];
+	for(int i=0; i<self.numberOfSegments; i++) {
+		NSString *title = [self titleForSegmentAtIndex:i];
+		[self setTitle:[title stringByReplacingOccurrencesOfString:checkMark withString:@""] forSegmentAtIndex:i];
+	}
+		
+	NSString *checkMarkTitle = [NSString stringWithFormat:@"%@%@", checkMark, [self titleForSegmentAtIndex:self.selectedSegmentIndex]];
+	[self setTitle:checkMarkTitle forSegmentAtIndex:self.selectedSegmentIndex];
 }
 
 @end

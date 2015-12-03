@@ -23,6 +23,8 @@
 #import "GraphObject.h"
 #import "UnLockAppVC.h"
 #import <LocalAuthentication/LocalAuthentication.h>
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
 
 @interface MainMenuVC ()
 
@@ -240,6 +242,7 @@
 }
 
 -(IBAction)segmentClicked:(id)sender {
+	[self.chartSegmentControl changeSegment];
 	[self displayMainTitle];
 	[self setupData];
 }
@@ -294,6 +297,7 @@
 	if(kTestMode)
 		[self setTitle:@"Test Mode!"];
 	
+	
 	self.popupArray=[[NSMutableArray alloc] init];
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.barGraphObjects = [[NSMutableArray alloc] init];
@@ -337,109 +341,13 @@
 	
 	self.vaultImageView.hidden=YES;
 	self.appLockedFlg=NO;
-	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0)
-		[self lockApp];
-	
+	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0) {
+		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
 }
 
 
--(void)lockApp {
-	LAContext *myContext = [[LAContext alloc] init];
-	[self.activityIndicatorView startAnimating];
-	NSError *authError = nil;
-	NSString *myLocalizedReasonString = @"Authenticate using TouchID";
-	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"appOpened"];
-
-	self.appLockedFlg=YES;
-	self.vaultImageView.hidden=NO;
-
-	
-	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
-		
-		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
-				  localizedReason:myLocalizedReasonString
-							reply:^(BOOL succes, NSError *error) {
-								
-								if (succes) {
-									dispatch_async(dispatch_get_main_queue(), ^{
-										[self.activityIndicatorView stopAnimating];
-										self.vaultImageView.hidden=YES;
-										self.appLockedFlg=NO;
-										NSLog(@"User is authenticated successfully");
-									});
-								} else {
-									dispatch_async(dispatch_get_main_queue(), ^{
-									switch (error.code) {
-										case LAErrorAuthenticationFailed:
-											[ObjectiveCScripts showAlertPopup:@"Authentication Failed" message:authError.description];
-											NSLog(@"Authentication Failed");
-											break;
-											
-										case LAErrorUserCancel:
-											NSLog(@"User pressed Cancel button");
-											break;
-											
-										case LAErrorUserFallback:
-											break;
-											
-										default:
-											[ObjectiveCScripts showAlertPopup:@"Touch ID is not configured" message:authError.description];
-											NSLog(@"Touch ID is not configured");
-											break;
-									}
-										[self.activityIndicatorView stopAnimating];
-										UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
-										[self.navigationController pushViewController:detailViewController animated:YES];
-										NSLog(@"Authentication Fails");
-									});
-								}
-							}];
-	} else {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self.activityIndicatorView stopAnimating];
-			UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
-			[self.navigationController pushViewController:detailViewController animated:YES];
-			NSLog(@"Can not evaluate Touch ID");
-		});
-		
-	}
-	/*
-	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
-		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
-				  localizedReason:myLocalizedReasonString
-							reply:^(BOOL success, NSError *error) {
-								if (success) {
-									dispatch_async(dispatch_get_main_queue(), ^{
-										NSLog(@"Yes!");
-//										[self performSegueWithIdentifier:@"Success" sender:nil];
-									});
-								} else {
-									dispatch_async(dispatch_get_main_queue(), ^{
-										UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-																							message:error.description
-																						   delegate:self
-																				  cancelButtonTitle:@"OK"
-																				  otherButtonTitles:nil, nil];
-										[alertView show];
-										[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
-										// Rather than show a UIAlert here, use the error to determine if you should push to a keypad for PIN entry.
-									});
-								}
-							}];
-	} else {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"TouchID Error"
-																message:authError.description
-															   delegate:self
-													  cancelButtonTitle:@"OK"
-													  otherButtonTitles:nil, nil];
-			[alertView show];
-			[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"lockAppFlg"];
-			// Rather than show a UIAlert here, use the error to determine if you should push to a keypad for PIN entry.
-		});
-	}
-	 */
-}
 
 -(BOOL)checkForExpiredFlg {
 	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0)

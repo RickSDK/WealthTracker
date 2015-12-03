@@ -14,6 +14,7 @@
                 <outlet property="dayTextField" destination="SVu-D0-ek0" id="XVl-O0-GZX"/>
                 <outlet property="deleteButton" destination="1OX-JR-UMy" id="pMh-bW-w9f"/>
                 <outlet property="nameTextField" destination="1U1-oh-dBs" id="LGb-y2-VJ7"/>
+                <outlet property="selectButton" destination="KF1-eU-5So" id="AWp-FV-2er"/>
                 <outlet property="submitButton" destination="YBz-rs-JhE" id="82A-mr-KQ5"/>
                 <outlet property="typeLabel" destination="Dqo-FT-Y0i" id="Ajd-qF-bdE"/>
                 <outlet property="typeSwitch" destination="zct-tn-vZu" id="yYf-wH-KEm"/>
@@ -29,12 +30,12 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
-                <view contentMode="scaleToFill" id="h88-hG-beA">
+                <view contentMode="scaleToFill" id="h88-hG-beA" customClass="CustomView">
                     <rect key="frame" x="8" y="8" width="304" height="313"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="1U1-oh-dBs">
-                            <rect key="frame" x="8" y="8" width="288" height="30"/>
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" minimumFontSize="17" clearButtonMode="whileEditing" id="1U1-oh-dBs">
+                            <rect key="frame" x="8" y="8" width="160" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
@@ -73,7 +74,7 @@
                             <rect key="frame" x="178" y="88" width="113" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YBz-rs-JhE">
@@ -101,16 +102,26 @@
                             <rect key="frame" x="161" y="156" width="130" height="36"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter monthly bills and income using this form. Record all known inflows and outflows of your monthly income." lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JEc-I6-ZnT">
                             <rect key="frame" x="8" y="199" width="283" height="106"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="KF1-eU-5So" customClass="CustomButton">
+                            <rect key="frame" x="178" y="8" width="108" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Select">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="selectButtonPressed:" destination="-1" eventType="touchDown" id="VPa-K4-Juc"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.82178730870000005" green="0.82178730870000005" blue="0.82178730870000005" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
@@ -136,7 +147,7 @@
         </view>
     </objects>
     <resources>
-        <image name="greenTexture.jpg" width="640" height="1164"/>
+        <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="redButton.png" width="400" height="100"/>
         <image name="yellowButton.png" width="400" height="100"/>
     </resources>

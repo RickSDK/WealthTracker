@@ -58,15 +58,17 @@
 	}
 	double emergency = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
 	minimum -= emergency;
-	if(minimum<0)
+	if(minimum+emergency<0)
 		self.surplusLabel.text = [ObjectiveCScripts convertNumberToMoneyString:minimum];
+	else if(minimum<0)
+		self.surplusLabel.text = [NSString stringWithFormat:@"$0 (%@ emergency)", [ObjectiveCScripts convertNumberToMoneyString:minimum+emergency]];
 	else
 		self.surplusLabel.text = [NSString stringWithFormat:@"%@ (+%@)", [ObjectiveCScripts convertNumberToMoneyString:minimum], [ObjectiveCScripts convertNumberToMoneyString:emergency]];
 	self.surplusLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:minimum lightFlg:YES];
 	
 	[self.mainTableView reloadData];
 	
-	if(minimum<0)
+	if(minimum+emergency<0)
 		[ObjectiveCScripts showAlertPopup:@"Notice!!" message:@"You are in danger of overdrawing your account!"];
 	
 	[self.mainTableView reloadData];

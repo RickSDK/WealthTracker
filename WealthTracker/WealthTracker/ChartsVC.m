@@ -11,8 +11,8 @@
 #import "ObjectiveCScripts.h"
 #import "GraphCell.h"
 #import "GraphLib.h"
-#import "BreakdownByMonthVC.h"
 #import "GraphSegmentCell.h"
+#import "ChartViewVC.h"
 
 
 @interface ChartsVC ()
@@ -67,7 +67,12 @@
 	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
 	//Get the corresponding index path within the table view
 	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
-	int type=(int)indexPath.section;
+	[self drilldown:(int)indexPath.section];
+}
+
+-(void)drilldown:(int)section {
+	
+	int type=section;
 	int fieldType=0;
 	if(type==3) {
 		type=0;
@@ -77,20 +82,21 @@
 		type=0;
 		fieldType=1;
 	}
+
 	
-	NSArray *dates = [[self.graphDates objectAtIndex:indexPath.section] componentsSeparatedByString:@"|"];
+	NSArray *dates = [[self.graphDates objectAtIndex:section] componentsSeparatedByString:@"|"];
 	int displayYear = [[dates objectAtIndex:0] intValue];
-	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
+	ChartViewVC *detailViewController = [[ChartViewVC alloc] initWithNibName:@"ChartViewVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.type=type;
 	detailViewController.fieldType=fieldType;
 	detailViewController.displayYear=displayYear;
-	if(indexPath.section==3)
+	if(section==3)
 		detailViewController.tag = 99; // interest
-	else if(indexPath.section==4)
+	else if(section==4)
 		detailViewController.tag=3; // debt
 	else
-		detailViewController.tag = (int)indexPath.section;
+		detailViewController.tag = section;
 	
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -244,32 +250,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	int type=(int)indexPath.section;
-	int fieldType=0;
-	if(type==3) {
-		type=0;
-		fieldType=3;
-	}
-	if(type==4) {
-		type=0;
-		fieldType=1;
-	}
-	
-	NSArray *dates = [[self.graphDates objectAtIndex:indexPath.section] componentsSeparatedByString:@"|"];
-	int displayYear = [[dates objectAtIndex:0] intValue];
-	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.type=type;
-	detailViewController.fieldType=fieldType;
-	detailViewController.displayYear=displayYear;
-	if(indexPath.section==3)
-		detailViewController.tag = 99; // interest
-	else if(indexPath.section==4)
-		detailViewController.tag=3; // debt
-	else
-		detailViewController.tag = (int)indexPath.section;
-	
-	[self.navigationController pushViewController:detailViewController animated:YES];
+	[self drilldown:(int)indexPath.section];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

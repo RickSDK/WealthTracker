@@ -79,7 +79,7 @@
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
 	}
 
-
+	[self.topSegmentControl changeSegment];
 	[self setupData];
 }
 
@@ -148,6 +148,7 @@
 	int width = [[UIScreen mainScreen] bounds].size.width;
 	self.topGraphImageView.frame = CGRectMake(0, 20, width, width/2-20);
 
+	[self.changeSegmentControl changeSegment];
 	[self.mainTableView reloadData];
 }
 
@@ -239,6 +240,7 @@
 
 -(IBAction)topSegmentChanged:(id)sender {
 	self.fieldType = (int)self.topSegmentControl.selectedSegmentIndex;
+	[self.topSegmentControl changeSegment];
 	[self setupData];
 }
 

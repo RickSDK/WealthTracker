@@ -9,6 +9,7 @@
 #import "UnLockAppVC.h"
 #import "ObjectiveCScripts.h"
 #import "SoundsLib.h"
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @interface UnLockAppVC ()
 
@@ -139,10 +140,72 @@
 	self.navigationItem.rightBarButtonItem = homeButton;
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:nil];
-;
+	
+	[self lockAppMethod];
 
     // Do any additional setup after loading the view from its nib.
 }
+
+-(void)lockAppMethod {
+	LAContext *myContext = [[LAContext alloc] init];
+//	[self.activityIndicatorView startAnimating];
+	NSError *authError = nil;
+	NSString *myLocalizedReasonString = @"Authenticate using TouchID";
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"appOpened"];
+	
+//	self.appLockedFlg=YES;
+//	self.vaultImageView.hidden=NO;
+	
+	
+	if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
+		
+		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+				  localizedReason:myLocalizedReasonString
+							reply:^(BOOL succes, NSError *error) {
+								
+								if (succes) {
+									dispatch_async(dispatch_get_main_queue(), ^{
+//										[self.activityIndicatorView stopAnimating];
+//										self.vaultImageView.hidden=YES;
+//										self.appLockedFlg=NO;
+										NSLog(@"User is authenticated successfully");
+									});
+								} else {
+									dispatch_async(dispatch_get_main_queue(), ^{
+										switch (error.code) {
+											case LAErrorAuthenticationFailed:
+												[ObjectiveCScripts showAlertPopup:@"Authentication Failed" message:authError.description];
+												NSLog(@"Authentication Failed");
+												break;
+												
+											case LAErrorUserCancel:
+												NSLog(@"User pressed Cancel button");
+												break;
+												
+											case LAErrorUserFallback:
+												break;
+												
+											default:
+												[ObjectiveCScripts showAlertPopup:@"Touch ID is not configured" message:authError.description];
+												NSLog(@"Touch ID is not configured");
+												break;
+										}
+//										[self.activityIndicatorView stopAnimating];
+//										UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+//										[self.navigationController pushViewController:detailViewController animated:YES];//
+										NSLog(@"Authentication Fails");
+									});
+								}
+							}];
+	} else {
+		dispatch_async(dispatch_get_main_queue(), ^{
+//			[self.activityIndicatorView stopAnimating];
+			NSLog(@"Can not evaluate Touch ID");
+		});
+		
+	}
+}
+
 
 - (void)didReceiveMemoryWarning
 {

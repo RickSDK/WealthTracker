@@ -131,6 +131,14 @@
 		6BBEDEEF1BF3C4DE001D372F /* UnLockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEED1BF3C4DE001D372F /* UnLockAppVC.m */; };
 		6BBEDEF01BF3C4DE001D372F /* UnLockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEEE1BF3C4DE001D372F /* UnLockAppVC.xib */; };
 		6BBEDEF21BF3C52A001D372F /* whiteChromeBut.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEF11BF3C52A001D372F /* whiteChromeBut.png */; };
+		6BBEDEF61C0E2F88001D372F /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEF51C0E2F88001D372F /* NSString+FontAwesome.m */; };
+		6BBEDEFB1C0E2F93001D372F /* UIFont+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEF81C0E2F93001D372F /* UIFont+FontAwesome.m */; };
+		6BBEDEFC1C0E2F93001D372F /* UIImage+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEFA1C0E2F93001D372F /* UIImage+FontAwesome.m */; };
+		6BBEDEFF1C0E4304001D372F /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEFD1C0E4304001D372F /* FontAwesome.ttf */; };
+		6BBEDF001C0E4304001D372F /* fontawesome-github.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEFE1C0E4304001D372F /* fontawesome-github.jpg */; };
+		6BBEDF031C0E5578001D372F /* ChartSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDF021C0E5578001D372F /* ChartSegmentControl.m */; };
+		6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDF051C0E60FF001D372F /* ChartViewVC.m */; };
+		6BBEDF081C0E60FF001D372F /* ChartViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDF061C0E60FF001D372F /* ChartViewVC.xib */; };
 		6BC3065C1B8FDEEF00E10C9F /* PayoffVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */; };
 		6BC3065D1B8FDEEF00E10C9F /* PayoffVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */; };
 		6BC472281B6151D400F68341 /* UpdateWebCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC472271B6151D400F68341 /* UpdateWebCell.m */; };
@@ -344,6 +352,19 @@
 		6BBEDEED1BF3C4DE001D372F /* UnLockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnLockAppVC.m; sourceTree = "<group>"; };
 		6BBEDEEE1BF3C4DE001D372F /* UnLockAppVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnLockAppVC.xib; sourceTree = "<group>"; };
 		6BBEDEF11BF3C52A001D372F /* whiteChromeBut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteChromeBut.png; sourceTree = "<group>"; };
+		6BBEDEF41C0E2F88001D372F /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FontAwesome.h"; sourceTree = "<group>"; };
+		6BBEDEF51C0E2F88001D372F /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FontAwesome.m"; sourceTree = "<group>"; };
+		6BBEDEF71C0E2F93001D372F /* UIFont+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+FontAwesome.h"; sourceTree = "<group>"; };
+		6BBEDEF81C0E2F93001D372F /* UIFont+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+FontAwesome.m"; sourceTree = "<group>"; };
+		6BBEDEF91C0E2F93001D372F /* UIImage+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FontAwesome.h"; sourceTree = "<group>"; };
+		6BBEDEFA1C0E2F93001D372F /* UIImage+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FontAwesome.m"; sourceTree = "<group>"; };
+		6BBEDEFD1C0E4304001D372F /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		6BBEDEFE1C0E4304001D372F /* fontawesome-github.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "fontawesome-github.jpg"; sourceTree = "<group>"; };
+		6BBEDF011C0E5578001D372F /* ChartSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartSegmentControl.h; sourceTree = "<group>"; };
+		6BBEDF021C0E5578001D372F /* ChartSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartSegmentControl.m; sourceTree = "<group>"; };
+		6BBEDF041C0E60FF001D372F /* ChartViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartViewVC.h; sourceTree = "<group>"; };
+		6BBEDF051C0E60FF001D372F /* ChartViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartViewVC.m; sourceTree = "<group>"; };
+		6BBEDF061C0E60FF001D372F /* ChartViewVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartViewVC.xib; sourceTree = "<group>"; };
 		6BC306591B8FDEEF00E10C9F /* PayoffVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayoffVC.h; sourceTree = "<group>"; };
 		6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayoffVC.m; sourceTree = "<group>"; };
 		6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PayoffVC.xib; sourceTree = "<group>"; };
@@ -522,6 +543,9 @@
 				6B04442B1B58973A001E7007 /* ChartsVC.h */,
 				6B04442C1B58973A001E7007 /* ChartsVC.m */,
 				6B04442D1B58973A001E7007 /* ChartsVC.xib */,
+				6BBEDF041C0E60FF001D372F /* ChartViewVC.h */,
+				6BBEDF051C0E60FF001D372F /* ChartViewVC.m */,
+				6BBEDF061C0E60FF001D372F /* ChartViewVC.xib */,
 				6BE8EAF31B618B66005510F6 /* UpdateSalaryVC.h */,
 				6BE8EAF41B618B66005510F6 /* UpdateSalaryVC.m */,
 				6BE8EAF51B618B66005510F6 /* UpdateSalaryVC.xib */,
@@ -577,6 +601,8 @@
 				6B6389951B7BA2A000260656 /* Icon@2x.png */,
 				6BBEDEE51BF3C47F001D372F /* vault.jpg */,
 				6B6389961B7BA2A000260656 /* iTunesArtwork */,
+				6BBEDEFD1C0E4304001D372F /* FontAwesome.ttf */,
+				6BBEDEFE1C0E4304001D372F /* fontawesome-github.jpg */,
 				6BFECD4E1B7A7D4700F40961 /* greenTexture.jpg */,
 				6BA44F0E1B9CF71E00C7470C /* financesButton.png */,
 				6BFECD501B7A884300F40961 /* blueGrad.jpg */,
@@ -621,6 +647,8 @@
 				6B9673FD1B6B286400641C7F /* CustomImageView.m */,
 				6B5E92C91BE2839A00D546F5 /* CustomSegment.h */,
 				6B5E92CA1BE2839A00D546F5 /* CustomSegment.m */,
+				6BBEDF011C0E5578001D372F /* ChartSegmentControl.h */,
+				6BBEDF021C0E5578001D372F /* ChartSegmentControl.m */,
 				6B3C180A1B70381E0039733B /* CustomView.h */,
 				6B3C180B1B70381E0039733B /* CustomView.m */,
 				6B416F141B509FC2009C9834 /* WebServiceView.h */,
@@ -629,6 +657,12 @@
 				6B8EB99B1B52272A00F8A20B /* NSDate+ATTDate.m */,
 				6B8EB99D1B52273100F8A20B /* NSString+ATTString.h */,
 				6B8EB99E1B52273100F8A20B /* NSString+ATTString.m */,
+				6BBEDEF41C0E2F88001D372F /* NSString+FontAwesome.h */,
+				6BBEDEF51C0E2F88001D372F /* NSString+FontAwesome.m */,
+				6BBEDEF71C0E2F93001D372F /* UIFont+FontAwesome.h */,
+				6BBEDEF81C0E2F93001D372F /* UIFont+FontAwesome.m */,
+				6BBEDEF91C0E2F93001D372F /* UIImage+FontAwesome.h */,
+				6BBEDEFA1C0E2F93001D372F /* UIImage+FontAwesome.m */,
 				6B2E23F01B54699500CC2851 /* UIColor+ATTColor.h */,
 				6B2E23F11B54699500CC2851 /* UIColor+ATTColor.m */,
 				6B8EB9971B5226FC00F8A20B /* CoreDataLib.h */,
@@ -796,9 +830,11 @@
 				6B8EB9901B51DF7F00F8A20B /* SelectListVC.xib in Resources */,
 				6B63899D1B7BA2A100260656 /* Icon-120.png in Resources */,
 				6B38E3DE1B6C595200EF8D40 /* blueButton.png in Resources */,
+				6BBEDF081C0E60FF001D372F /* ChartViewVC.xib in Resources */,
 				6B2E23F41B549D8E00CC2851 /* redButton.png in Resources */,
 				6BBEDEF21BF3C52A001D372F /* whiteChromeBut.png in Resources */,
 				6BFECD511B7A884300F40961 /* blueGrad.jpg in Resources */,
+				6BBEDEFF1C0E4304001D372F /* FontAwesome.ttf in Resources */,
 				6B2E23EC1B545B0B00CC2851 /* UpdateDetails.xib in Resources */,
 				6B6389981B7BA2A100260656 /* Icon-40.png in Resources */,
 				6B6389A41B7BA2A100260656 /* iTunesArtwork in Resources */,
@@ -839,6 +875,7 @@
 				6B04442F1B58973A001E7007 /* ChartsVC.xib in Resources */,
 				6B5B87F81B681C0D00BBE741 /* OptionsVC.xib in Resources */,
 				6B6389A11B7BA2A100260656 /* Icon-1024.png in Resources */,
+				6BBEDF001C0E4304001D372F /* fontawesome-github.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,6 +899,7 @@
 				6BC472281B6151D400F68341 /* UpdateWebCell.m in Sources */,
 				6B8EB9881B51D58200F8A20B /* ItemCellObj.m in Sources */,
 				6B416F1C1B50A5B2009C9834 /* EnterValueVC.m in Sources */,
+				6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */,
 				6B8EB9931B5218BD00F8A20B /* ProfileObj.m in Sources */,
 				6B416EFE1B508774009C9834 /* StartupVC.m in Sources */,
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
@@ -882,7 +920,9 @@
 				6B8EB99F1B52273100F8A20B /* NSString+ATTString.m in Sources */,
 				6B416ECC1B506D53009C9834 /* WealthTracker.xcdatamodeld in Sources */,
 				6B5B87F71B681C0D00BBE741 /* OptionsVC.m in Sources */,
+				6BBEDEF61C0E2F88001D372F /* NSString+FontAwesome.m in Sources */,
 				6B3C180C1B70381E0039733B /* CustomView.m in Sources */,
+				6BBEDEFC1C0E2F93001D372F /* UIImage+FontAwesome.m in Sources */,
 				6BC4722C1B61576B00F68341 /* WebViewVC.m in Sources */,
 				6B2E23F81B556FAB00CC2851 /* AnalysisVC.m in Sources */,
 				6BB354E11B743B470003987A /* GraphSegmentCell.m in Sources */,
@@ -892,6 +932,7 @@
 				6B416F171B509FC2009C9834 /* CustomButton.m in Sources */,
 				6B3C18051B6FEE170039733B /* CashFlowEditItemVC.m in Sources */,
 				6B9673FE1B6B286400641C7F /* CustomImageView.m in Sources */,
+				6BBEDEFB1C0E2F93001D372F /* UIFont+FontAwesome.m in Sources */,
 				6B644CB31B68201800483F98 /* LoginVC.m in Sources */,
 				6BDCEF1D1B600C3500DDA3AC /* BreakdownCell.m in Sources */,
 				6BE6B2F71B6A90B700C434BA /* ValueObj.m in Sources */,
@@ -914,6 +955,7 @@
 				6B42B00C1BAB309400CC649C /* TipsVC.m in Sources */,
 				6B2E23EB1B545B0B00CC2851 /* UpdateDetails.m in Sources */,
 				6BC3065C1B8FDEEF00E10C9F /* PayoffVC.m in Sources */,
+				6BBEDF031C0E5578001D372F /* ChartSegmentControl.m in Sources */,
 				6BE8EAF61B618B66005510F6 /* UpdateSalaryVC.m in Sources */,
 				6B2E23FD1B55733000CC2851 /* MyPlanVC.m in Sources */,
 				6B2E24021B55BB2200CC2851 /* AnalysisDetailsVC.m in Sources */,

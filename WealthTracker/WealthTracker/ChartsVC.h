@@ -15,7 +15,6 @@
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
-//@property (nonatomic) int displayMonth;
 @property (nonatomic, strong) NSArray *graphTitles;
 @property (nonatomic, strong) NSMutableArray *graphDates;
 @property (nonatomic, strong) NSMutableArray *graphSegmentIndexes;
