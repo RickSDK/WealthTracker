@@ -64,7 +64,7 @@
 	self.graphImageView.layer.borderColor = [UIColor blackColor].CGColor;
 	self.graphImageView.layer.borderWidth = 1.0;
 
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.displayYear=self.nowYear;
 	self.displayMonth=self.nowMonth;
@@ -460,7 +460,7 @@
 			line2 = [NSString stringWithFormat:@"Your real estate value fell another %.1f%% this month, pushing your total for the year down to %.1f%%.", percentMonth*-1, percentYear];
 	}
 	
-	line3 = [NSString stringWithFormat:@"Your real estate purchases are currently under water at %d%% equity. Your best bet is to remain calm and wait for the market to recover. Start working the plan on the analysis page to get out of the hole.", equity];
+	line3 = [NSString stringWithFormat:@"Your real estate purchases are currently under water at %d%% equity. Your best bet is to remain calm and wait for the market to recover. Start working the plan on the main menu to get out of the hole.", equity];
 
 	if(value==0) {
 		if(percentOfIncome<34)
@@ -468,12 +468,12 @@
 		else
 			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is too high. Ideally you want to be at around 25%%. Strongly consider moving to a smaller rental and start saving up for a home.\n\nAnd view the main menu page for details on starting a good plan of action.", percentOfIncome];
 		
-		line3 = @"You currently do not own any property. Consider following the plan on the analysis page to start building wealth.";
+		line3 = @"You currently do not own any property. Consider following the plan on the main menu to start building wealth.";
 	} else {
 		if(equity>=0)
-			line3 = [NSString stringWithFormat:@"Your real estate purchases have %d%% equity which is good, but you are still below the 20%% mark. Start working the plan on the analysis page and aim towards getting the mortgage paid down.", equity];
+			line3 = [NSString stringWithFormat:@"Your real estate purchases have %d%% equity which is good, but you are still below the 20%% mark. Start working the plan on the main menu and aim towards getting the mortgage paid down.", equity];
 		if(equity>=20)
-			line3 = [NSString stringWithFormat:@"Your real estate purchases are in very good shape, sitting at %d%% equity. You are well on your way towards being debt free. Work the plan on the analysis page to continue building wealth.", equity];
+			line3 = [NSString stringWithFormat:@"Your real estate purchases are in very good shape, sitting at %d%% equity. You are well on your way towards being debt free. Work the plan on the main menu to continue building wealth.", equity];
 		
 		if(equity>=80)
 			line3 = @"Fantastic job paying down your mortgages! Continue working the plan on the main menu screen as you watch your wealth build.";
@@ -505,7 +505,7 @@
 	}
 	if(assetEquity>max) {
 		max=assetEquity;
-		maxString = @"Assets";
+		maxString = @"Other-Asset equity";
 	}
 
 	NSString *minString = @"Real Estate equity";
@@ -519,7 +519,7 @@
 		min=debtEquity;
 	}
 	if(assetEquity<min) {
-		minString = @"Assets";
+		minString = @"Other-Asset equity";
 		min=assetEquity;
 	}
 	
@@ -894,6 +894,8 @@
 		monStr = [NSString stringWithFormat:@"just %d months", 12-self.displayMonth];
 	if(self.displayMonth>10)
 		monStr = @"one more month";
+	if(self.displayMonth>11)
+		monStr = @"less than a month";
 
 	int debtPerMonth = 0;
 	if(self.displayMonth>0)
@@ -1035,7 +1037,6 @@
 }
 
 -(void)displayLabels {
-	NSString *monthName = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 	NSString *title = nil;
 	if(self.tag==1)
 		title = @"Real Estate Values";
@@ -1043,13 +1044,13 @@
 		title = @"Vehicle Values";
 	if(self.tag==3) {
 		if(self.topSegment.selectedSegmentIndex==0)
-			title = [NSString stringWithFormat:@"Debts Changes in %@", monthName];
+			title = @"Debt Change by Month";
 		else
 			title = @"Total Debts";
 	}
 	if(self.tag==4) {
 		if(self.topSegment.selectedSegmentIndex==0)
-			title = [NSString stringWithFormat:@"Changes in %@", monthName];
+			title = @"Net Worth Change by Month";
 		else
 			title = @"Total Net Worth";
 	}
@@ -1213,7 +1214,7 @@
 
 -(void)drawChartatPoint:(CGPoint)point {
 	[self.chartValuesArray removeAllObjects];
-	int month = [GraphLib getMonthFromView:self.graphImageView point:point];
+	int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
 	self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
 	self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
 }
@@ -1223,7 +1224,9 @@
 	double prevValue=0;
 	double prevBalance=0;
 	
-	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = 12", nowYear-1];
+	int displayYear = nowYear-1;
+	int month = self.nowMonth;
+	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, month];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 	for (NSManagedObject *mo in itemsPre) {
 		double asset_value = [[mo valueForKey:@"asset_value"] doubleValue];
@@ -1249,8 +1252,14 @@
 	int numMonthsConfirmed = 0;
 	
 	NSMutableArray *graphObjects = [[NSMutableArray alloc] init];
-	for(int month = 1; month <= 12; month++) {
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", nowYear, month];
+	for(int i = 1; i <= 12; i++) {
+		month++;
+		if(month>12) {
+			month=1;
+			displayYear++;
+		}
+		
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, month];
 		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 		NSString *valFlag = @"N";
 		NSString *balFlag = @"N";
@@ -1298,7 +1307,7 @@
 		prevBalance = balance;
 		
 		if(month==nowMonth) {
-			self.topLeftLabel.text = [NSString stringWithFormat:@"Debt changes in %@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:nowMonth-1], nowYear];
+			self.topLeftLabel.text = @"Debt Changes by Month";
 			[ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:last30 lightFlg:NO revFlg:type==3];
 		}
 		

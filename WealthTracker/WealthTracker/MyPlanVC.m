@@ -85,7 +85,7 @@
 	self.debtView.hidden=YES;
 	self.myStepLabel.text = [NSString stringWithFormat:@"%d", self.step];
 
-	int year = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 
 	switch (self.myStep) {

@@ -122,9 +122,11 @@
 	cell.checkMarkButton.tag=indexPath.row;
 	[cell.checkMarkButton addTarget:self action:@selector(checkMarkPressed:) forControlEvents:UIControlEventTouchDown];
 
-	if([[mo valueForKey:@"confirmFlg"] boolValue])
+	if([[mo valueForKey:@"confirmFlg"] boolValue]) {
 		cell.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
-	else {
+		[cell.checkMarkButton setBackgroundImage:[UIImage imageNamed:@"checkMark.jpg"] forState:UIControlStateNormal];
+	} else {
+		[cell.checkMarkButton setBackgroundImage:nil forState:UIControlStateNormal];
 		if(amount>=0)
 			cell.backgroundColor=[UIColor colorWithRed:.9 green:1 blue:.9 alpha:1];
 		else

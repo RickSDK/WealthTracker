@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Salary"];
-	self.displayYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.displayYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.yearStepper.maximumValue=self.displayYear;
 	self.yearStepper.value=self.displayYear;
 	[self setupData];

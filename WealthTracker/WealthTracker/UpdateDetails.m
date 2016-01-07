@@ -48,7 +48,7 @@
 	self.namesArray = [[NSMutableArray alloc] init];
 	self.colorsArray = [[NSMutableArray alloc] init];
 	
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
 	self.displayYear = self.nowYear;

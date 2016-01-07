@@ -27,7 +27,7 @@
 	
 	self.chartValuesArray = [[NSMutableArray alloc] init];
 
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
@@ -119,10 +119,6 @@
 		self.graphImageView.image =[GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
 	
 	self.nextYearButton.enabled = self.displayYear<self.nowYear;
-//	if(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth)
-//		self.nextYearButton.enabled=NO;
-//	else
-//		self.nextYearButton.enabled=YES;
 	
 	self.titleLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 }
@@ -166,9 +162,11 @@
 }
 
 -(void)drawChartAtPoint:(CGPoint)point {
-	int month = [GraphLib getMonthFromView:self.graphImageView point:point];
+	int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
 	if(month != self.displayMonth) {
 		self.displayMonth=month;
+		self.displayYear=(self.displayMonth>self.nowMonth)?self.nowYear-1:self.nowYear;
+		
 		[self setupData];
 	}
 }

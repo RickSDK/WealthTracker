@@ -660,19 +660,26 @@
 	int leftEdgeOfChart=totalWidth/12.8;
 	int bottomEdgeOfChart=totalHeight-(totalWidth/25.6);
 	
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	//Find min and max---------
 	float min=999999;
 	float max=0;
 	
+	int predYear=nowYear-1;
+	int month=nowMonth;
+	
 	NSMutableArray *assetArray = [[NSMutableArray alloc] init];
 	NSMutableArray *balanceArray = [[NSMutableArray alloc] init];
 	BOOL networthPositive=YES;
-	for(int month=1; month<=12; month++) {
-		
-		NSPredicate *predicate = [self predicateForMonth:month year:displayYear item_id:item_id type:type];
+	for(int i=1; i<=12; i++) {
+		month++;
+		if(month>12) {
+			month=1;
+			predYear++;
+		}
+		NSPredicate *predicate = [self predicateForMonth:month year:predYear item_id:item_id type:type];
 		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:mOC ascendingFlg:YES];
 		double asset_value=0;
 		double balance_owed=0;
@@ -783,8 +790,12 @@
 	CGContextSetRGBFillColor(c, 0.4, 0.4, 0.4, 1); // gray
 	xCord = leftEdgeOfChart-10;
 	NSArray *months = [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", nil];
+	month = nowMonth;
 	for(int i=1; i<=12; i++) {
-		[[months objectAtIndex:i-1] drawAtPoint:CGPointMake(xCord, bottomEdgeOfChart) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/42.67)]];
+		month++;
+		if(month>12)
+			month=1;
+		[[months objectAtIndex:month-1] drawAtPoint:CGPointMake(xCord, bottomEdgeOfChart) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/42.67)]];
 		xCord+=totalWidth/12;
 	}
 	
@@ -855,8 +866,16 @@
 	BOOL oldRecordConfirmed=NO;
 	BOOL oldRecordConfirmed2=NO;
 	BOOL isTodayFlg=NO;
-	for(int month=1; month<=12; month++) {
-		NSPredicate *predicate = [self predicateForMonth:month year:displayYear item_id:item_id type:type];
+	
+	predYear=nowYear-1;
+	month=nowMonth;
+	for(int i=1; i<=12; i++) {
+		month++;
+		if(month>12) {
+			month=1;
+			predYear++;
+		}
+		NSPredicate *predicate = [self predicateForMonth:month year:predYear item_id:item_id type:type];
 		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:mOC ascendingFlg:YES];
 		float asset_value=0;
 		float balance_owed=0;
@@ -866,7 +885,7 @@
 		BOOL recordConfirmed=NO;
 		BOOL recordConfirmed2=NO;
 		BOOL recordExists=NO;
-		BOOL recExists = (displayYear<nowYear || (displayYear==nowYear && month<=nowMonth+1));
+		BOOL recExists = (predYear<nowYear || (predYear==nowYear && month<=nowMonth+1));
 		for(NSManagedObject *mo in items) {
 			asset_value += [[mo valueForKey:@"asset_value"] floatValue];
 			balance_owed += [[mo valueForKey:@"balance_owed"] floatValue];
@@ -927,13 +946,13 @@
 			
 			
 			
-			if(month==nowMonth && displayYear==nowYear) {
+			if(month==nowMonth && predYear==nowYear) {
 				CGContextSetLineWidth(c, 4);
 				CGContextSetRGBStrokeColor(c, 0, .5, .5, 1); // today
 				[self drawLine:c startX:plotX startY:0 endX:plotX endY:bottomEdgeOfChart];
 			}
 			if(month==displayMonth) {
-				if(month==nowMonth && displayYear==nowYear)
+				if(month==nowMonth && nowYear==predYear)
 					isTodayFlg=YES;
 				CGContextSetLineWidth(c, 2);
 				CGContextSetRGBStrokeColor(c, .5, .5, 0, 1); // display month
@@ -1344,9 +1363,9 @@
 	return startDegree;
 }
 
-+(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point {
++(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point startingMonth:(int)startingMonth {
 	float width = imageView.frame.size.width;
-	int month=1;
+	int month=startingMonth;
 	if(width>0) {
 		int leftEdge = imageView.center.x-width/2;
 		month = (10+point.x-leftEdge)*12/width;
@@ -1355,6 +1374,9 @@
 		if(month<1)
 			month=1;
 	}
+	month+=startingMonth;
+	if(month>12)
+		month-=12;
 	return month;
 }
 

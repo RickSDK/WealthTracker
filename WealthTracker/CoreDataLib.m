@@ -433,6 +433,8 @@
 		multFuture=1;
 		multHistory=1;
 	}
+	multFuture=1; //<-- new strategy, don't try to predict
+	
 	int itemType = [ObjectiveCScripts typeNumberFromTypeString:obj.type];
 	float interest_rate = [obj.interest_rate floatValue];
 	double interest = (interest_rate*amount)/100/12;
@@ -560,7 +562,7 @@
 +(int)getAge:(NSManagedObjectContext *)context
 {
 	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:context];
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int age = nowYear-yearBorn;
 	if(age>110)
 		age=40; // just in case of bad data

@@ -34,7 +34,7 @@
     [super viewDidLoad];
 	[self setTitle:@"Credit Tracker"];
 
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;

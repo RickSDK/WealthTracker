@@ -53,8 +53,8 @@
 	self.graphArray = [[NSMutableArray alloc] init];
 	
 
-	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM, YYYY"];
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM, yyyy"];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addNewItem)];

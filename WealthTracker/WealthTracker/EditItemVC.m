@@ -235,7 +235,7 @@
 		[self updateDatabaseRecord:mo];
 		self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 	}
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.value doubleValue] moc:self.managedObjectContext];
 	[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
@@ -261,7 +261,7 @@
 		[self updateDatabaseRecord:mo];
 		
 		int age = [[mo valueForKey:@"age"] intValue];
-		int year = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+		int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 		int yearBorn = year-age;
 		[mo setValue:[NSNumber numberWithInt:yearBorn] forKey:@"yearBorn"];
 		[self.managedObjectContext save:nil];
@@ -289,7 +289,7 @@
 			[mo setValue:@"Emergency Fund" forKey:@"name"];
 			[mo setValue:[NSNumber numberWithInt:emergencyFund] forKey:@"value"];
 			[self.managedObjectContext save:nil];
-			int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+			int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 			int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 			self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 			[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.value doubleValue] moc:self.managedObjectContext];

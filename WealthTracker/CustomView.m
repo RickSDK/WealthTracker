@@ -36,9 +36,6 @@
 	self.layer.masksToBounds = YES;				// clips background images to rounded corners
 	self.layer.borderColor = [UIColor blackColor].CGColor;
 	self.layer.borderWidth = 2.;
-	
-	// Default is white background and ATTBlue text color
-//	self.backgroundColor = [UIColor whiteColor];
 }
 
 @end

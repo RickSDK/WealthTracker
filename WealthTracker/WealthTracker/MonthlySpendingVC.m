@@ -37,7 +37,7 @@
 	self.multiLineArray = [[NSMutableArray alloc] init];
 	self.graphArray = [[NSMutableArray alloc] init];
 	
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.displayYear=self.nowYear;
 	self.displayMonth = self.nowMonth;
@@ -49,11 +49,21 @@
 	[self.multiLineArray removeAllObjects];
 	[self.graphArray removeAllObjects];
 	
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
-	
 	double monthlyIncome = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
 	monthlyIncome/=12;
 	double incomeTaxes = monthlyIncome*.2;
+
+	NSArray *cashItems = [CoreDataLib selectRowsFromEntity:@"CASH_FLOW" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *mo in cashItems) {
+		double amount = [[mo valueForKey:@"amount"] doubleValue];
+		if(amount<0) {
+			monthlyIncome-=amount*-1;
+			[self addGraphItem:[mo valueForKey:@"name"] rowId:round(amount) amount:amount*-1 confirmFlg:[[mo valueForKey:@"confirmFlg"] boolValue]];
+		}
+	}
+	
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 		int rowId = [obj.rowId intValue];
@@ -89,11 +99,64 @@
 	if(monthlyIncome>0)
 		[self addGraphItem:@"Other" rowId:101 amount:monthlyIncome confirmFlg:YES];
 	
+	[self sortArray];
 	[self.mainTableView reloadData];
+}
+
+-(void)sortArray {
+	if(self.multiLineArray.count<2)
+		return;
+	for(int i=0; i<self.multiLineArray.count-1;i++)
+		[self sortArray2];
+}
+
+-(void)sortArray2 {
+	for(int i=0; i<self.multiLineArray.count-1;i++) {
+		MultiLineObj *obj = [self.multiLineArray objectAtIndex:i];
+		MultiLineObj *obj2 = [self.multiLineArray objectAtIndex:i+1];
+		double amount1 = [ObjectiveCScripts convertMoneyStringToDouble:obj.value];
+		double amount2 = [ObjectiveCScripts convertMoneyStringToDouble:obj2.value];
+		if(amount1<amount2) {
+			MultiLineObj *temp = [[MultiLineObj alloc] init];
+			temp.name=obj.name;
+			temp.value=obj.value;
+			obj.name=obj2.name;
+			obj.value=obj2.value;
+			obj2.name=temp.name;
+			obj2.value=temp.value;
+			if(self.graphArray.count>i+1) {
+				GraphObject *gObj = [self.graphArray objectAtIndex:i];
+				GraphObject *gObj2 = [self.graphArray objectAtIndex:i+1];
+				GraphObject *tempObj = [[GraphObject alloc] init];
+				tempObj.name=gObj.name;
+				gObj.name=gObj2.name;
+				gObj2.name=tempObj.name;
+				tempObj.amount=gObj.amount;
+				gObj.amount=gObj2.amount;
+				gObj2.amount=tempObj.amount;
+				tempObj.rowId=gObj.rowId;
+				gObj.rowId=gObj2.rowId;
+				gObj2.rowId=tempObj.rowId;
+			}
+		}
+	}
 }
 
 -(void)addGraphItem:(NSString *)name rowId:(int)rowId amount:(double)amount confirmFlg:(BOOL)confirmFlg {
 	int amountInt = round(amount);
+	for(MultiLineObj *obj in self.multiLineArray) {
+		if([name isEqualToString:obj.name]) {
+			if(amount>[ObjectiveCScripts convertMoneyStringToDouble:obj.value])
+				obj.value=[ObjectiveCScripts convertNumberToMoneyString:amountInt];
+		}
+	}
+	for(GraphObject *obj in self.graphArray) {
+		if([name isEqualToString:obj.name]) {
+			if(amountInt>obj.amount)
+				obj.amount=amountInt;
+			return;
+		}
+	}
 	GraphObject *graphObject = [[GraphObject alloc] init];
 	graphObject.name=name;
 	graphObject.amount=amountInt;
@@ -110,6 +173,7 @@
 		multiLineObj.color=[UIColor grayColor];
 	}
 	[self.multiLineArray addObject:multiLineObj];
+
 }
 
 -(NSMutableArray *)arrayOfType:(int)type {
@@ -189,7 +253,7 @@
 
 -(void)nextYearButtonPressed {
 	self.displayMonth++;
-	if(self.displayMonth>=12) {
+	if(self.displayMonth>12) {
 		self.displayMonth=1;
 		self.displayYear++;
 	}

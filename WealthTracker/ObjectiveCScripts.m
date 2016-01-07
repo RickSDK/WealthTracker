@@ -515,7 +515,7 @@
 
 +(NSString *)yearMonthStringNowPlusMonths:(int)months
 {
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	int changeYears = months/12;
 	int remainingMonths = months-(changeYears*12);
@@ -648,7 +648,7 @@
 
 +(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths type:(int)type {
 	if(month==0 && year==0) {
-		year = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+		year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 		month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	}
 	
@@ -791,7 +791,7 @@
 }
 
 +(int)nowYear {
-	return [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	return [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 }
 
 +(int)nowMonth {

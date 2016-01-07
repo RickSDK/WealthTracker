@@ -39,8 +39,6 @@
 	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
 		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
-	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	if([ObjectiveCScripts getUserDefaultValue:@"appOpened"].length>0) {
 		self.vaultImageView.hidden=YES;
@@ -93,7 +91,14 @@
 	double prevNetWorth=0;
 	double prevValue=0;
 	double prevBalance=0;
-	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = 12", self.nowYear-1];
+	
+	int displayYear = self.nowYear-1;
+	int displayMonth = 12;
+//	if(self.nowMonth<=10) { // go back 12 months
+		displayMonth=self.nowMonth;
+		self.chartLabel.text = @"Net Worth Changes Per Month";
+//	}
+	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 	for (NSManagedObject *mo in itemsPre) {
 		prevValue += [[mo valueForKey:@"asset_value"] doubleValue];
@@ -104,15 +109,20 @@
 	int numMonthsConfirmed = 0;
 	
 	[self.graphObjects removeAllObjects];
-	for(int month = 1; month <= 12; month++) {
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", self.nowYear, month];
+	for(int i = 1; i <= 12; i++) {
+		displayMonth++;
+		if(displayMonth>12) {
+			displayMonth=1;
+			displayYear++;
+		}
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
 		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 		NSString *valFlag = @"N";
 		NSString *balFlag = @"N";
 		int last30 = 0;
 		double value = 0;
 		double balance = 0;
-		NSString *futureFlag = (month>self.nowMonth)?@"Y":@"N";
+		NSString *futureFlag = (displayMonth>self.nowMonth && displayYear>=self.nowYear)?@"Y":@"N";
 		
 		for(NSManagedObject *mo in updateItems) {
 			value += [[mo valueForKey:@"asset_value"] doubleValue];
@@ -123,7 +133,7 @@
 			if([[mo valueForKey:@"bal_confirm_flg"] boolValue])
 				balFlag=@"Y";
 			
-			if (month==self.nowMonth) {
+			if (displayMonth==self.nowMonth && displayYear==self.nowYear) {
 				
 				int item_id = [[mo valueForKey:@"item_id"] intValue];
 				double debtChange = [ObjectiveCScripts changedBalanceLast30ForItem:item_id context:self.managedObjectContext];
@@ -147,10 +157,10 @@
 		prevValue = value;
 		prevBalance = balance;
 		
-		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
-		[self.graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO currentMonthFlg:month==self.nowMonth]];
+		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
+		[self.graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO currentMonthFlg:displayMonth==self.nowMonth && displayYear==self.nowYear]];
 		
-		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, self.nowYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
+		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, displayYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
 		
 	} //<-- for month
 	
@@ -234,7 +244,7 @@
 
 -(void)displayMainTitle {
 	if(self.chartSegmentControl.selectedSegmentIndex==0)
-		self.chartLabel.text = [NSString stringWithFormat:@"%@ Net Worth Change Per Month", [[NSDate date] convertDateToStringWithFormat:@"yyyy"]];
+		self.chartLabel.text = [NSString stringWithFormat:@"%d Net Worth Change Per Month", self.nowYear];
 	if(self.chartSegmentControl.selectedSegmentIndex==1)
 		self.chartLabel.text = [NSString stringWithFormat:@"%@ Assets and Debts", [[NSDate date] convertDateToStringWithFormat:@"yyyy"]];
 	if(self.chartSegmentControl.selectedSegmentIndex==2)
@@ -267,7 +277,7 @@
 }
 
 -(void)fireLocalNotificationForName:(NSString *)name statement_day:(int)statement_day {
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	int day = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
 	if(statement_day<day) {
@@ -277,8 +287,8 @@
 			nowYear++;
 		}
 	}
-	NSString *dateString = [NSString stringWithFormat:@"%02d/%02d/%d 06:00:00 AM", nowMonth, statement_day, nowYear];
-	NSDate *thisDate = [dateString convertStringToDateWithFormat:@"MM/dd/yyyy hh:mm:ss a"];
+	NSString *dateString = [NSString stringWithFormat:@"%02d/%02d/%d 06:00:00", nowMonth, statement_day, nowYear];
+	NSDate *thisDate = [dateString convertStringToDateWithFormat:@"MM/dd/yyyy hh:mm:ss"];
 	
 	UILocalNotification* local = [[UILocalNotification alloc] init];
 	
@@ -302,6 +312,10 @@
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.barGraphObjects = [[NSMutableArray alloc] init];
 
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	
+	NSLog(@"+++%d %d", self.nowMonth, self.nowYear);
 	
 	self.expiredFlg = [self checkForExpiredFlg];
 	
@@ -345,6 +359,8 @@
 		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
+	
+
 }
 
 
@@ -434,16 +450,8 @@
 		if(x<80)
 			x=80;
 		
-		float width = self.graphImageView.frame.size.width;
-		int month=0;
-		if(width>0) {
-			int leftEdge = self.graphImageView.center.x-width/2;
-			month = (10+point.x-leftEdge)*12/width;
-			if(month>12)
-				month=12;
-		}
-		
-		NSString *popupValues = [self.popupArray objectAtIndex:month];
+		int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
+		NSString *popupValues = [self.popupArray objectAtIndex:month-1];
 		NSArray *components = [popupValues componentsSeparatedByString:@"|"];
 		if(components.count>7) {
 			self.popupDateLabel.text = [components objectAtIndex:0];
@@ -474,7 +482,7 @@
 		for (GraphObject *obj in self.graphObjects) {
 			i++;
 			obj.currentMonthFlg=NO;
-			if(i==month)
+			if(i==month-self.nowMonth || i==month+12-self.nowMonth)
 				obj.currentMonthFlg=YES;
 		}
 		if(self.chartSegmentControl.selectedSegmentIndex==0)

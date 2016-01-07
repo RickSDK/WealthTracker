@@ -32,7 +32,7 @@
     [super viewDidLoad];
 	[self setTitle:@"Charts"];
 	
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	self.graphTitles = [NSArray arrayWithObjects:@"Assets", @"Real Estate", @"Vehicles", @"Interest", @"Debt", nil];

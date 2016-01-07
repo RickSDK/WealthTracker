@@ -38,7 +38,7 @@
 	self.nameLabel.text = self.itemObject.name;
 	self.interestRate=[self.itemObject.interest_rate floatValue];
 	
-	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 
 	self.totalAmount = [ObjectiveCScripts amountForItem:self.row_id month:nowMonth year:nowYear field:@"balance_owed" context:self.managedObjectContext type:0];

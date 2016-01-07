@@ -52,7 +52,7 @@
 		self.titleLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
 	}
 
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"YYYY"] intValue];
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	if(self.displayYear==0)
 		self.displayYear=self.nowYear;
