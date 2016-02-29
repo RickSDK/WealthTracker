@@ -24,12 +24,14 @@
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
 @property (nonatomic, strong) IBOutlet UILabel *netWorthLabel;
+@property (nonatomic, strong) IBOutlet UILabel *netWorthChangeLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *topImageView;
 @property (nonatomic, strong) IBOutlet UILabel *graphTitleLabel;
 
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
 @property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
+@property (nonatomic, strong) IBOutlet CustomSegment *midSegment;
 @property (nonatomic, strong) IBOutlet ChartSegmentControl *pieSegment;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
 
@@ -47,6 +49,7 @@
 @property (nonatomic) float startDegree;
 
 -(IBAction)topSegmentChanged:(id)sender;
+-(IBAction)midSegmentChanged:(id)sender;
 -(IBAction)pieSegmentChanged:(id)sender;
 
 

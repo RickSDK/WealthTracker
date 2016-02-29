@@ -653,7 +653,7 @@
 
 
 
-+(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type year:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth
++(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type displayYear:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth startMonth:(int)startMonth startYear:(int)startYear
 {
 	int totalWidth=[self totalWidth];
 	int totalHeight=totalWidth/2;
@@ -667,8 +667,8 @@
 	float min=999999;
 	float max=0;
 	
-	int predYear=nowYear-1;
-	int month=nowMonth;
+	int predYear=startYear-1;
+	int month=startMonth;
 	
 	NSMutableArray *assetArray = [[NSMutableArray alloc] init];
 	NSMutableArray *balanceArray = [[NSMutableArray alloc] init];
@@ -790,7 +790,7 @@
 	CGContextSetRGBFillColor(c, 0.4, 0.4, 0.4, 1); // gray
 	xCord = leftEdgeOfChart-10;
 	NSArray *months = [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", nil];
-	month = nowMonth;
+	month = startMonth;
 	for(int i=1; i<=12; i++) {
 		month++;
 		if(month>12)
@@ -867,8 +867,8 @@
 	BOOL oldRecordConfirmed2=NO;
 	BOOL isTodayFlg=NO;
 	
-	predYear=nowYear-1;
-	month=nowMonth;
+	predYear=startYear-1;
+	month=startMonth;
 	for(int i=1; i<=12; i++) {
 		month++;
 		if(month>12) {

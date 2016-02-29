@@ -36,6 +36,14 @@
 
 -(IBAction)topSegmentChanged:(id)sender {
 	[self.topSegment changeSegment];
+	self.mainTableView.hidden=self.topSegment.selectedSegmentIndex==1;
+	self.graphImageView.hidden=self.topSegment.selectedSegmentIndex==0;
+	self.midSegment.hidden=self.topSegment.selectedSegmentIndex==0;
+	self.pieSegment.hidden=self.topSegment.selectedSegmentIndex==0;
+}
+
+-(IBAction)midSegmentChanged:(id)sender {
+	[self.midSegment changeSegment];
 	[self setupData];
 }
 
@@ -52,6 +60,8 @@
 	self.topImageView = [[UIImageView alloc] init];
 	self.graphArray = [[NSMutableArray alloc] init];
 	
+	self.graphImageView.hidden=YES;
+	self.pieSegment.hidden=YES;
 
 	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM, yyyy"];
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
@@ -65,6 +75,11 @@
 																					 action:@selector(handleSwipeLeft:)];
 	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
 	[self.mainTableView addGestureRecognizer:recognizer];
+	
+
+	[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
+
+	[ObjectiveCScripts displayNetChangeLabel:self.netWorthChangeLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
 
 	[self setMaxWidth];
 }
@@ -123,14 +138,12 @@
 	[self.amountArray removeAllObjects];
 	[self.graphArray removeAllObjects];
 
-	BOOL displayChangeFlg = self.topSegment.selectedSegmentIndex==0;
+	BOOL displayChangeFlg = self.midSegment.selectedSegmentIndex==0;
 	
 	if(displayChangeFlg) {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Net Worth Changes in %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
-		[ObjectiveCScripts displayNetChangeLabel:self.netWorthLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
 	} else {
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"Equity as of %@", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
-		[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
 	}
 
 	
@@ -235,8 +248,8 @@
 		cell.bgView.backgroundColor = [UIColor whiteColor];
 		
 		if(obj)
-			[self updateCell:cell obj:obj];
-		
+			[ItemCell updateCell:cell obj:obj];
+	
 		if(self.nextItemDue == [obj.rowId intValue] && obj.status>0)
 			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:.5 alpha:1];
 		
@@ -262,7 +275,7 @@
 		float width=0;
 		if(self.maxBalance>0)
 			width = [obj.loan_balance floatValue]*316/self.maxBalance;
-		cell.redLineView.frame=CGRectMake(0, 55, width, 5);
+		cell.redLineView.frame=CGRectMake(0, 85, width, 5);
 		cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
 		cell.accessoryType = (offset==0)?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
 		cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section+1];
@@ -294,35 +307,6 @@
 			break;
 	}
 	return obj;
-}
-
--(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj {
-	cell.nameLabel.text = obj.name;
-	cell.subTypeLabel.text = obj.sub_type;
-	
-	double amount = [obj.value doubleValue]-[obj.loan_balance doubleValue];
-	double last30 = [ObjectiveCScripts changedEquityLast30ForItem:[obj.rowId intValue] context:self.managedObjectContext];
-	
-	if(last30>0 && obj.status==0)
-		cell.bgView.layer.borderColor = [UIColor colorWithRed:0 green:.6 blue:0 alpha:1].CGColor;
-	if(last30<0)
-		cell.bgView.layer.borderColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:1].CGColor;
-
-	[ObjectiveCScripts displayMoneyLabel:cell.amountLabel amount:amount lightFlg:NO revFlg:NO];
-	[ObjectiveCScripts displayNetChangeLabel:cell.last30Label amount:last30 lightFlg:NO revFlg:NO];
-
-	cell.valStatusImage.image = [ObjectiveCScripts imageForStatus:obj.status];
-	
-	if([obj.statement_day intValue]==0) {
-		cell.statement_dayLabel.text=@"";
-		cell.statement_dayLabel2.text=@"";
-	} else {
-		cell.statement_dayLabel.text = obj.statement_day;
-		cell.statement_dayLabel2.text = @"Statement Day";
-	}
-	
-	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:obj.type];
-	
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -437,7 +421,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 65;
+	return 95;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

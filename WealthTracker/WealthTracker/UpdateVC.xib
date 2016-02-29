@@ -8,9 +8,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpdateVC">
             <connections>
                 <outlet property="graphImageView" destination="ytX-nu-Xyn" id="Y3x-iE-vc3"/>
-                <outlet property="graphTitleLabel" destination="0B7-wp-kKx" id="vrZ-ky-Gck"/>
                 <outlet property="mainTableView" destination="eLf-sz-D9M" id="toD-rV-nWQ"/>
-                <outlet property="netWorthLabel" destination="wud-ec-M7M" id="rkZ-3b-paL"/>
+                <outlet property="midSegment" destination="ugJ-05-q71" id="pKw-du-Bnj"/>
+                <outlet property="netWorthChangeLabel" destination="wud-ec-M7M" id="jdM-D9-jHg"/>
+                <outlet property="netWorthLabel" destination="bQx-fM-Qlc" id="GeD-yc-85f"/>
                 <outlet property="pieSegment" destination="ihe-9W-gCy" id="TdG-4Z-MVq"/>
                 <outlet property="topSegment" destination="31a-3c-T3c" id="W9Z-Yl-uTk"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -25,42 +26,40 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="eLf-sz-D9M">
-                    <rect key="frame" x="0.0" y="231" width="320" height="272"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="Qxr-Ol-6NB"/>
-                        <outlet property="delegate" destination="-1" id="6iQ-nI-uFS"/>
-                    </connections>
-                </tableView>
                 <view contentMode="scaleToFill" id="dWP-Md-X28">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="41"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="0B7-wp-kKx">
-                            <rect key="frame" x="5" y="0.0" width="207" height="19"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$2,000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="wud-ec-M7M">
-                            <rect key="frame" x="214" y="0.0" width="98" height="19"/>
+                            <rect key="frame" x="176" y="20" width="136" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="highlightedColor"/>
                             <size key="shadowOffset" width="-1" height="-1"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="bQx-fM-Qlc">
+                            <rect key="frame" x="176" y="1" width="136" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Net Worth" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UhK-Tv-HVP">
+                            <rect key="frame" x="8" y="12" width="160" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="0.82178730870000005" green="0.82178730870000005" blue="0.82178730870000005" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="31a-3c-T3c" customClass="CustomSegment">
-                    <rect key="frame" x="0.0" y="20" width="320" height="29"/>
+                    <rect key="frame" x="0.0" y="40" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
-                        <segment title="Net Change"/>
-                        <segment title="Total"/>
+                        <segment title="List"/>
+                        <segment title="Charts"/>
                     </segments>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
@@ -68,12 +67,23 @@
                     </connections>
                 </segmentedControl>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ytX-nu-Xyn">
-                    <rect key="frame" x="0.0" y="49" width="320" height="154"/>
+                    <rect key="frame" x="0.0" y="69" width="320" height="200"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="ihe-9W-gCy" customClass="ChartSegmentControl">
-                    <rect key="frame" x="0.0" y="202" width="320" height="29"/>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="ugJ-05-q71" customClass="CustomSegment">
+                    <rect key="frame" x="0.0" y="267" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Change this Month"/>
+                        <segment title="Total"/>
+                    </segments>
+                    <connections>
+                        <action selector="midSegmentChanged:" destination="-1" eventType="valueChanged" id="U6c-4x-b4e"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="ihe-9W-gCy" customClass="ChartSegmentControl">
+                    <rect key="frame" x="0.0" y="476" width="320" height="29"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <segments>
                         <segment title="Bars"/>
                         <segment title="Pie"/>
@@ -82,6 +92,15 @@
                         <action selector="pieSegmentChanged:" destination="-1" eventType="valueChanged" id="rSi-nx-OY9"/>
                     </connections>
                 </segmentedControl>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="eLf-sz-D9M">
+                    <rect key="frame" x="0.0" y="69" width="320" height="435"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Qxr-Ol-6NB"/>
+                        <outlet property="delegate" destination="-1" id="6iQ-nI-uFS"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

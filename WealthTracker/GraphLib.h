@@ -19,7 +19,7 @@
 +(UIImage *)graphBarsWithItems:(NSArray *)itemList;
 +(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg currentMonthFlg:(BOOL)currentMonthFlg;
 +(CGContextRef)contextRefForGraphofWidth:(int)totalWidth totalHeight:(int)totalHeight;
-+(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type year:(int)year item_id:(int)item_id displayMonth:(int)displayMonth;
++(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type displayYear:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth startMonth:(int)startMonth startYear:(int)startYear;
 +(int)drawZeroLineForContext:(CGContextRef)c min:(float)min max:(float)max bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth;
 +(void)drawLeftLabelsAndLinesForContext:(CGContextRef)c totalMoneyRange:(float)totalMoneyRange min:(double)min leftEdgeOfChart:(int)leftEdgeOfChart totalHeight:(int)totalHeight totalWidth:(int)totalWidth numOnlyFlg:(BOOL)numOnlyFlg;
 +(void)drawBottomLabelsForArray:(NSArray *)labels c:(CGContextRef)c bottomEdgeOfChart:(int)bottomEdgeOfChart leftEdgeOfChart:(int)leftEdgeOfChart totalWidth:(int)totalWidth;

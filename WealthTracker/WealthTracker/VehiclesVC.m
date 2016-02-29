@@ -136,20 +136,12 @@
 	
 	if(indexPath.row<self.itemArray.count) {
 		ItemObject *obj = [self.itemArray objectAtIndex:indexPath.row];
-		cell.nameLabel.text=obj.name;
-		if([obj.value doubleValue]>0)
-			cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:[obj.value doubleValue]];
-		else
-			cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:[obj.loan_balance doubleValue]];
-		cell.subTypeLabel.text = obj.sub_type;
-		cell.last30Label.text = @"";
-		cell.statement_dayLabel.text = obj.statement_day;
-		cell.valStatusImage.image=[UIImage imageNamed:@"green.png"];
+		[ItemCell updateCell:cell obj:obj];
 	} else {
 		cell.nameLabel.text=[NSString stringWithFormat:@"%@ #%d", [ObjectiveCScripts typeNameForType:self.type], (int)indexPath.row+1];
-		cell.amountLabel.text = @"";
+		cell.equityLabel.text = @"";
 		cell.subTypeLabel.text = @"";
-		cell.last30Label.text = @"";
+		cell.equityChangeLabel.text = @"";
 		cell.statement_dayLabel.text = @"";
 		cell.valStatusImage.image=[UIImage imageNamed:@"red.png"];
 	}
@@ -255,7 +247,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 65;
+	return 95;
 }
 
 @end

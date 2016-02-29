@@ -65,7 +65,7 @@
 		if(self.balanceFlg) {
 			self.valueTextField.text = [ObjectiveCScripts convertNumberToMoneyString:[self.itemObject.loan_balance doubleValue]];
 		} else {
-			self.valueTextField.text = [ObjectiveCScripts convertNumberToMoneyString:[self.itemObject.value doubleValue]];
+			self.valueTextField.text = [ObjectiveCScripts convertNumberToMoneyString:self.itemObject.value];
 			
 			if([@"Vehicle" isEqualToString:self.itemObject.type] && urlString.length==0)
 				urlString = @"http://www.kbb.com/whats-my-car-worth/";

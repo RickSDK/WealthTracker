@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ObjectiveCScripts.h"
+#import "ItemObject.h"
 
 @interface ItemCell : UITableViewCell
 
@@ -16,9 +18,15 @@
 @property (nonatomic, retain) UIView *redLineView;
 @property (nonatomic, retain) UILabel *nameLabel;
 @property (nonatomic, retain) UILabel *subTypeLabel;
-@property (nonatomic, retain) UILabel *amountLabel;
-@property (nonatomic, retain) UILabel *last30Label;
+@property (nonatomic, retain) UILabel *balanceLabel;
+@property (nonatomic, retain) UILabel *balanceChangeLabel;
+@property (nonatomic, retain) UILabel *valueLabel;
+@property (nonatomic, retain) UILabel *valueChangeLabel;
+@property (nonatomic, retain) UILabel *equityLabel;
+@property (nonatomic, retain) UILabel *equityChangeLabel;
 @property (nonatomic, retain) UILabel *statement_dayLabel;
 @property (nonatomic, retain) UILabel *statement_dayLabel2;
+
++(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj;
 
 @end

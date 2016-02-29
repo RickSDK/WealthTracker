@@ -460,7 +460,15 @@
 	obj.category = [mo valueForKey:@"category"];
 	obj.payment_type = [mo valueForKey:@"payment_type"];
 	obj.statement_day = [NSString stringWithFormat:@"%d", [[mo valueForKey:@"statement_day"] intValue]];
-	obj.value = [NSString stringWithFormat:@"%d", (int)[[mo valueForKey:@"value"] doubleValue]];
+	obj.value = [[mo valueForKey:@"value"] doubleValue];
+	obj.balance = [[mo valueForKey:@"loan_balance"] doubleValue];
+	obj.equity = obj.value-obj.balance;
+	
+	obj.balanceChange = [ObjectiveCScripts changedBalanceLast30ForItem:[obj.rowId intValue] context:moc];
+	obj.valueChange = [ObjectiveCScripts changedValueLast30ForItem:[obj.rowId intValue] context:moc];
+	obj.equityChange = obj.valueChange-obj.balanceChange;
+
+	obj.valueStr = [NSString stringWithFormat:@"%d", (int)obj.value];
 	obj.loan_balance = [NSString stringWithFormat:@"%d", (int)[[mo valueForKey:@"loan_balance"] doubleValue]];
 	obj.interest_rate = [mo valueForKey:@"interest_rate"];
 	obj.monthly_payment = [NSString stringWithFormat:@"%d", (int)[[mo valueForKey:@"monthly_payment"] doubleValue]];
@@ -471,8 +479,6 @@
 	
 	int nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
 	obj.futureDayFlg = [obj.statement_day intValue]>nowDay;
-//	int monthToCheck = (obj.futureDayFlg)?-1:0;
-//	int monthToCheck=0;
 	NSString *yearMonth = [ObjectiveCScripts yearMonthStringNowPlusMonths:0];
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year_month = %@ AND item_id = %d", yearMonth, [obj.rowId intValue]];
 	
@@ -678,6 +684,10 @@
 
 +(double)changedBalanceLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context {
 	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:@"balance_owed" context:context numMonths:1 type:0];
+}
+
++(double)changedValueLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context {
+	return [ObjectiveCScripts changedForItem:item_id month:0 year:0 field:@"asset_value" context:context numMonths:1 type:0];
 }
 
 +(double)changedEquityLast30:(NSManagedObjectContext *)context {

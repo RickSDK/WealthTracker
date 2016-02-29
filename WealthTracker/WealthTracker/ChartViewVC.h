@@ -37,6 +37,7 @@
 @property (nonatomic) int type;
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
+@property (nonatomic) int startYear;
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int fieldType;

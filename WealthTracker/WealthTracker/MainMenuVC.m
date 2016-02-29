@@ -109,6 +109,8 @@
 	int numMonthsConfirmed = 0;
 	
 	[self.graphObjects removeAllObjects];
+	[self.popupArray addObject:@"Test"];
+
 	for(int i = 1; i <= 12; i++) {
 		displayMonth++;
 		if(displayMonth>12) {
@@ -158,6 +160,7 @@
 		prevBalance = balance;
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
+		NSLog(@"+++monthName: %@", monthName);
 		[self.graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO currentMonthFlg:displayMonth==self.nowMonth && displayYear==self.nowYear]];
 		
 		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, displayYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
@@ -204,7 +207,7 @@
 	if(self.chartSegmentControl.selectedSegmentIndex==0)
 		self.graphImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
 	if(self.chartSegmentControl.selectedSegmentIndex==1)
-		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:self.nowMonth];
+		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 displayYear:self.nowYear item_id:0 displayMonth:self.nowMonth startMonth:self.nowMonth startYear:self.nowYear];
 	if(self.chartSegmentControl.selectedSegmentIndex==2)
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
 
@@ -314,8 +317,6 @@
 
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
-	
-	NSLog(@"+++%d %d", self.nowMonth, self.nowYear);
 	
 	self.expiredFlg = [self checkForExpiredFlg];
 	
@@ -451,6 +452,7 @@
 			x=80;
 		
 		int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
+		
 		NSString *popupValues = [self.popupArray objectAtIndex:month-1];
 		NSArray *components = [popupValues componentsSeparatedByString:@"|"];
 		if(components.count>7) {
@@ -471,7 +473,10 @@
 				self.popupValImageView.image = [UIImage imageNamed:@"yellow.png"];
 				self.popupBalImageView.image = [UIImage imageNamed:@"yellow.png"];
 			}
-		}
+			self.popUpView.hidden=NO;
+		} else
+			self.popUpView.hidden=YES;
+
 		
 		if(month==self.nowMonth)
 			self.popUpView.backgroundColor=[UIColor yellowColor];
@@ -488,10 +493,9 @@
 		if(self.chartSegmentControl.selectedSegmentIndex==0)
 			self.graphImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
 		if(self.chartSegmentControl.selectedSegmentIndex==1)
-			self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 year:self.nowYear item_id:0 displayMonth:month];
+			self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 displayYear:self.nowYear item_id:0 displayMonth:month startMonth:self.nowMonth startYear:self.nowYear];
 
 		self.popUpView.center=CGPointMake(x, point.y-150);
-		self.popUpView.hidden=NO;
 	} else
 		self.popUpView.hidden=YES;
 }

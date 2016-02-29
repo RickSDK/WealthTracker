@@ -146,7 +146,7 @@
 			[self insertObjectWithTitle:@"name" desc:@"Choose a nickname for this property. It can be anything. Enter 'Home' if nothing else." value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			
 			if([self showThisEntry]) {
-				[self insertObjectWithTitle:@"value" desc:@"Approx what is your home currently worth? (Check zillow.com)" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"value" desc:@"Approx what is your home currently worth? (Check zillow.com)" value:self.itemObject.valueStr flag:@"N" fieldType:1 listNumber:0];
 				[self insertObjectWithTitle:@"loan_balance" desc:@"Approx what is your current balance on the home loan?" value:self.itemObject.loan_balance flag:@"N" fieldType:1 listNumber:0];
 			}
 			[self insertObjectWithTitle:@"interest_rate" desc:@"What interest rate on the home loan?" value:self.itemObject.interest_rate flag:@"N" fieldType:3 listNumber:0];
@@ -173,7 +173,7 @@
 			}
 			[self insertObjectWithTitle:@"statement_day" desc:@"What day of the month does your statement arrive?" value:statement_day flag:@"Y" fieldType:2 listNumber:0];
 			if([self showThisEntry])
-				[self insertObjectWithTitle:@"value" desc:@"What is the approx value of this vehicle? (Check kelly blue book)" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"value" desc:@"What is the approx value of this vehicle? (Check kelly blue book)" value:self.itemObject.valueStr flag:@"N" fieldType:1 listNumber:0];
 			[self checkFieldsForTag:1 value:self.itemObject.payment_type];
 
 			break;
@@ -191,7 +191,7 @@
 			self.topDescLabel.text = @"Asset: Enter information related to this asset.";
 			[self insertObjectWithTitle:@"name" desc:@"Enter a name. Can be anything. Ex: 401k, Stocks, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
-				[self insertObjectWithTitle:@"value" desc:@"What is the current dollar value?" value:self.itemObject.value flag:@"N" fieldType:1 listNumber:0];
+				[self insertObjectWithTitle:@"value" desc:@"What is the current dollar value?" value:self.itemObject.valueStr flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"statement_day" desc:@"What day of the month does your statement arrive?" value:statement_day flag:@"Y" fieldType:2 listNumber:0];
 			
 			break;
@@ -237,11 +237,11 @@
 	}
 	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
-	[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.value doubleValue] moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.valueStr doubleValue] moc:self.managedObjectContext];
 	[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
 	
 	if([@"Asset" isEqualToString:self.itemObject.type] && [@"Emergency Fund" isEqualToString:self.itemObject.name]) {
-		int amount = [self.itemObject.value intValue];
+		int amount = [self.itemObject.valueStr intValue];
 		NSArray *items = [CoreDataLib selectRowsFromTable:@"PROFILE" mOC:self.managedObjectContext];
 		if(items.count>0) {
 			NSManagedObject *mo = [items objectAtIndex:0];
@@ -292,7 +292,7 @@
 			int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 			int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 			self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-			[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.value doubleValue] moc:self.managedObjectContext];
+			[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:self.itemObject.value  moc:self.managedObjectContext];
 			[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
 		}
 

@@ -309,7 +309,7 @@
 			
 			int monthsToGo = 999;
 			if (principalPaid>0)
-				monthsToGo = loan_balance/principalPaid;
+				monthsToGo = ceil(loan_balance/principalPaid);
 			if(monthsToGo>0) {
 				[self.namesArray addObject:@"Est Months to pay off"];
 				[self.valuesArray addObject:[NSString stringWithFormat:@"%d (%.1f years)", monthsToGo, (float)monthsToGo/12]];
@@ -437,7 +437,7 @@
 			cell.graphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 		} else {
 			
-			cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] year:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth];
+			cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear];
 		}
 		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
 

@@ -96,7 +96,7 @@
 		balance-=self.displayPaydownAmount;
 	}
 	
-	int taxes=[self.itemObject.value intValue]*.0007;
+	int taxes=self.itemObject.value*.0007;
 	float paymentInterest = self.totalAmount*self.interestRate/100/12;
 	self.monthlyPaymnetLabel.text = [ObjectiveCScripts convertNumberToMoneyString:round(self.displayPaydownAmount+paymentInterest+taxes)];
 	

@@ -177,7 +177,7 @@
 	}
 	
 	if(segment==0)
-		cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType year:displayYear item_id:0 displayMonth:displayMonth];
+		cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType displayYear:displayYear item_id:0 displayMonth:displayMonth startMonth:displayMonth startYear:displayYear];
 	if(segment==1)
 		cell.graphImageView.image =[GraphLib graphBarsWithItems:chartValuesArray];
 	if(segment==2)

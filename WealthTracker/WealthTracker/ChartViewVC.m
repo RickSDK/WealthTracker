@@ -31,6 +31,7 @@
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
+	self.startYear = self.nowYear;
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Breakdown" style:UIBarButtonItemStyleBordered target:self action:@selector(breakdownButtonPressed)];
 
@@ -45,8 +46,6 @@
 		self.topSegmentControl.selectedSegmentIndex=1;
 	if(self.tag==99)
 		self.topSegmentControl.selectedSegmentIndex=2;
-	
-	NSLog(@"+++%d", self.tag);
 	
 	if(self.tag==0) {
 		[self.topSegmentControl setTitle:@"Assets" forSegmentAtIndex:0];
@@ -111,8 +110,9 @@
 	if(graphType==4)
 		graphType=0; // debt
 
+
 	if(self.changeSegmentControl.selectedSegmentIndex==1)
-		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType year:self.displayYear item_id:0 displayMonth:self.displayMonth];
+		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType displayYear:self.displayYear item_id:0 displayMonth:self.displayMonth startMonth:self.nowMonth startYear:self.startYear];
 	if(self.changeSegmentControl.selectedSegmentIndex==0)
 		self.graphImageView.image =[GraphLib graphBarsWithItems:self.chartValuesArray];
 	if(self.changeSegmentControl.selectedSegmentIndex==2)
@@ -221,20 +221,29 @@
 
 
 -(IBAction)prevYearButtonPressed:(id)sender {
-//	self.displayMonth--;
-//	if(self.displayMonth<1) {
-//		self.displayMonth=12;
+	int leftMOnth = self.nowMonth+1;
+	if(leftMOnth>12)
+		leftMOnth=1;
+	if(self.displayMonth != leftMOnth) {
+		if(leftMOnth>self.displayMonth)
+			self.displayYear--;
+		self.displayMonth=leftMOnth;
+	} else {
 		self.displayYear--;
-//	}
+		self.startYear--;
+	}
 	[self setupData];
 	
 }
 -(IBAction)nextYearButtonPressed:(id)sender {
-//	self.displayMonth++;
-//	if(self.displayMonth>12) {
-//		self.displayMonth=1;
+	if(self.displayMonth != self.nowMonth) {
+		if(self.nowMonth<self.displayMonth)
+			self.displayYear++;
+		self.displayMonth=self.nowMonth;
+	} else {
 		self.displayYear++;
-//	}
+		self.startYear++;
+	}
 	[self setupData];
 	
 }

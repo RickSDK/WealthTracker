@@ -420,8 +420,8 @@
 	} else {
 		if(equity>=0)
 			line2 = [NSString stringWithFormat:@"Your vehicle purchases are currently sitting at %d%% equity. Follow the plan on the main menu screen in order to get them paid off as quickly as possible.", equity];
-		if(equity>=80)
-			line2 = @"Great job paying off your vehicles. Remember to ONLY pay cash for future purchases. The goal is to saty out of debt.";
+		if(equity>=98)
+			line2 = @"Great job paying off your vehicles. Remember to ONLY pay cash for future purchases. The goal is to stay out of debt.";
 	}
 
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"type = 'Vehicle' AND payment_type = 'Leasing'"];
@@ -905,12 +905,16 @@
 			line3 = [NSString stringWithFormat:@"You have paid off a good deal of total debt this year with %@ reduced so far in %d, with %@ to go.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1], self.displayYear, monStr];
 		else
 			line3 = [NSString stringWithFormat:@"You haven't been able to knock out a huge amount of your total debt this year, but have reduced it by %@ in %d, with %@ to go.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1], self.displayYear, monStr];
+		if(self.displayMonth==1)
+			line3 = [NSString stringWithFormat:@"You are getting %d off to a good start by paying down %@ of total debt in the first month.", self.displayYear, [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1]];
 
 	} else { // more debt
 		if(debtPerMonth>1200)
 			line3 = [NSString stringWithFormat:@"You have been loading tons of total debt this year with %@ added so far in %d, and %@ left to start paying it down.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear], self.displayYear, monStr];
 		else
 			line3 = [NSString stringWithFormat:@"You haven't managed to reduce debt this year and have in fact added %@ in %d, with %@ left to start paying it down.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear], self.displayYear, monStr];
+		if(self.displayMonth==1)
+			line3 = [NSString stringWithFormat:@"%d is not getting off to a good start as you have added %@ of total debt in the first month.", self.displayYear, [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1]];
 	}
 
 	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, debtString, line4]];

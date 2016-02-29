@@ -16,7 +16,7 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *payment_type;
 @property (nonatomic, strong) NSString *category;
-@property (nonatomic, strong) NSString *value;
+@property (nonatomic, strong) NSString *valueStr;
 
 @property (nonatomic, strong) NSString *statement_day;
 @property (nonatomic, strong) NSString *homeowner_dues;
@@ -33,5 +33,12 @@
 @property (nonatomic) BOOL futureDayFlg;
 @property (nonatomic) int status;
 @property (nonatomic) int day;
+
+@property (nonatomic) float balance;
+@property (nonatomic) float balanceChange;
+@property (nonatomic) float value;
+@property (nonatomic) float valueChange;
+@property (nonatomic) float equity;
+@property (nonatomic) float equityChange;
 
 @end

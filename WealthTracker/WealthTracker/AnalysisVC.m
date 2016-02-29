@@ -69,13 +69,12 @@
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 		int loan_balance = [obj.loan_balance intValue];
 		totalDebt+=loan_balance;
-		float value = [obj.value intValue];
-		totalvalue += value;
+		totalvalue += obj.value;
 		
 		float monthly_payment = [obj.monthly_payment intValue];
 		
 		if([@"Vehicle" isEqualToString:obj.type]) {
-			totalVehicleValue += value;
+			totalVehicleValue += obj.value;
 		}
 		if([@"Real Estate" isEqualToString:obj.type]) {
 			totalRealEstateDebt += loan_balance;

@@ -50,6 +50,7 @@
 +(double)changedForItem:(int)item_id month:(int)month year:(int)year field:(NSString *)field context:(NSManagedObjectContext *)context numMonths:(int)numMonths type:(int)type;
 +(double)changedEquityLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
 +(double)changedBalanceLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
++(double)changedValueLast30ForItem:(int)item_id context:(NSManagedObjectContext *)context;
 +(double)changedEquityLast30:(NSManagedObjectContext *)context;
 +(float)chartHeightForSize:(float)height;
 +(UIImage *)imageIconForType:(NSString *)typeStr;
