@@ -47,7 +47,7 @@
 	
 	// Default is white background and ATTBlue text color
 	self.backgroundColor = [UIColor whiteColor];
-	[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self setTitleColor:[UIColor colorWithRed:(12/255.0) green:(37/255.0) blue:(119/255.0) alpha:1.0] forState:UIControlStateNormal];
 }
 
 - (void)setEnabled:(BOOL)enabled {

@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "CustomSegment.h"
 #import "ChartSegmentControl.h"
+#import "TemplateVC.h"
+#import "ListChartSegment.h"
 
-@interface UpdateVC : UIViewController <UIActionSheetDelegate>
+@interface UpdateVC : TemplateVC <UIActionSheetDelegate>
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
@@ -27,10 +29,11 @@
 @property (nonatomic, strong) IBOutlet UILabel *netWorthChangeLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *topImageView;
 @property (nonatomic, strong) IBOutlet UILabel *graphTitleLabel;
+@property (nonatomic, strong) IBOutlet UILabel *portfolioLabel;
 
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusCountLabel;
-@property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
+@property (nonatomic, strong) IBOutlet ListChartSegment *topSegment;
 @property (nonatomic, strong) IBOutlet CustomSegment *midSegment;
 @property (nonatomic, strong) IBOutlet ChartSegmentControl *pieSegment;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;

@@ -25,12 +25,92 @@
 #import <LocalAuthentication/LocalAuthentication.h>
 #import "NSString+FontAwesome.h"
 #import "UIFont+FontAwesome.h"
+#import "PlanningVC.h"
 
 @interface MainMenuVC ()
 
 @end
 
 @implementation MainMenuVC
+
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	[self setTitle:@"Main Menu"];
+	if(kTestMode)
+		[self setTitle:@"Test Mode!"];
+	
+	
+	self.popupArray=[[NSMutableArray alloc] init];
+	self.graphObjects = [[NSMutableArray alloc] init];
+	self.barGraphObjects = [[NSMutableArray alloc] init];
+	
+	self.portfolioButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[self.portfolioButton setTitle:[NSString stringWithFormat:@"%@ Portfolio", [NSString fontAwesomeIconStringForEnum:FAbank]] forState:UIControlStateNormal];
+	self.chartsButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[self.chartsButton setTitle:[NSString stringWithFormat:@"%@ Charts", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forState:UIControlStateNormal];
+	self.myPlanButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[self.myPlanButton setTitle:[NSString stringWithFormat:@"%@ Plan", [NSString fontAwesomeIconStringForEnum:FAFileText]] forState:UIControlStateNormal];
+	self.analysisButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[self.analysisButton setTitle:[NSString stringWithFormat:@"%@ Advisor", [NSString fontAwesomeIconStringForEnum:FAUser]] forState:UIControlStateNormal];
+	
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	
+	self.expiredFlg = [self checkForExpiredFlg];
+	
+	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
+		//		UIImage *image = [UIImage imageNamed:@"blueGrad.jpg"]; //greenGradient.png
+		//		[self.navigationController.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+		self.navigationController.navigationBar.barTintColor = [ObjectiveCScripts darkColor];
+		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+		self.navigationController.navigationBar.translucent = NO;
+		self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:.8 blue:0 alpha:1];
+	}
+	
+	[self displayMainTitle];
+	self.netWorthView.backgroundColor=[ObjectiveCScripts mediumkColor];
+	self.botView.backgroundColor=[ObjectiveCScripts darkColor];
+	
+	
+	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:kFontAwesomeFamilyName size:20.f] forKey:UITextAttributeFont]];
+	
+/*
+	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [UIFont fontWithName:kFontAwesomeFamilyName size:20.f], UITextAttributeFont,
+											 [UIColor whiteColor], UITextAttributeTextColor,
+											 [UIColor blackColor], UITextAttributeTextShadowColor,
+											 [NSValue valueWithUIOffset:UIOffsetMake(0.0f, 1.0f)], UITextAttributeTextShadowOffset,
+											 nil]];
+*/	
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+	
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+	
+	if(![ObjectiveCScripts isStartupCompleted]) {
+		StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
+	
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
+	
+	self.messageView.hidden=YES;
+	self.arrowImage.hidden=YES;
+	
+	[self checkNextItemDue];
+	
+	self.vaultImageView.hidden=YES;
+	self.appLockedFlg=NO;
+	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0) {
+		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
+	
+	
+}
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -160,7 +240,6 @@
 		prevBalance = balance;
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
-		NSLog(@"+++monthName: %@", monthName);
 		[self.graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO currentMonthFlg:displayMonth==self.nowMonth && displayYear==self.nowYear]];
 		
 		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, displayYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
@@ -230,7 +309,7 @@
 	double balance_owed = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
 	[ObjectiveCScripts displayNetChangeLabel:self.netWorthChangeLabel amount:asset_value-balance_owed lightFlg:YES revFlg:NO];
 
-	self.monthBotLabel.text = [NSString stringWithFormat:@"(%@)", [[NSDate date] convertDateToStringWithFormat:@"MMMM"]];
+	self.monthBotLabel.text = [NSString stringWithFormat:@"Net Worth (%@)", [[NSDate date] convertDateToStringWithFormat:@"MMMM, YYYY"]];
 	
 	[ObjectiveCScripts displayNetChangeLabel:self.assetChangeLabel amount:asset_value lightFlg:YES revFlg:NO];
 	[ObjectiveCScripts displayNetChangeLabel:self.debtChangeLabel amount:balance_owed lightFlg:YES revFlg:YES];
@@ -302,66 +381,6 @@
 		local.timeZone = [NSTimeZone defaultTimeZone];
 		[[UIApplication sharedApplication] scheduleLocalNotification:local];
 	}
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-	[self setTitle:@"Main Menu"];
-	if(kTestMode)
-		[self setTitle:@"Test Mode!"];
-	
-	
-	self.popupArray=[[NSMutableArray alloc] init];
-	self.graphObjects = [[NSMutableArray alloc] init];
-	self.barGraphObjects = [[NSMutableArray alloc] init];
-
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
-	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
-	
-	self.expiredFlg = [self checkForExpiredFlg];
-	
-	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
-		UIImage *image = [UIImage imageNamed:@"blueGrad.jpg"]; //greenGradient.png
-		[self.navigationController.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
-		self.navigationController.navigationBar.barTintColor = [ObjectiveCScripts mediumkColor];
-		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-		self.navigationController.navigationBar.translucent = NO;
-		self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:.8 blue:0 alpha:1];
-	}
-	
-	[self displayMainTitle];
-	self.netWorthView.backgroundColor=[ObjectiveCScripts mediumkColor];
-	self.botView.backgroundColor=[ObjectiveCScripts mediumkColor];
-
-	
-	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-
-	if(![ObjectiveCScripts isStartupCompleted]) {
-		StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		[self.navigationController pushViewController:detailViewController animated:YES];
-	}
-
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
-	
-	self.messageView.hidden=YES;
-	self.arrowImage.hidden=YES;
-
-	[self checkNextItemDue];
-	
-	self.vaultImageView.hidden=YES;
-	self.appLockedFlg=NO;
-	if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length>0) {
-		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
-		[self.navigationController pushViewController:detailViewController animated:YES];
-	}
-	
-
 }
 
 
@@ -498,6 +517,8 @@
 		self.popUpView.center=CGPointMake(x, point.y-150);
 	} else
 		self.popUpView.hidden=YES;
+
+	self.popUpView.hidden=YES;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -520,7 +541,7 @@
 }
 
 -(IBAction)myPlanButtonClicked:(id)sender {
-	MyPlanVC *detailViewController = [[MyPlanVC alloc] initWithNibName:@"MyPlanVC" bundle:nil];
+	PlanningVC *detailViewController = [[PlanningVC alloc] initWithNibName:@"PlanningVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -554,7 +575,7 @@
 	self.messageView.hidden=NO;
 	self.arrowImage.hidden=NO;
 	
-	self.arrowImage.center = CGPointMake(self.netWorthView.frame.origin.x+20, self.netWorthView.frame.origin.y-55);
+	self.arrowImage.center = CGPointMake(self.netWorthView.frame.origin.x+120, self.netWorthView.frame.origin.y-55);
 	self.messageView.center = CGPointMake(self.netWorthView.center.x, self.netWorthView.center.y-220);
 	self.messageLabel.text = @"Wealth Tracker!\n\nThe first thing to understand about finances, is to know your net worth. Which is simply the total of all your assets minus what you owe in debts.";
 }
@@ -582,7 +603,7 @@
 			break;
   case 5:
 			self.arrowImage.center = CGPointMake(self.analysisButton.frame.origin.x+50, self.analysisButton.frame.origin.y+100);
-			self.messageLabel.text = @"Under 'Analysis' you will get a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
+			self.messageLabel.text = @"Under 'Financial Advisor' you will get a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
 			break;
   case 6:
 			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+100, self.myPlanButton.frame.origin.y+40);

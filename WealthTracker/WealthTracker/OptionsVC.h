@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WebServiceView.h"
+#import "TemplateVC.h"
 
-@interface OptionsVC : UIViewController <UIAlertViewDelegate>
+@interface OptionsVC : TemplateVC <UIAlertViewDelegate>
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
 
 @interface CustomSegment : UISegmentedControl
 

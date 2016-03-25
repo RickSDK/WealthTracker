@@ -10,6 +10,8 @@
 #import "NSDate+ATTDate.h"
 #import "CoreDataLib.h"
 #import "UIColor+ATTColor.h"
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
 
 
 @implementation ObjectiveCScripts
@@ -541,7 +543,7 @@
 }
 
 +(NSArray *)monthListShort {
-	return [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", @"X", nil];
+	return [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", @"Jan", nil];
 }
 
 +(BOOL)isStatusGreen:(ItemObject *)obj {
@@ -807,6 +809,48 @@
 +(int)nowMonth {
 	return [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 }
+
++(void)fontAwesomeButton:(UIButton *)button title:(NSString *)title icon:(NSString *)icon size:(float)size {
+	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
+	[button setTitle:[NSString stringWithFormat:@"%@ %@", icon, title] forState:UIControlStateNormal];
+}
+
++(void)fontAwesomeButton:(UIButton *)button type:(int)type size:(float)size {
+	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
+	
+	[button setTitle:[self fontAwesomeTextForType:type] forState:UIControlStateNormal];
+}
+
++(void)fontAwesomeAltButton:(UIButton *)button type:(int)type size:(float)size {
+	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
+	
+	[button setTitle:[self fontAwesomeTextAltForType:type] forState:UIControlStateNormal];
+}
+
++(NSString *)fontAwesomeTextForType:(int)type {
+	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Home", @"Auto", @"Debt", @"Wealth", nil];
+	
+	return [NSString stringWithFormat:@"%@ %@", [self faIconOfType:type], [titles objectAtIndex:type]];
+}
+
++(NSString *)faIconOfType:(int)type {
+	NSArray *icons = [NSArray arrayWithObjects:
+					  [NSString fontAwesomeIconStringForEnum:FAUser],
+					  [NSString fontAwesomeIconStringForEnum:FAHome],
+					  [NSString fontAwesomeIconStringForEnum:FAautomobile],
+					  [NSString fontAwesomeIconStringForEnum:FACreditCard],
+					  [NSString fontAwesomeIconStringForEnum:FAUsd],
+					  nil];
+	return [icons objectAtIndex:type];
+}
+
++(NSString *)fontAwesomeTextAltForType:(int)type {
+	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
+	
+	return [NSString stringWithFormat:@"%@ %@", [self faIconOfType:type], [titles objectAtIndex:type]];
+}
+
+
 
 
 

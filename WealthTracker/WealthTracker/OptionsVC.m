@@ -92,7 +92,25 @@
 	if(cell==nil)
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 
-	cell.textLabel.text=[self.menuItems objectAtIndex:indexPath.row];
+	NSArray *icons = [NSArray arrayWithObjects:
+					  [NSString fontAwesomeIconStringForEnum:FACreditCard],
+					  [NSString fontAwesomeIconStringForEnum:FAUsd],
+					  [NSString fontAwesomeIconStringForEnum:FAMoney],
+					  [NSString fontAwesomeIconStringForEnum:FAArrowUp],
+					  [NSString fontAwesomeIconStringForEnum:FAArrowDown],
+					  [NSString fontAwesomeIconStringForEnum:FAtrash],
+					  [NSString fontAwesomeIconStringForEnum:FAUser],
+					  [NSString fontAwesomeIconStringForEnum:FAbank],
+					  [NSString fontAwesomeIconStringForEnum:FAEnvelope],
+					  [NSString fontAwesomeIconStringForEnum:FAStar],
+					  [NSString fontAwesomeIconStringForEnum:FALock],
+					  [NSString fontAwesomeIconStringForEnum:FALock],
+					  [NSString fontAwesomeIconStringForEnum:FALock],
+					  [NSString fontAwesomeIconStringForEnum:FALock],
+					  nil];
+
+	cell.textLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20.f];
+	cell.textLabel.text=[NSString stringWithFormat:@"%@ %@", [icons objectAtIndex:indexPath.row], [self.menuItems objectAtIndex:indexPath.row]];
 	if([kMenu11 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
 		if([ObjectiveCScripts getUserDefaultValue:@"lockAppFlg"].length==0)
 			cell.accessoryType= UITableViewCellAccessoryNone;
@@ -106,9 +124,9 @@
 	} else
 		cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
 	
-	cell.backgroundColor=(indexPath.row==1)?[UIColor colorWithRed:1 green:1 blue:.8 alpha:1]:[UIColor whiteColor];
+	cell.backgroundColor=(indexPath.row==1)?[UIColor colorWithRed:.8 green:1 blue:.8 alpha:1]:[UIColor whiteColor];
 
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 	return cell;
 }
 

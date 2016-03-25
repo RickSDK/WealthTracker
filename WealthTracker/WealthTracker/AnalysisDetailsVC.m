@@ -56,8 +56,9 @@
 	self.valuesArray2 = [[NSMutableArray alloc] init];
 	self.colorsArray2 = [[NSMutableArray alloc] init];
 	
-	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Auto", @"Debt", @"Wealth", nil];
-	[self setTitle:[titles objectAtIndex:self.tag]];
+	NSLog(@"+++%d", self.tag);
+	
+	[self setTitle:[ObjectiveCScripts fontAwesomeTextForType:self.tag]];
 
 	self.graphImageView.layer.cornerRadius = 8.0;
 	self.graphImageView.layer.masksToBounds = YES;
@@ -69,10 +70,15 @@
 	self.displayYear=self.nowYear;
 	self.displayMonth=self.nowMonth;
 
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Strategy" style:UIBarButtonItemStyleBordered target:self action:@selector(tipsButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Breakdown" style:UIBarButtonItemStyleBordered target:self action:@selector(breakdownButtonPressed)];
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
+	if(self.tag==2 || self.tag==1) {
+		self.topSegment.selectedSegmentIndex=1;
+		[self.topSegment changeSegment];
+	}
+	self.graphImageView.hidden=YES;
 	[self setupData];
 }
 
@@ -91,6 +97,8 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+
+
 -(void)breakdownButtonPressed {
 	int type=self.tag;
 	int fieldType = 0;
@@ -102,6 +110,9 @@
 		type=0;
 		fieldType=2;
 	}
+	
+	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Auto", @"Debt", @"Wealth", nil];
+	[self setTitle:[titles objectAtIndex:self.tag]];
 	
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
@@ -215,7 +226,7 @@
 	  [self addBlackLabelForMoneyWithName:@"Your Ideal Loan" amount:idealLoan];
 	  [self addBlankLine];
 	  
-	  [self addMOneyLabel:@"Total Home Equity" amount:totalValueObj.value-totalValueObj.balance revFlg:NO];
+	  [self addMOneyLabel:@"Total Real Estate Equity" amount:totalValueObj.value-totalValueObj.balance revFlg:NO];
 	  int percentOfEquity = [self addPercentLabelWithName:@"Equity %" amount:totalValueObj.value-totalValueObj.balance otherAmount:totalValueObj.value low:5 high:30 revFlg:YES];
 	  
 	  float percentMonth = 0.0;
@@ -294,12 +305,12 @@
 
 
 	  [self addBlankLine];
-	  [self addBlackLabelForMoneyWithName:@"Total Class A Debt" amount:totalValueObj.badDebt];
+	  [self addBlackLabelForMoneyWithName:@"Total Consumer Debt" amount:totalValueObj.badDebt];
 	  [self addNetChangeLabel:@"Change this month" amount:classADebt30 revFlg:YES];
 	  
 	  if(classAReduction>0) {
 		  [self addPerMonthLabelWithName:@"Current Reduction Rate" amount:classAReduction];
-		  int monthsToPayoff = totalValueObj.badDebt/classAReduction;
+		  int monthsToPayoff = ceil(totalValueObj.badDebt/classAReduction);
 		  [self addMonthsToPayoff:@"Time till Payoff" months:monthsToPayoff];
 	  }
 	  
@@ -318,9 +329,15 @@
 		  [self addMonthsToPayoff:@"Time till Payoff" months:monthsToPayoff];
 	  }
 	  [self addBlankLine];
+	  
+	  
 
 	  int debtAtEndOfLastYear = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth]];
+	  int debtAt2YearsAgo = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth-12]];
+	  int debtAt3YearsAgo = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth-24]];
 	  
+	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear-2] amountNow:debtAt2YearsAgo amountThen:debtAt3YearsAgo revFlg:YES];
+	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear-1] amountNow:debtAtEndOfLastYear amountThen:debtAt2YearsAgo revFlg:YES];
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear] amountNow:debtToday amountThen:debtAtEndOfLastYear revFlg:YES];
 
 	  NSString *debtString = [self debtAnalysisWithDetbToAssets:detbToAssets badDebtToIncome:badDebtToIncome interestToIncome:interestToIncome];
@@ -350,8 +367,9 @@
 	  [self addNetChangeLabel:@"Net Worth Last 12 months" amount:netWorthToday-netWorthLastYear revFlg:NO];
 
 	  double avePerYear = (netWorthToday-netWorthLastYear);
-	  double thisMonthTimes12 = (netWorthToday-netWorthLastMonth)*12;
-	  double estValuePerYear = (avePerYear*2+thisMonthTimes12)/3;
+//	  double thisMonthTimes12 = (netWorthToday-netWorthLastMonth)*12;
+	  double estValuePerYear = avePerYear;
+//	  double estValuePerYear = (avePerYear*2+thisMonthTimes12)/3;
 	  int age = [CoreDataLib getAge:self.managedObjectContext];
 	  int netWorth = totalValueObj.value-totalValueObj.balance;
 	  
@@ -446,7 +464,7 @@
 		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high, but it looks like this may be due to agressively paying off your mortgage.\n\nIdeally you want your payments to be about 25%% of your monthly income, based on a 15 year loan.", percentOfIncome];
 	
 	if(percentOfIncome<34)
-		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be at around 25%%.", percentOfIncome];
+		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be close to 25%%.", percentOfIncome];
 	
 	if(percentMonth>=0) {
 		if(percentYear>=0)
@@ -575,14 +593,14 @@
 	NSString *line2 = [self wealthAnalysisByCategory];
 	
 	NSString *line3 = @"";
-	if(monthlyChange>0) {
-		if(retirementAge<60) {
+	if(monthlyChange>=0) {
+		if(retirementAge<65) {
 			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a pretty good number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
 		} else {
 			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a little on the low side for this stage of your life.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
 		}
 	} else {
-		if(retirementAge<60) {
+		if(retirementAge<65) {
 			line3 = [NSString stringWithFormat:@"Your total net worth has now dropped to %@, but is still a pretty good number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
 		} else {
 			line3 = [NSString stringWithFormat:@"Your total net worth has now dropped to %@, pushing your retirement age even further behind.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
@@ -603,9 +621,13 @@
 	
 	if(netWorthToday>0 && estValuePerYear<0 && netWorthToday<idealNetWorth/2)
 		line5=@"You have a positive net worth, but this past year has not been good to you. You can work your way out of debt and into prosperity if you follow the plan on the main menu screen.";
-	
+	int percentComplete = [self percentComplete];
+	NSString *lineFinal = [NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, line4, line5];
+	if(percentComplete==0)
+		lineFinal = [NSString stringWithFormat:@"%@%@\n\n%@\n\n%@", line0, line3, line4, line5];
+		
 	[self.namesArray2 addObject:@""];
-	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, line4, line5]];
+	[self.valuesArray2 addObject:lineFinal];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 }
 
@@ -624,7 +646,7 @@
 -(void)addMonthsToPayoff:(NSString *)name months:(int)months {
 	[self.namesArray1 addObject:name];
 	if(months<24)
-		[self.valuesArray1 addObject:[NSString stringWithFormat:@"%d months", months]];
+		[self.valuesArray1 addObject:[NSString stringWithFormat:@"%d month%@", months, (months==1)?@"":@"s"]];
 	else
 		[self.valuesArray1 addObject:[NSString stringWithFormat:@"%.1f years", (float)months/12]];
 	[self.colorsArray1 addObject:[UIColor blackColor]];
@@ -777,6 +799,8 @@
 						denominator=valueObj.value;
 					if(denominator>0)
 						changePercent = amount*100/denominator;
+					if(changePercent>999)
+						changePercent=999;
 					[self.valuesArray0 addObject:[NSString stringWithFormat:@"%@ (%.1f%%)", [self netChangeForAmount:amount], changePercent]];
 				} else
 					[self.valuesArray0 addObject:[self netChangeForAmount:amount]];
@@ -828,11 +852,15 @@
 	return valueObj;
 }
 
--(NSString *)percentComplateString {
+-(int)percentComplete {
 	int percentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
 	if(self.displayMonth != self.nowMonth || self.displayYear != self.displayYear)
 		percentComplete=100;
-	
+	return percentComplete;
+}
+
+-(NSString *)percentComplateString {
+	int percentComplete = [self percentComplete];
 	NSString *line0=@"";
 	if(percentComplete==0)
 		line0 = @"Note: You have not started updating your portfolio for this month, so the following analysis may not be relevant.\n\n";
@@ -881,11 +909,11 @@
 	NSString *line2=@"";
 	if(classADebt>5000) {
 		if(classAReduction>0)
-			line2 = [NSString stringWithFormat:@"Your total Class A debt now stands at %@, which puts you about %d months away from being debt free at your current rate.", [ObjectiveCScripts convertNumberToMoneyString:classADebt], (int)classADebt/classAReduction];
+			line2 = [NSString stringWithFormat:@"Your total Consumer debt now stands at %@, which puts you about %d months away from being debt free at your current rate.", [ObjectiveCScripts convertNumberToMoneyString:classADebt], (int)classADebt/classAReduction];
 		else
-			line2 = [NSString stringWithFormat:@"Your total Class A debt now stands at %@ and rising. It's time to put the breaks on spending.", [ObjectiveCScripts convertNumberToMoneyString:classADebt]];
+			line2 = [NSString stringWithFormat:@"Your total Consumer debt now stands at %@ and rising. It's time to put the breaks on spending.", [ObjectiveCScripts convertNumberToMoneyString:classADebt]];
 	} else {
-		line2 = @"Your class A debt is very managable so great job there. Continue building your wealth and planning for the future.";
+		line2 = @"Your Consumer debt is very managable so great job there. Continue building your wealth and planning for the future.";
 	}
 
 	NSString *line3=@"";
@@ -916,8 +944,12 @@
 		if(self.displayMonth==1)
 			line3 = [NSString stringWithFormat:@"%d is not getting off to a good start as you have added %@ of total debt in the first month.", self.displayYear, [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1]];
 	}
+	
+	NSString *lineFinal = [NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, debtString, line4];
+	if(percentComplete == 0)
+		lineFinal = [NSString stringWithFormat:@"%@%@\n\n%@\n\n%@", line0, line2, debtString, line4];
 
-	[self.valuesArray2 addObject:[NSString stringWithFormat:@"%@%@\n\n%@\n\n%@\n\n%@\n\n%@", line0, line1, line2, line3, debtString, line4]];
+	[self.valuesArray2 addObject:lineFinal];
 	[self.colorsArray2 addObject:[UIColor blackColor]];
 }
 
@@ -935,15 +967,15 @@
 		line4 = @"Follow the plan on the main menu screen to get your finances back in order.";
 		
 		if(badDebtToIncome>40) {
-			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is WAY too high, at %d%% of income. This needs to be paid down ASAP!", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Your Consumer debt (which is all debt not counting mortgages) is WAY too high, at %d%% of income. This needs to be paid down ASAP!", badDebtToIncome];
 		} else if(badDebtToIncome>30) {
-			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is very high, at %d%% of income and needs to be paid down quickly.", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Your Consumer debt (which is all debt not counting mortgages) is very high, at %d%% of income and needs to be paid down quickly.", badDebtToIncome];
 		} else if(badDebtToIncome>20) {
-			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is too high, at %d%% of income and needs to be paid down.", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Your Consumer debt (which is all debt not counting mortgages) is too high, at %d%% of income and needs to be paid down.", badDebtToIncome];
 		} else if(badDebtToIncome>10) {
-			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is a little high, at %d%% of income and should be paid down.", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Your Consumer debt (which is all debt not counting mortgages) is a little high, at %d%% of income and should be paid down.", badDebtToIncome];
 		} else {
-			line2 = @"Your class A debt (which is all debt not counting mortgages) is in pretty good shape.";
+			line2 = @"Your Consumer debt (which is all debt not counting mortgages) is in pretty good shape.";
 		}
 		
 	} else { // positive net worth
@@ -962,11 +994,11 @@
 		}
 		
 		if(badDebtToIncome>25) {
-			line2 = [NSString stringWithFormat:@"Even though you are in overall good financial shape, your class A debt (which is all debt not counting mortgages) is at %d%% of income and makes it hard for you to free up enough monthly income to invest in real estate or other high growth opportunities. Once that debt is paid off you will see a significant rise in your monthly expendable income.", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Even though you are in overall good financial shape, your Consumer debt (which is all debt not counting mortgages) is at %d%% of income and makes it hard for you to free up enough monthly income to invest in real estate or other high growth opportunities. Once that debt is paid off you will see a significant rise in your monthly expendable income.", badDebtToIncome];
 		} else if(badDebtToIncome>10) {
-			line2 = [NSString stringWithFormat:@"Your class A debt (which is all debt not counting mortgages) is very managable at %d%% of income but the monthly payments are enough to keep you away from your next high ticket purchase.", badDebtToIncome];
+			line2 = [NSString stringWithFormat:@"Your Consumer debt (which is all debt not counting mortgages) is very managable at %d%% of income but the monthly payments are enough to keep you away from your next high ticket purchase.", badDebtToIncome];
 		} else {
-			line2 = @"Your class A debt (which is all debt not counting mortgages) is in great shape.";
+			line2 = @"Your Consumer debt (which is all debt not counting mortgages) is in great shape.";
 		}
 	}
 	
@@ -1048,19 +1080,22 @@
 		title = @"Vehicle Values";
 	if(self.tag==3) {
 		if(self.topSegment.selectedSegmentIndex==0)
-			title = @"Debt Change by Month";
+			title = [NSString stringWithFormat:@"Debt Change %@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 		else
 			title = @"Total Debts";
 	}
 	if(self.tag==4) {
 		if(self.topSegment.selectedSegmentIndex==0)
-			title = @"Net Worth Change by Month";
+			title = [NSString stringWithFormat:@"Net Worth Change %@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 		else
 			title = @"Total Net Worth";
 	}
 	
 	self.titleLabel.text = title;
 	self.topLeftLabel.text = title;
+	
+	if(self.tag==1)
+		self.topLeftLabel.text = @"Real Estate Monthly Payments";
 	
 }
 
@@ -1164,7 +1199,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[self breakdownButtonPressed];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -1320,6 +1354,13 @@
 		
 	}
 	return graphObjects;
+}
+
+-(IBAction)topSegmentChanged:(id)sender {
+	self.mainTableView.hidden=!self.mainTableView.hidden;
+	self.graphImageView.hidden=!self.graphImageView.hidden;
+	
+	[self.mainSegmentControl changeSegment];
 }
 
 

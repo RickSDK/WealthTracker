@@ -13,4 +13,6 @@
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITextView *textView;
 
+@property (nonatomic) BOOL finFlg;
+
 @end

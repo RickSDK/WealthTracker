@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomSegment.h"
 
 @interface BreakdownSingleMonthVC : UIViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *topSegmentControl;
+@property (nonatomic, strong) IBOutlet CustomSegment *topSegmentControl;
 @property (nonatomic, strong) IBOutlet UILabel *typeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *fieldTypeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
@@ -35,7 +36,7 @@
 @property (nonatomic) CGPoint startTouchPosition;
 @property (nonatomic) float startDegree;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *chartSegmentControl;
+@property (nonatomic, strong) IBOutlet CustomSegment *chartSegmentControl;
 
 
 -(IBAction)topSegmentChanged:(id)sender;

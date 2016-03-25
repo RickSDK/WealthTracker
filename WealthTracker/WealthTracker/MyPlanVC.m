@@ -17,17 +17,10 @@
 
 @implementation MyPlanVC
 
--(void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	[self setTitle:@"My Plan"];
+	[self setTitle:@"Broke to Baron"];
 	
 	self.bgView.layer.cornerRadius = 8.0;
 	self.bgView.layer.masksToBounds = YES;
@@ -62,10 +55,18 @@
 	
 	[self displayButtons];
 	
-	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"3 Keys" style:UIBarButtonItemStyleBordered target:self action:@selector(keysButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 
 	
+	
+	
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
+		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 }
 
 -(double)classADebtForYear:(int)year month:(int)month {
@@ -110,12 +111,14 @@
 	  
 	  if(classAMax>0) {
 		  float width = self.debtView.frame.size.width;
-		  int percent = classA*100/classAMax;
-		  self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", percent];
+		  float percent = classA*100/classAMax;
+		  self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
 		  self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
+		  if(percent<2)
+			  self.remainingDebtView.hidden=YES;
 	  }
 	  
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 2 Progress:  %@ of Class A debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:classA]];
+			self.progressLabel.text = [NSString stringWithFormat:@"Step 2 Progress:  %@ of Consumer debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:classA]];
 			break;
   }
   case 3: {
@@ -156,8 +159,8 @@
 	}
 }
 
--(void)keysButtonPressed {
-	self.scrollView.text = @"3 keys to financial Success\n\nHere are the 3 rules to follow in life that lead to financial success. It's smart to always follow these.\n\n1) Avoid credit card debt. Unless it is an emergency, avoid revolving debt at all costs. Pay for things as you go and pay your balance in full each month. Living outside your means is the fast-track to ruin.\n\n2) As a general rule, you should ONLY pay cash for your cars. Avoid financing. Even with a zero-interest loan, you are adding risk to your life and not leaving yourself in the best possible situation to handle life's speed-bumps. If you can't afford to pay cash, consider getting a beater and saving up each month until you can afford to buy with cash. It's the smartest way to go.\n\n3) ONLY buy real estate on 15 years or less. Never on a 30 year term. 15-year gets you the best interest rate and gets it paid off quickly. Banks and Lenders will try to steer you into a 30-year loan because their commission bonus checks go way up, but don't fall for it. Think of it this way: If you can't afford the payment of a 15 year mortgage, you can't afford that house.";
+-(void)planButtonPressed {
+	self.scrollView.text = @"Broke to Baron\n\nBroke to Baron is a proven, time-tested strategy for getting out of debt and achieving your financial goals.\n\nWhether you are living in poverty, or a millionaire, age 71 or 17 this plan will work for you!\n\nSimply follow the 10-steps and it will lead you to financial prosperity. Be sure to check out the tips for valuable strategy hints.\n\nGood luck and happy wealth building!";
 	[self.scrollView scrollRectToVisible:CGRectMake(0,0,1,1) animated:YES];
 	self.tipsView.hidden=NO;
 }

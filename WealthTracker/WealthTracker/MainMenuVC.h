@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ChartSegmentControl.h"
+#import "TemplateVC.h"
 
-@interface MainMenuVC : UIViewController
+@interface MainMenuVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 

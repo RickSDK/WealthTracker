@@ -89,11 +89,6 @@
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.itemObject = self.itemObject;
 	[self.navigationController pushViewController:detailViewController animated:YES];
-
-//	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
-//	detailViewController.managedObjectContext = self.managedObjectContext;
-//	detailViewController.row_id=self.row_id;
-//	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(void)rateVC {
@@ -125,13 +120,22 @@
 	
 	[self.dataArray2 removeAllObjects];
 
+	int year=self.displayYear;
+	int month=self.displayMonth;
+	year--;
 	for(int i=1; i<=12; i++) {
 		
+		month++;
+		if(month>12) {
+			month=1;
+			year++;
+		}
+
 		NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
 		NSString *field = [fieldTypes objectAtIndex:self.fieldType];
-		double amount = [ObjectiveCScripts changedForItem:self.row_id month:i year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:self.type];
+		double amount = [ObjectiveCScripts changedForItem:self.row_id month:month year:year field:field context:self.managedObjectContext numMonths:1 type:self.type];
 
-		double total = [ObjectiveCScripts amountForItem:self.row_id month:i year:self.displayYear field:field context:self.managedObjectContext type:self.type];
+		double total = [ObjectiveCScripts amountForItem:self.row_id month:month year:year field:field context:self.managedObjectContext type:self.type];
 		
 		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
 		
@@ -176,7 +180,11 @@
 	if(cell==nil)
 		cell = [[BreakdownCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
-	cell.monthLabel.text=[[ObjectiveCScripts monthListShort] objectAtIndex:indexPath.row];
+	int month=self.displayMonth+(int)indexPath.row;
+	if(month>12)
+		month-=12;
+
+	cell.monthLabel.text=[[ObjectiveCScripts monthListShort] objectAtIndex:month];
 
 	double total=0;
 	double amount=0;
@@ -189,7 +197,7 @@
 		[ObjectiveCScripts displayNetChangeLabel:cell.past30DaysLabel amount:amount lightFlg:NO revFlg:(self.topSegmentControl.selectedSegmentIndex==1)];
 	}
 	
-	if(self.displayYear==self.nowYear && self.nowMonth==indexPath.row+1)
+	if(self.displayYear==self.nowYear && indexPath.row==11)
 		cell.backgroundColor=[UIColor yellowColor];
 	else
 		cell.backgroundColor=[UIColor whiteColor];
@@ -204,10 +212,10 @@
 
 
 	if(self.displayYear>self.nowYear || (self.displayYear==self.nowYear && self.nowMonth<indexPath.row+1)) {
-		cell.monthLabel.textColor = [UIColor grayColor];
-		cell.amountLabel.textColor = [UIColor grayColor];
-		cell.past30DaysLabel.textColor = [UIColor grayColor];
-		cell.backgroundColor=[UIColor colorWithWhite:.8 alpha:1];
+//		cell.monthLabel.textColor = [UIColor grayColor];
+//		cell.amountLabel.textColor = [UIColor grayColor];
+//		cell.past30DaysLabel.textColor = [UIColor grayColor];
+//		cell.backgroundColor=[UIColor colorWithWhite:.8 alpha:1];
 	} else {
 		cell.monthLabel.textColor = [UIColor blackColor];
 	}
@@ -262,10 +270,17 @@
 		[self setupData];
 	}
 	if(indexPath.section==1 && self.row_id==0) {
+		int year=self.nowYear-1;
+		int month=self.nowMonth+(int)indexPath.row+1;
+		if(month>12) {
+			month-=12;
+			year++;
+		}
+
 		BreakdownSingleMonthVC *detailViewController = [[BreakdownSingleMonthVC alloc] initWithNibName:@"BreakdownSingleMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.displayYear=self.displayYear;
-		detailViewController.displayMonth=(int)indexPath.row+1;
+		detailViewController.displayYear=year;
+		detailViewController.displayMonth=month;
 		detailViewController.nowYear=self.nowYear;
 		detailViewController.nowMonth=self.nowMonth;
 		detailViewController.fieldType=self.fieldType;

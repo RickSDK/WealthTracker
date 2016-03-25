@@ -66,5 +66,11 @@
 +(int)nowYear;
 +(int)nowMonth;
 +(UIColor *)colorForType:(int)type;
++(void)fontAwesomeButton:(UIButton *)button title:(NSString *)title icon:(NSString *)icon size:(float)size;
++(void)fontAwesomeButton:(UIButton *)button type:(int)type size:(float)size;
++(void)fontAwesomeAltButton:(UIButton *)button type:(int)type size:(float)size;
++(NSString *)fontAwesomeTextForType:(int)type;
++(NSString *)fontAwesomeTextAltForType:(int)type;
++(NSString *)faIconOfType:(int)type;
 
 @end

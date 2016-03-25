@@ -294,6 +294,13 @@
 		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:balance]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:-1 lightFlg:NO]];
 
+		if(value>0 && type==1) {
+			[self.namesArray addObject:@"LTV"];
+			int ltv = balance*100/value;
+			[self.valuesArray addObject:[NSString stringWithFormat:@"%d%%", ltv]];
+			[self.colorsArray addObject:[UIColor blackColor]];
+		}
+		
 		[self addNetChangeLineWithName:@"Balance This Month" amount:balToday-bal30 revFlg:YES];
 		[self addNetChangeLineWithName:@"Balance Last 3 Months" amount:balToday-bal90 revFlg:YES];
 		

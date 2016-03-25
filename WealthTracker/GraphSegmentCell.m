@@ -8,6 +8,9 @@
 
 #import "GraphSegmentCell.h"
 #import "ObjectiveCScripts.h"
+#import "CustomButton.h"
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
 
 @implementation GraphSegmentCell
 
@@ -56,18 +59,28 @@
 		self.segmentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 320, 34)];
 		self.segmentView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:.5 alpha:1.0];
 		[self.contentView addSubview:self.segmentView];
-		
-		self.lineButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 62, 98, 30)];
-		[self.lineButton setBackgroundImage:[UIImage imageNamed:@"lineChart.png"] forState:UIControlStateNormal];
+
+		id pieChart  = [NSString fontAwesomeIconStringForEnum:FApieChart];
+		id barChartO = [NSString fontAwesomeIconStringForEnum:FABarChartO];
+		id lineChart = [NSString fontAwesomeIconStringForEnum:FAlineChart];
+
+		self.lineButton = [[CustomButton alloc] initWithFrame:CGRectMake(10, 62, 98, 30)];
+		self.lineButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
+		[self.lineButton setTitle:[NSString stringWithFormat:@"%@ Lines", lineChart] forState:UIControlStateNormal];
+//		[self.lineButton setBackgroundImage:[UIImage imageNamed:@"lineChart.png"] forState:UIControlStateNormal];
 		self.lineButton.enabled=NO;
 		[self.contentView addSubview:self.lineButton];
 		
-		self.barButton = [[UIButton alloc] initWithFrame:CGRectMake(112, 62, 98, 30)];
-		[self.barButton setBackgroundImage:[UIImage imageNamed:@"barChart.png"] forState:UIControlStateNormal];
+		self.barButton = [[CustomButton alloc] initWithFrame:CGRectMake(112, 62, 98, 30)];
+		self.barButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
+		[self.barButton setTitle:[NSString stringWithFormat:@"%@ Bars", barChartO] forState:UIControlStateNormal];
+//		[self.barButton setBackgroundImage:[UIImage imageNamed:@"barChart.png"] forState:UIControlStateNormal];
 		[self.contentView addSubview:self.barButton];
 		
-		self.pieButton = [[UIButton alloc] initWithFrame:CGRectMake(214, 62, 98, 30)];
-		[self.pieButton setBackgroundImage:[UIImage imageNamed:@"pieChart.png"] forState:UIControlStateNormal];
+		self.pieButton = [[CustomButton alloc] initWithFrame:CGRectMake(214, 62, 98, 30)];
+		self.pieButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
+		[self.pieButton setTitle:[NSString stringWithFormat:@"%@ Pie", pieChart] forState:UIControlStateNormal];
+//		[self.pieButton setBackgroundImage:[UIImage imageNamed:@"pieChart.png"] forState:UIControlStateNormal];
 		[self.contentView addSubview:self.pieButton];
 		
 		self.graphImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 94, 316, 178-34)];

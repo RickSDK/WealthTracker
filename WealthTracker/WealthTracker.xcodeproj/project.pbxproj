@@ -11,6 +11,17 @@
 		6B04442F1B58973A001E7007 /* ChartsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B04442D1B58973A001E7007 /* ChartsVC.xib */; };
 		6B0444321B596A56001E7007 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0444311B596A56001E7007 /* DateCell.m */; };
 		6B0444421B59DD48001E7007 /* redCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0444411B59DD48001E7007 /* redCircle.png */; };
+		6B2353AF1C91184F008947AF /* TemplateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353AE1C91184F008947AF /* TemplateVC.m */; };
+		6B2353B31C911928008947AF /* HomeBuyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353B11C911928008947AF /* HomeBuyVC.m */; };
+		6B2353B41C911928008947AF /* HomeBuyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2353B21C911928008947AF /* HomeBuyVC.xib */; };
+		6B2353B81C911952008947AF /* AutoBuyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353B61C911952008947AF /* AutoBuyVC.m */; };
+		6B2353B91C911952008947AF /* AutoBuyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2353B71C911952008947AF /* AutoBuyVC.xib */; };
+		6B2353BD1C932B50008947AF /* PlanningVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353BB1C932B50008947AF /* PlanningVC.m */; };
+		6B2353BE1C932B50008947AF /* PlanningVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2353BC1C932B50008947AF /* PlanningVC.xib */; };
+		6B2353C11C9391FF008947AF /* ListChartSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353C01C9391FF008947AF /* ListChartSegment.m */; };
+		6B2353C51C93C82F008947AF /* EducationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353C31C93C82F008947AF /* EducationVC.m */; };
+		6B2353C61C93C82F008947AF /* EducationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2353C41C93C82F008947AF /* EducationVC.xib */; };
+		6B2353C91C948150008947AF /* PieChartSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2353C81C948150008947AF /* PieChartSegment.m */; };
 		6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */; };
 		6B2A7FD51B8149CE009AF987 /* BreakdownSingleMonthVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */; };
 		6B2D50EE1BEA6FA000703FC2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B2D50ED1BEA6FA000703FC2 /* LocalAuthentication.framework */; };
@@ -179,6 +190,24 @@
 		6B0444301B596A56001E7007 /* DateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateCell.h; sourceTree = "<group>"; };
 		6B0444311B596A56001E7007 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
 		6B0444411B59DD48001E7007 /* redCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redCircle.png; sourceTree = "<group>"; };
+		6B2353AD1C91184E008947AF /* TemplateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateVC.h; sourceTree = "<group>"; };
+		6B2353AE1C91184F008947AF /* TemplateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateVC.m; sourceTree = "<group>"; };
+		6B2353B01C911928008947AF /* HomeBuyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeBuyVC.h; sourceTree = "<group>"; };
+		6B2353B11C911928008947AF /* HomeBuyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeBuyVC.m; sourceTree = "<group>"; };
+		6B2353B21C911928008947AF /* HomeBuyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeBuyVC.xib; sourceTree = "<group>"; };
+		6B2353B51C911952008947AF /* AutoBuyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoBuyVC.h; sourceTree = "<group>"; };
+		6B2353B61C911952008947AF /* AutoBuyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoBuyVC.m; sourceTree = "<group>"; };
+		6B2353B71C911952008947AF /* AutoBuyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AutoBuyVC.xib; sourceTree = "<group>"; };
+		6B2353BA1C932B50008947AF /* PlanningVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanningVC.h; sourceTree = "<group>"; };
+		6B2353BB1C932B50008947AF /* PlanningVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanningVC.m; sourceTree = "<group>"; };
+		6B2353BC1C932B50008947AF /* PlanningVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlanningVC.xib; sourceTree = "<group>"; };
+		6B2353BF1C9391FF008947AF /* ListChartSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListChartSegment.h; sourceTree = "<group>"; };
+		6B2353C01C9391FF008947AF /* ListChartSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListChartSegment.m; sourceTree = "<group>"; };
+		6B2353C21C93C82F008947AF /* EducationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EducationVC.h; sourceTree = "<group>"; };
+		6B2353C31C93C82F008947AF /* EducationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EducationVC.m; sourceTree = "<group>"; };
+		6B2353C41C93C82F008947AF /* EducationVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EducationVC.xib; sourceTree = "<group>"; };
+		6B2353C71C948150008947AF /* PieChartSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PieChartSegment.h; sourceTree = "<group>"; };
+		6B2353C81C948150008947AF /* PieChartSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartSegment.m; sourceTree = "<group>"; };
 		6B2A7FD11B8149CE009AF987 /* BreakdownSingleMonthVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakdownSingleMonthVC.h; sourceTree = "<group>"; };
 		6B2A7FD21B8149CE009AF987 /* BreakdownSingleMonthVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BreakdownSingleMonthVC.m; sourceTree = "<group>"; };
 		6B2A7FD31B8149CE009AF987 /* BreakdownSingleMonthVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BreakdownSingleMonthVC.xib; sourceTree = "<group>"; };
@@ -447,6 +476,8 @@
 		6B416EC21B506D52009C9834 /* WealthTracker */ = {
 			isa = PBXGroup;
 			children = (
+				6B2353AD1C91184E008947AF /* TemplateVC.h */,
+				6B2353AE1C91184F008947AF /* TemplateVC.m */,
 				6B416EC71B506D52009C9834 /* AppDelegate.h */,
 				6B416EC81B506D52009C9834 /* AppDelegate.m */,
 				6B416ECD1B506D53009C9834 /* MasterViewController.h */,
@@ -457,6 +488,12 @@
 				6B416EEF1B506E0B009C9834 /* MainMenuVC.h */,
 				6B416EF01B506E0B009C9834 /* MainMenuVC.m */,
 				6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */,
+				6B2353BA1C932B50008947AF /* PlanningVC.h */,
+				6B2353BB1C932B50008947AF /* PlanningVC.m */,
+				6B2353BC1C932B50008947AF /* PlanningVC.xib */,
+				6B2353C21C93C82F008947AF /* EducationVC.h */,
+				6B2353C31C93C82F008947AF /* EducationVC.m */,
+				6B2353C41C93C82F008947AF /* EducationVC.xib */,
 				6BE6B2F01B6A855000C434BA /* InfoVC.h */,
 				6BE6B2F11B6A855000C434BA /* InfoVC.m */,
 				6BE6B2F21B6A855000C434BA /* InfoVC.xib */,
@@ -541,6 +578,12 @@
 				6B2E23FF1B55BB2200CC2851 /* AnalysisDetailsVC.h */,
 				6B2E24001B55BB2200CC2851 /* AnalysisDetailsVC.m */,
 				6B2E24011B55BB2200CC2851 /* AnalysisDetailsVC.xib */,
+				6B2353B01C911928008947AF /* HomeBuyVC.h */,
+				6B2353B11C911928008947AF /* HomeBuyVC.m */,
+				6B2353B21C911928008947AF /* HomeBuyVC.xib */,
+				6B2353B51C911952008947AF /* AutoBuyVC.h */,
+				6B2353B61C911952008947AF /* AutoBuyVC.m */,
+				6B2353B71C911952008947AF /* AutoBuyVC.xib */,
 				6B42B0091BAB309400CC649C /* TipsVC.h */,
 				6B42B00A1BAB309400CC649C /* TipsVC.m */,
 				6B42B00B1BAB309400CC649C /* TipsVC.xib */,
@@ -655,6 +698,10 @@
 				6B5E92CA1BE2839A00D546F5 /* CustomSegment.m */,
 				6BBEDF011C0E5578001D372F /* ChartSegmentControl.h */,
 				6BBEDF021C0E5578001D372F /* ChartSegmentControl.m */,
+				6B2353BF1C9391FF008947AF /* ListChartSegment.h */,
+				6B2353C01C9391FF008947AF /* ListChartSegment.m */,
+				6B2353C71C948150008947AF /* PieChartSegment.h */,
+				6B2353C81C948150008947AF /* PieChartSegment.m */,
 				6B3C180A1B70381E0039733B /* CustomView.h */,
 				6B3C180B1B70381E0039733B /* CustomView.m */,
 				6B416F141B509FC2009C9834 /* WebServiceView.h */,
@@ -805,6 +852,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B63899B1B7BA2A100260656 /* Icon-76.png in Resources */,
+				6B2353B41C911928008947AF /* HomeBuyVC.xib in Resources */,
 				6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */,
 				6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */,
 				6B63899C1B7BA2A100260656 /* Icon-80.png in Resources */,
@@ -813,6 +861,7 @@
 				6B644CBE1B68204900483F98 /* PrivacyPolicyVC.xib in Resources */,
 				6B0444421B59DD48001E7007 /* redCircle.png in Resources */,
 				6B5B87F31B668EF600BBE741 /* vehicle.png in Resources */,
+				6B2353B91C911952008947AF /* AutoBuyVC.xib in Resources */,
 				6B416F1D1B50A5B2009C9834 /* EnterValueVC.xib in Resources */,
 				6B5B87F11B668EF600BBE741 /* debt.png in Resources */,
 				6B6389971B7BA2A000260656 /* Icon-29.png in Resources */,
@@ -841,6 +890,7 @@
 				6BBEDEF21BF3C52A001D372F /* whiteChromeBut.png in Resources */,
 				6BFECD511B7A884300F40961 /* blueGrad.jpg in Resources */,
 				6BBEDEFF1C0E4304001D372F /* FontAwesome.ttf in Resources */,
+				6B2353BE1C932B50008947AF /* PlanningVC.xib in Resources */,
 				6B2E23EC1B545B0B00CC2851 /* UpdateDetails.xib in Resources */,
 				6B6389981B7BA2A100260656 /* Icon-40.png in Resources */,
 				6B6389A41B7BA2A100260656 /* iTunesArtwork in Resources */,
@@ -878,6 +928,7 @@
 				6BE8EAF71B618B66005510F6 /* UpdateSalaryVC.xib in Resources */,
 				6BB2D26F1C3C8AF600FFD7C6 /* checkbox1.png in Resources */,
 				6B6389991B7BA2A100260656 /* Icon-58.png in Resources */,
+				6B2353C61C93C82F008947AF /* EducationVC.xib in Resources */,
 				6B416ED71B506D53009C9834 /* Images.xcassets in Resources */,
 				6BA44F0F1B9CF71E00C7470C /* financesButton.png in Resources */,
 				6B04442F1B58973A001E7007 /* ChartsVC.xib in Resources */,
@@ -909,14 +960,17 @@
 				6B416F1C1B50A5B2009C9834 /* EnterValueVC.m in Sources */,
 				6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */,
 				6B8EB9931B5218BD00F8A20B /* ProfileObj.m in Sources */,
+				6B2353AF1C91184F008947AF /* TemplateVC.m in Sources */,
 				6B416EFE1B508774009C9834 /* StartupVC.m in Sources */,
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
+				6B2353BD1C932B50008947AF /* PlanningVC.m in Sources */,
 				6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */,
 				6B644CC21B68206000483F98 /* InAppPurchaseVC.m in Sources */,
 				6B416F261B50CF81009C9834 /* MoneyCell.m in Sources */,
 				6B644CB81B68203400483F98 /* NewAccountVC.m in Sources */,
 				6B416ECF1B506D53009C9834 /* MasterViewController.m in Sources */,
 				6B04442E1B58973A001E7007 /* ChartsVC.m in Sources */,
+				6B2353C11C9391FF008947AF /* ListChartSegment.m in Sources */,
 				6BD0D8E11B83D9D70062E152 /* MonthlySpendingVC.m in Sources */,
 				6B644CBD1B68204900483F98 /* PrivacyPolicyVC.m in Sources */,
 				6B5E92CB1BE2839A00D546F5 /* CustomSegment.m in Sources */,
@@ -938,6 +992,7 @@
 				6BDCEF191B5FFCD500DDA3AC /* BreakdownByMonthVC.m in Sources */,
 				6B8EB9991B5226FC00F8A20B /* CoreDataLib.m in Sources */,
 				6B416F171B509FC2009C9834 /* CustomButton.m in Sources */,
+				6B2353C91C948150008947AF /* PieChartSegment.m in Sources */,
 				6B3C18051B6FEE170039733B /* CashFlowEditItemVC.m in Sources */,
 				6B9673FE1B6B286400641C7F /* CustomImageView.m in Sources */,
 				6BBEDEFB1C0E2F93001D372F /* UIFont+FontAwesome.m in Sources */,
@@ -947,6 +1002,7 @@
 				6B8EB98F1B51DF7F00F8A20B /* SelectListVC.m in Sources */,
 				6B8EB9A21B530EFB00F8A20B /* ItemCell.m in Sources */,
 				6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */,
+				6B2353C51C93C82F008947AF /* EducationVC.m in Sources */,
 				6B6940F71B646C5D00088D55 /* GraphObject.m in Sources */,
 				6B2E23EF1B5468C400CC2851 /* MultiLineDetailCellWordWrap.m in Sources */,
 				6B416F161B509FC2009C9834 /* SoundsLib.m in Sources */,
@@ -956,6 +1012,8 @@
 				6B8EB98B1B51D75A00F8A20B /* ItemObject.m in Sources */,
 				6B2E24091B58268E00CC2851 /* GraphCell.m in Sources */,
 				6BBEDEEF1BF3C4DE001D372F /* UnLockAppVC.m in Sources */,
+				6B2353B31C911928008947AF /* HomeBuyVC.m in Sources */,
+				6B2353B81C911952008947AF /* AutoBuyVC.m in Sources */,
 				6B42B0021BA8BBEA00CC649C /* RateVC.m in Sources */,
 				6B416F181B509FC2009C9834 /* WebServiceView.m in Sources */,
 				6BD0D8E51B83DB320062E152 /* MultiLineObj.m in Sources */,

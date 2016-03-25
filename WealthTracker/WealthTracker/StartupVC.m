@@ -43,6 +43,13 @@
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Salary" style:UIBarButtonItemStyleBordered target:self action:@selector(salaryButtonPressed)];
 	}
 	
+	[ObjectiveCScripts fontAwesomeAltButton:self.profileButton type:0 size:24];
+	[ObjectiveCScripts fontAwesomeAltButton:self.debtsButton type:3 size:24];
+	[ObjectiveCScripts fontAwesomeAltButton:self.assetsButton type:4 size:24];
+	[ObjectiveCScripts fontAwesomeAltButton:self.housingButton type:1 size:24];
+	[ObjectiveCScripts fontAwesomeAltButton:self.vehiclesButton type:2 size:24];
+
+	
 
 }
 

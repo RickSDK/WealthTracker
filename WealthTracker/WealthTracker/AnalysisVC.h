@@ -21,9 +21,17 @@
 @property (nonatomic, strong) IBOutlet UIImageView *homeImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *autoImageView;
 
+@property (nonatomic, strong) IBOutlet UIButton *debtButton;
+@property (nonatomic, strong) IBOutlet UIButton *wealthButton;
+@property (nonatomic, strong) IBOutlet UIButton *homeButton;
+@property (nonatomic, strong) IBOutlet UIButton *autoButton;
+
 @property (nonatomic, strong) IBOutlet UILabel *currentStepLabel;
+@property (nonatomic, strong) IBOutlet UILabel *advisorLabel;
 
 -(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)detailsButtonClicked:(id)sender;
+-(IBAction)homeButtonPressed;
+-(IBAction)autoButtonPressed;
 
 @end

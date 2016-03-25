@@ -12,6 +12,8 @@
 #import "CoreDataLib.h"
 #import "GraphLib.h"
 #import "GraphObject.h"
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
 
 @interface BreakdownSingleMonthVC ()
 
@@ -38,6 +40,12 @@
 	self.nowYear = [ObjectiveCScripts nowYear];
 	self.nowMonth = [ObjectiveCScripts nowMonth];
 	[self setTitle:@"By Month"];
+	
+	id pieChart  = [NSString fontAwesomeIconStringForEnum:FApieChart];
+	id barChartO = [NSString fontAwesomeIconStringForEnum:FABarChartO];
+	[self.chartSegmentControl setTitle:[NSString stringWithFormat:@"%@ Bars", barChartO] forSegmentAtIndex:0];
+	[self.chartSegmentControl setTitle:[NSString stringWithFormat:@"%@ Pie", pieChart] forSegmentAtIndex:1];
+
 	[self setupData];
 }
 
@@ -156,10 +164,12 @@
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
+	[self.topSegmentControl changeSegment];
 	[self setupData];
 }
 
 -(IBAction)segmentClicked:(id)sender {
+	[self.chartSegmentControl changeSegment];
 	[self setupData];
 }
 

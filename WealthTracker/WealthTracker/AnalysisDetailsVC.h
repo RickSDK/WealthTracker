@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomSegment.h"
+#import "TemplateVC.h"
 
-@interface AnalysisDetailsVC : UIViewController
+@interface AnalysisDetailsVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
@@ -54,6 +55,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *prevButton;
 @property (nonatomic, strong) IBOutlet UIButton *nextButton;
 
+-(IBAction)topSegmentChanged:(id)sender;
 -(IBAction)segmentChanged:(id)sender;
 -(IBAction)nextButtonPressed:(id)sender;
 -(IBAction)prevButtonPressed:(id)sender;

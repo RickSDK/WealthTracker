@@ -12,6 +12,8 @@
 #import "CoreDataLib.h"
 #import "ObjectiveCScripts.h"
 #import "RetirementVC.h"
+#import "HomeBuyVC.h"
+#import "AutoBuyVC.h"
 
 @interface AnalysisVC ()
 
@@ -31,20 +33,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Analysis"];
-
-	self.myPlanView.layer.cornerRadius = 8.0;
-	self.myPlanView.layer.masksToBounds = YES;
-	self.myPlanView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.myPlanView.layer.borderWidth = 2.0;
-
-	self.ButtonsView.layer.cornerRadius = 8.0;
-	self.ButtonsView.layer.masksToBounds = YES;
-	self.ButtonsView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.ButtonsView.layer.borderWidth = 2.0;
+	[self setTitle:@"Advisor"];
 	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retirement" style:UIBarButtonItemStyleBordered target:self action:@selector(retirementButtonPressed)];
-
+	[ObjectiveCScripts fontAwesomeButton:self.debtButton type:3 size:24];
+	[ObjectiveCScripts fontAwesomeButton:self.wealthButton type:4 size:24];
+	[ObjectiveCScripts fontAwesomeButton:self.homeButton type:1 size:24];
+	[ObjectiveCScripts fontAwesomeButton:self.autoButton type:2 size:24];
+	
+	self.advisorLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:48.f];
+	self.advisorLabel.text = [NSString fontAwesomeIconStringForEnum:FAUser];
+	
 	[self checkStatusLights];
 }
 
@@ -152,6 +150,17 @@
 	AnalysisDetailsVC *detailViewController = [[AnalysisDetailsVC alloc] initWithNibName:@"AnalysisDetailsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.tag = (int)button.tag;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)homeButtonPressed {
+	HomeBuyVC *detailViewController = [[HomeBuyVC alloc] initWithNibName:@"HomeBuyVC" bundle:nil];
+	detailViewController.managedObjectContext=self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+-(IBAction)autoButtonPressed {
+	AutoBuyVC *detailViewController = [[AutoBuyVC alloc] initWithNibName:@"AutoBuyVC" bundle:nil];
+	detailViewController.managedObjectContext=self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 

@@ -1,14 +1,14 @@
 //
-//  ChartSegmentControl.m
+//  PieChartSegment.m
 //  WealthTracker
 //
-//  Created by Rick Medved on 12/1/15.
-//  Copyright (c) 2015 Rick Medved. All rights reserved.
+//  Created by Rick Medved on 3/12/16.
+//  Copyright (c) 2016 Rick Medved. All rights reserved.
 //
 
-#import "ChartSegmentControl.h"
+#import "PieChartSegment.h"
 
-@implementation ChartSegmentControl
+@implementation PieChartSegment
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -32,11 +32,9 @@
 {
 	
 	id pieChart  = [NSString fontAwesomeIconStringForEnum:FApieChart];
-	id lineChart = [NSString fontAwesomeIconStringForEnum:FAlineChart];
 	id barChartO = [NSString fontAwesomeIconStringForEnum:FABarChartO];
-//	id areaChart = [NSString fontAwesomeIconStringForEnum:FAareaChart];
-
-	UIFont *font = [UIFont fontWithName:kFontAwesomeFamilyName size:14.f];
+	
+	UIFont *font = [UIFont fontWithName:kFontAwesomeFamilyName size:17.f];
 	NSMutableDictionary *attribsNormal;
 	attribsNormal = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil];
 	
@@ -45,13 +43,12 @@
 	
 	[self setTitleTextAttributes:attribsNormal forState:UIControlStateNormal];
 	[self setTitleTextAttributes:attribsSelected forState:UIControlStateSelected];
-
+	
 	int i=0;
-	[self setTitle:[NSString stringWithFormat:@"%@ Bars", barChartO] forSegmentAtIndex:i++];
-	if(self.numberOfSegments>2)
-		[self setTitle:[NSString stringWithFormat:@"%@ Lines", lineChart] forSegmentAtIndex:i++];
-	[self setTitle:[NSString stringWithFormat:@"%@ Pie", pieChart] forSegmentAtIndex:i++];
+	[self setTitle:[NSString stringWithFormat:@"%@ Net Change", barChartO] forSegmentAtIndex:i++];
+	[self setTitle:[NSString stringWithFormat:@"%@ Totals", pieChart] forSegmentAtIndex:i++];
 	[self changeSegment];
 }
+
 
 @end

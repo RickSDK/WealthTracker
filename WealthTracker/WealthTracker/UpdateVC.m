@@ -24,16 +24,6 @@
 
 @implementation UpdateVC
 
--(void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
-	
-	self.nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
-	[self setupData];
-}
-
 -(IBAction)topSegmentChanged:(id)sender {
 	[self.topSegment changeSegment];
 	self.mainTableView.hidden=self.topSegment.selectedSegmentIndex==1;
@@ -49,7 +39,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Portfolio List"];
+	[self setTitle:@"Portfolio"];
 	
 	self.propertyArray = [[NSMutableArray alloc] init];
 	self.vehicleArray = [[NSMutableArray alloc] init];
@@ -76,12 +66,20 @@
 	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
 	[self.mainTableView addGestureRecognizer:recognizer];
 	
-
-	[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
-
-	[ObjectiveCScripts displayNetChangeLabel:self.netWorthChangeLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
+	self.portfolioLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:40.f];
+	self.portfolioLabel.text = [NSString fontAwesomeIconStringForEnum:FAbank];
 
 	[self setMaxWidth];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
+		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
+	
+	self.nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
+	[self setupData];
 }
 
 -(void)setMaxWidth {
@@ -201,6 +199,11 @@
 	self.graphImageView.image = (self.pieSegment.selectedSegmentIndex==1)?[GraphLib pieChartWithItems:self.graphArray startDegree:self.startDegree]:[GraphLib graphBarsWithItems:self.graphArray];
 
 	[self.pieSegment changeSegment];
+	
+	[ObjectiveCScripts displayMoneyLabel:self.netWorthLabel amount:[ObjectiveCScripts amountForItem:0 month:self.nowMonth year:self.nowYear field:@"" context:self.managedObjectContext type:0] lightFlg:NO revFlg:NO];
+	
+	[ObjectiveCScripts displayNetChangeLabel:self.netWorthChangeLabel amount:[ObjectiveCScripts changedEquityLast30:self.managedObjectContext] lightFlg:NO revFlg:NO];
+
 
 	[self.mainTableView reloadData];
 }
@@ -249,6 +252,10 @@
 		
 		if(obj)
 			[ItemCell updateCell:cell obj:obj];
+	
+	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19];
+	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfType:(int)indexPath.section+1], cell.nameLabel.text];
+	
 	
 		if(self.nextItemDue == [obj.rowId intValue] && obj.status>0)
 			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:.5 alpha:1];
@@ -340,14 +347,6 @@
 	if(self.expiredFlg)
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {
-		
-//		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-//		detailViewController.managedObjectContext = self.managedObjectContext;
-//		detailViewController.itemObject = [self itemObjectForRow:indexPath];
-//		detailViewController.displayYear=self.nowYear;
-//		[self.navigationController pushViewController:detailViewController animated:YES];
-		
-		
 		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.itemObject = [self itemObjectForRow:indexPath];
@@ -362,8 +361,8 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	NSArray *titles = [NSArray arrayWithObjects:@"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
-	return [self viewForHeaderWithText:[titles objectAtIndex:section] cellHeight:30 amount:[[self.amountArray objectAtIndex:section] doubleValue] section:(int)section];
+	NSString *title = [ObjectiveCScripts fontAwesomeTextAltForType:(int)section+1];
+	return [self viewForHeaderWithText:title cellHeight:30 amount:[[self.amountArray objectAtIndex:section] doubleValue] section:(int)section];
 }
 
 - (UIView *)viewForHeaderWithText:(NSString *)headerText cellHeight:(float)cellHeight amount:(double)amount section:(int)section
@@ -377,7 +376,7 @@
 	headerLabel.opaque = NO;
 	headerLabel.textColor = [UIColor whiteColor];
 	headerLabel.highlightedTextColor = [UIColor whiteColor];
-	headerLabel.font = [UIFont boldSystemFontOfSize:18];
+	headerLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:18];
 	headerLabel.shadowColor = [UIColor blackColor];
 	headerLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 	headerLabel.numberOfLines = 0;

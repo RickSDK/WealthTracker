@@ -29,18 +29,14 @@
 		self.redLineView.backgroundColor=[UIColor redColor];
 		[self.bgView addSubview:self.redLineView];
 		
-		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3+15, 50, 50)];
+		
+		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(15, 44, 30, 30)];
 		self.valStatusImage.image = [UIImage imageNamed:@"red.png"];
 		self.valStatusImage.alpha=1;
 		[self.bgView addSubview:self.valStatusImage];
 		
-		self.typeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 15+15, 25, 25)];
-		self.typeImageView.image = [UIImage imageNamed:@"asset.png"];
-		self.typeImageView.alpha=1;
-		[self.bgView addSubview:self.typeImageView];
-
 		
-		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, kTopEdge-2, 150, 22)];
+		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, kTopEdge-2, 170, 22)];
 		self.nameLabel.font = [UIFont boldSystemFontOfSize:20];
 		self.nameLabel.adjustsFontSizeToFitWidth = YES;
 		self.nameLabel.minimumScaleFactor = .7;
@@ -50,7 +46,7 @@
 		self.nameLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.nameLabel];
 
-		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, kTopEdge+15, 140, 22)];
+		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, kTopEdge+15, 140, 22)];
 		self.subTypeLabel.font = [UIFont boldSystemFontOfSize:14];
 		self.subTypeLabel.adjustsFontSizeToFitWidth = YES;
 		self.subTypeLabel.minimumScaleFactor = .8;
@@ -209,15 +205,13 @@
 	
 }
 
-
-- (void)awakeFromNib {
-    // Initialization code
+- (void)layoutSubviews {
+	
+	[super layoutSubviews];
+	self.bgView.frame = CGRectMake(2, 2, self.frame.size.width-4, 90);
+	
+	
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 
 @end
