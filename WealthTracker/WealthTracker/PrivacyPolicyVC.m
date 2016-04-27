@@ -7,6 +7,7 @@
 //
 
 #import "PrivacyPolicyVC.h"
+#import "ObjectiveCScripts.h"
 
 @interface PrivacyPolicyVC ()
 
@@ -27,7 +28,7 @@
 	[super viewDidLoad];
 	[self setTitle:@"Privacy Policy"];
 	
-	self.mainTextView.text = @"Wealth Tracker EULA\n\nPrivacy Guarantee: WT will never sell or share any information with any other third party vendor.\n\nEmail address is only used to reset lost passwords and is never shared with anyone.\n\nNo financial info or any info of any kind is ever shared with any party.";
+	self.mainTextView.text = [NSString stringWithFormat:@"%@ EULA\n\nPrivacy Guarantee: WT will never sell or share any information with any other third party vendor.\n\nEmail address is only used to reset lost passwords and is never shared with anyone.\n\nNo financial info or any info of any kind is ever shared with any party.", [ObjectiveCScripts appName]];
 	
 	// Do any additional setup after loading the view from its nib.
 }

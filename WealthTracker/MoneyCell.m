@@ -16,13 +16,13 @@
 	if (self) {
 		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, 316, 106)];
 		self.bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
-		self.bgView.layer.cornerRadius = 8.0;
+//		self.bgView.layer.cornerRadius = 8.0;
 		self.bgView.layer.masksToBounds = YES;
-		self.bgView.layer.borderColor = [UIColor blackColor].CGColor;
-		self.bgView.layer.borderWidth = 2.0;
+//		self.bgView.layer.borderColor = [UIColor blackColor].CGColor;
+//		self.bgView.layer.borderWidth = 2.0;
 		[self.contentView addSubview:self.bgView];
 		
-		self.statusImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 50, 50)];
+		self.statusImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
 		self.statusImage.image = [UIImage imageNamed:@"red.png"];
 		self.statusImage.alpha=1;
 		[self.contentView addSubview:self.statusImage];

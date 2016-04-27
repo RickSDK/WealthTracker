@@ -467,7 +467,9 @@
 		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be close to 25%%.", percentOfIncome];
 	
 	if(percentMonth>=0) {
-		if(percentYear>=0)
+		if(percentYear==0)
+			line2 = @"Your real estate value is unchanged this month.";
+		else if(percentYear>0)
 			line2 = [NSString stringWithFormat:@"Your real estate value is up another %.1f%% this month, bringing you up to %.1f%% on the year.", percentMonth, percentYear];
 		else
 			line2 = [NSString stringWithFormat:@"Your real estate value recovered %.1f%% this month, but you are still sitting at %.1f%% on the year.", percentMonth, percentYear];
@@ -542,8 +544,9 @@
 	}
 	
 	NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1];
-
-	if(networth>0) {
+	if(networth==0)
+		line = @"No updates to Net Worth yet.";
+    else if(networth>0) {
 		if(min>0) {
 			line = [NSString stringWithFormat:@"%@ %d has been fantastic as all four categories of your portfolio are positive, led by %@ up %@ this month.", monthName, self.displayYear, maxString, [ObjectiveCScripts convertNumberToMoneyString:max]];
 		} else {
@@ -586,6 +589,8 @@
 			line1 = [NSString stringWithFormat:@"This has been a fantastic month for you seeing your Net Worth rise by %@.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
 		else if(percent>75)
 			line1 = [NSString stringWithFormat:@"This has been a good month for you seeing your Net Worth rise by %@. Although it is off slightly from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
+		else if(monthlyChange==0)
+			line1 = @"So far no changes in Net Worth for this month. As you update your portfolio with new values, this section will let you know how you are doing.";
 		else
 			line1 = [NSString stringWithFormat:@"Your Net Worth has risen by %@ this month, although that is off from your recent average.", [ObjectiveCScripts convertNumberToMoneyString:monthlyChange]];
 	}
@@ -898,7 +903,9 @@
 
 		}
 	} else { // falling further behind
-		if(allDebt30 >= 0) // good month
+		if(allDebt30 == 0)
+			line1 = @"Our records show you haven't paid off any debt yet this month.";
+		else if(allDebt30 > 0) // good month
 			line1 = [NSString stringWithFormat:@"Good job paying off %@ of total debt this month, but you need to do more to reverse the recent trend of adding more debt.", [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
 		else  {// bad month
 			line1 = [NSString stringWithFormat:@"You added %@ more in total debt to an ever growing pile. Not a great month for wealth building.", [ObjectiveCScripts convertNumberToMoneyString:allDebt30*-1]];
@@ -928,7 +935,9 @@
 	int debtPerMonth = 0;
 	if(self.displayMonth>0)
 		debtPerMonth = debtThisYear/self.displayMonth;
-	if(debtPerMonth<0) { // paying down
+	if(debtPerMonth==0)
+		line3 = [NSString stringWithFormat:@"You have %@ left to start working on your debt for this year. The goal is to knock it out as quickly as possible.", monStr];
+	else if(debtPerMonth<0) { // paying down
 		if(debtPerMonth<-1200)
 			line3 = [NSString stringWithFormat:@"You have paid off a good deal of total debt this year with %@ reduced so far in %d, with %@ to go.", [ObjectiveCScripts convertNumberToMoneyString:debtThisYear*-1], self.displayYear, monStr];
 		else

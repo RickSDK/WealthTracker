@@ -35,7 +35,7 @@
 	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"assetsFlg"]]) {
 		[self setTitle:@"Startup"];
 		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStylePlain target:self action:@selector(optionsButtonPressed)];
-		[ObjectiveCScripts showAlertPopup:@"Welcome to Wealth Tracker!" message:@"First let's get some data entered"];
+		[ObjectiveCScripts showAlertPopup:[NSString stringWithFormat:@"Welcome to %@!", [ObjectiveCScripts appName]] message:@"First let's get some data entered"];
 
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Finished" style:UIBarButtonItemStyleBordered target:self action:@selector(doneButtonPressed)];
 

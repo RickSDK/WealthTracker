@@ -81,7 +81,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ndZ-m8-Fb8" customClass="CustomButton">
-                            <rect key="frame" x="165" y="10" width="145" height="50"/>
+                            <rect key="frame" x="165.00000002055336" y="10" width="145" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -107,7 +107,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R0A-1V-g3a" customClass="CustomButton">
-                            <rect key="frame" x="165" y="65" width="145" height="50"/>
+                            <rect key="frame" x="165.00000002055336" y="65" width="145" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>

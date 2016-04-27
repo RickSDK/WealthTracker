@@ -27,7 +27,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="304" height="293"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <string key="text">The way this app works is you track balances throughout the year, entering just one amount per month.  Try to enter data close to the same day of the month for each item. Use the 'Statement Day' field on each account to help you.  When you first set up your info, the app will attempt to put basic amounts for future and past dates. Simply go in and overwrite those amounts with the real values if you have them.  Enjoy, and happy wealth building!</string>
+                            <mutableString key="text">The way this app works is you track balances throughout the year, updating each item just once per month.  Try to enter data close to the same day of the month for each item. Use the 'Statement Day' field on each account to help you.  When you first set up your info, the app will attempt to put basic amounts for future and past dates. Simply go in and overwrite those amounts with the real values if you have them.  Enjoy, and happy wealth building!</mutableString>
                             <color key="textColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

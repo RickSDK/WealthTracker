@@ -36,7 +36,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[self setTitle:@"Main Menu"];
+	[self setTitle:[ObjectiveCScripts appName]];
 	if(kTestMode)
 		[self setTitle:@"Test Mode!"];
 	
@@ -377,7 +377,7 @@
 	if (local)
 	{
 		local.fireDate = thisDate;
-		local.alertBody = [NSString stringWithFormat:@"Update Wealth Tracker for item: %@", name];
+		local.alertBody = [NSString stringWithFormat:@"Update %@ for item: %@", [ObjectiveCScripts appName], name];
 		local.timeZone = [NSTimeZone defaultTimeZone];
 		[[UIApplication sharedApplication] scheduleLocalNotification:local];
 	}
@@ -395,7 +395,7 @@
 		return NO;
 	}
 	int secondsSinceInstall = [[NSDate date] timeIntervalSinceDate:[installTime convertStringToDateWithFormat:nil]];
-	if(secondsSinceInstall>(60*60*24*30*6)) // 6 month's old
+	if(secondsSinceInstall>(60*60*24*30*3)) // 3 month's old
 		return YES;
 	else
 		return NO;
@@ -615,12 +615,12 @@
 			self.graphImageView.hidden=NO;
 			self.arrowImage.center = CGPointMake(self.netWorthView.center.x, self.analysisButton.frame.origin.y+30);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
-			self.messageLabel.text = @"The graph on the main menu tracks your net worth on a monthly basis. This chart will start making more sense once you have been using Wealth Tracker for a few months.";
+			self.messageLabel.text = [NSString stringWithFormat:@"The graph on the main menu tracks your net worth on a monthly basis. This chart will start making more sense once you have been using %@ for a few months.", [ObjectiveCScripts appName]];
 			break;
   case 8:
 			self.arrowImage.hidden=YES;
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
-			self.messageLabel.text = @"Congratulations! You are ready to start using Wealth Tracker. Contact us if you have any questions or suggestions for this app.";
+			self.messageLabel.text = [NSString stringWithFormat:@"Congratulations! You are ready to start using %@. Contact us if you have any questions or suggestions for this app.", [ObjectiveCScripts appName]];
 			break;
   case 9:
 			self.initStep=-1;

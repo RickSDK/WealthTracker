@@ -134,10 +134,15 @@
 		6BA44F131B9E1ECE00C7470C /* blueArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BA44F111B9E1ECE00C7470C /* blueArrowUp.png */; };
 		6BB2D26E1C3C8AF600FFD7C6 /* checkbox0.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB2D26C1C3C8AF600FFD7C6 /* checkbox0.png */; };
 		6BB2D26F1C3C8AF600FFD7C6 /* checkbox1.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB2D26D1C3C8AF600FFD7C6 /* checkbox1.png */; };
+		6BB33B9C1CD1519200C32AF1 /* UpdatePortfolioVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB33B9A1CD1519200C32AF1 /* UpdatePortfolioVC.m */; };
+		6BB33B9D1CD1519200C32AF1 /* UpdatePortfolioVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB33B9B1CD1519200C32AF1 /* UpdatePortfolioVC.xib */; };
 		6BB354E11B743B470003987A /* GraphSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB354E01B743B470003987A /* GraphSegmentCell.m */; };
 		6BB354E61B744C1F0003987A /* lineChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E41B744C1F0003987A /* lineChart.png */; };
 		6BB354E71B744C1F0003987A /* pieChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E51B744C1F0003987A /* pieChart.png */; };
 		6BB354E91B744C280003987A /* barChart.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BB354E81B744C280003987A /* barChart.png */; };
+		6BB455FB1CAC52350082F38C /* FinancesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB455F91CAC52340082F38C /* FinancesVC.m */; };
+		6BB455FC1CAC52350082F38C /* FinancesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB455FA1CAC52340082F38C /* FinancesVC.xib */; };
+		6BB455FE1CAC725E0082F38C /* bundles.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6BB455FD1CAC725E0082F38C /* bundles.rtf */; };
 		6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE51BF3C47F001D372F /* vault.jpg */; };
 		6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */; };
 		6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */; };
@@ -372,11 +377,18 @@
 		6BA44F111B9E1ECE00C7470C /* blueArrowUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrowUp.png; sourceTree = "<group>"; };
 		6BB2D26C1C3C8AF600FFD7C6 /* checkbox0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox0.png; sourceTree = "<group>"; };
 		6BB2D26D1C3C8AF600FFD7C6 /* checkbox1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox1.png; sourceTree = "<group>"; };
+		6BB33B991CD1519200C32AF1 /* UpdatePortfolioVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdatePortfolioVC.h; sourceTree = "<group>"; };
+		6BB33B9A1CD1519200C32AF1 /* UpdatePortfolioVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdatePortfolioVC.m; sourceTree = "<group>"; };
+		6BB33B9B1CD1519200C32AF1 /* UpdatePortfolioVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpdatePortfolioVC.xib; sourceTree = "<group>"; };
 		6BB354DF1B743B470003987A /* GraphSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphSegmentCell.h; sourceTree = "<group>"; };
 		6BB354E01B743B470003987A /* GraphSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphSegmentCell.m; sourceTree = "<group>"; };
 		6BB354E41B744C1F0003987A /* lineChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineChart.png; sourceTree = "<group>"; };
 		6BB354E51B744C1F0003987A /* pieChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pieChart.png; sourceTree = "<group>"; };
 		6BB354E81B744C280003987A /* barChart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barChart.png; sourceTree = "<group>"; };
+		6BB455F81CAC52340082F38C /* FinancesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FinancesVC.h; sourceTree = "<group>"; };
+		6BB455F91CAC52340082F38C /* FinancesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FinancesVC.m; sourceTree = "<group>"; };
+		6BB455FA1CAC52340082F38C /* FinancesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FinancesVC.xib; sourceTree = "<group>"; };
+		6BB455FD1CAC725E0082F38C /* bundles.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = bundles.rtf; sourceTree = "<group>"; };
 		6BBEDEE51BF3C47F001D372F /* vault.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vault.jpg; sourceTree = "<group>"; };
 		6BBEDEE71BF3C4AC001D372F /* LockAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockAppVC.h; sourceTree = "<group>"; };
 		6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockAppVC.m; sourceTree = "<group>"; };
@@ -551,6 +563,9 @@
 				6B2E23E81B545B0A00CC2851 /* UpdateDetails.h */,
 				6B2E23E91B545B0B00CC2851 /* UpdateDetails.m */,
 				6B2E23EA1B545B0B00CC2851 /* UpdateDetails.xib */,
+				6BB33B991CD1519200C32AF1 /* UpdatePortfolioVC.h */,
+				6BB33B9A1CD1519200C32AF1 /* UpdatePortfolioVC.m */,
+				6BB33B9B1CD1519200C32AF1 /* UpdatePortfolioVC.xib */,
 				6BC472291B61576B00F68341 /* WebViewVC.h */,
 				6BC4722A1B61576B00F68341 /* WebViewVC.m */,
 				6BC4722B1B61576B00F68341 /* WebViewVC.xib */,
@@ -572,6 +587,9 @@
 				6B42B0041BAA2ACB00CC649C /* RetirementVC.h */,
 				6B42B0051BAA2ACB00CC649C /* RetirementVC.m */,
 				6B42B0061BAA2ACB00CC649C /* RetirementVC.xib */,
+				6BB455F81CAC52340082F38C /* FinancesVC.h */,
+				6BB455F91CAC52340082F38C /* FinancesVC.m */,
+				6BB455FA1CAC52340082F38C /* FinancesVC.xib */,
 				6B2E23FA1B55733000CC2851 /* MyPlanVC.h */,
 				6B2E23FB1B55733000CC2851 /* MyPlanVC.m */,
 				6B2E23FC1B55733000CC2851 /* MyPlanVC.xib */,
@@ -608,6 +626,7 @@
 			isa = PBXGroup;
 			children = (
 				6B416EC41B506D52009C9834 /* Info.plist */,
+				6BB455FD1CAC725E0082F38C /* bundles.rtf */,
 				6B416EC51B506D52009C9834 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -877,6 +896,7 @@
 				6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */,
 				6BB354E91B744C280003987A /* barChart.png in Resources */,
 				6BFECD4F1B7A7D4700F40961 /* greenTexture.jpg in Resources */,
+				6BB455FC1CAC52350082F38C /* FinancesVC.xib in Resources */,
 				6B644CC31B68206000483F98 /* InAppPurchaseVC.xib in Resources */,
 				6B416F031B508DFB009C9834 /* green.png in Resources */,
 				6B2E24031B55BB2200CC2851 /* AnalysisDetailsVC.xib in Resources */,
@@ -921,6 +941,7 @@
 				6BB2D26E1C3C8AF600FFD7C6 /* checkbox0.png in Resources */,
 				6B42B0081BAA2ACB00CC649C /* RetirementVC.xib in Resources */,
 				6BFE31BB1B73E143002F2343 /* checkMark.jpg in Resources */,
+				6BB33B9D1CD1519200C32AF1 /* UpdatePortfolioVC.xib in Resources */,
 				6B63899F1B7BA2A100260656 /* Icon-152.png in Resources */,
 				6B38E3E01B6C678900EF8D40 /* karma.png in Resources */,
 				6B644CB91B68203400483F98 /* NewAccountVC.xib in Resources */,
@@ -932,6 +953,7 @@
 				6B416ED71B506D53009C9834 /* Images.xcassets in Resources */,
 				6BA44F0F1B9CF71E00C7470C /* financesButton.png in Resources */,
 				6B04442F1B58973A001E7007 /* ChartsVC.xib in Resources */,
+				6BB455FE1CAC725E0082F38C /* bundles.rtf in Resources */,
 				6B5B87F81B681C0D00BBE741 /* OptionsVC.xib in Resources */,
 				6B6389A11B7BA2A100260656 /* Icon-1024.png in Resources */,
 				6BBEDF001C0E4304001D372F /* fontawesome-github.jpg in Resources */,
@@ -961,6 +983,7 @@
 				6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */,
 				6B8EB9931B5218BD00F8A20B /* ProfileObj.m in Sources */,
 				6B2353AF1C91184F008947AF /* TemplateVC.m in Sources */,
+				6BB455FB1CAC52350082F38C /* FinancesVC.m in Sources */,
 				6B416EFE1B508774009C9834 /* StartupVC.m in Sources */,
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
 				6B2353BD1C932B50008947AF /* PlanningVC.m in Sources */,
@@ -992,6 +1015,7 @@
 				6BDCEF191B5FFCD500DDA3AC /* BreakdownByMonthVC.m in Sources */,
 				6B8EB9991B5226FC00F8A20B /* CoreDataLib.m in Sources */,
 				6B416F171B509FC2009C9834 /* CustomButton.m in Sources */,
+				6BB33B9C1CD1519200C32AF1 /* UpdatePortfolioVC.m in Sources */,
 				6B2353C91C948150008947AF /* PieChartSegment.m in Sources */,
 				6B3C18051B6FEE170039733B /* CashFlowEditItemVC.m in Sources */,
 				6B9673FE1B6B286400641C7F /* CustomImageView.m in Sources */,
@@ -1153,13 +1177,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "980fd1fb-8abf-4e1d-a4fd-928d51b5e18c";
+				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1168,13 +1193,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "980fd1fb-8abf-4e1d-a4fd-928d51b5e18c";
+				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -7,11 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TemplateVC.h"
 
-@interface RetirementVC : UIViewController
+@interface RetirementVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITextView *textView;
+
+@property (nonatomic, strong) IBOutlet UILabel *netWorthLabel;
+@property (nonatomic, strong) IBOutlet UILabel *averageLabel;
+@property (nonatomic, strong) IBOutlet UILabel *idealLabel;
+@property (nonatomic, strong) IBOutlet UILabel *yourCurrentLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *downArrow;
+@property (nonatomic, strong) IBOutlet UIView *colorView;
 
 @property (nonatomic) BOOL finFlg;
 

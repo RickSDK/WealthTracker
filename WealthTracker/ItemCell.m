@@ -36,7 +36,7 @@
 		[self.bgView addSubview:self.valStatusImage];
 		
 		
-		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, kTopEdge-2, 170, 22)];
+		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, kTopEdge-2, 170, 22)];
 		self.nameLabel.font = [UIFont boldSystemFontOfSize:20];
 		self.nameLabel.adjustsFontSizeToFitWidth = YES;
 		self.nameLabel.minimumScaleFactor = .7;
@@ -46,12 +46,12 @@
 		self.nameLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.nameLabel];
 
-		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, kTopEdge+15, 140, 22)];
+		self.subTypeLabel = [[UILabel alloc] initWithFrame:CGRectMake(310-140, kTopEdge-2, 140, 22)];
 		self.subTypeLabel.font = [UIFont boldSystemFontOfSize:14];
 		self.subTypeLabel.adjustsFontSizeToFitWidth = YES;
 		self.subTypeLabel.minimumScaleFactor = .8;
 		self.subTypeLabel.text = @"Type";
-		self.subTypeLabel.textAlignment = NSTextAlignmentLeft;
+		self.subTypeLabel.textAlignment = NSTextAlignmentRight;
 		self.subTypeLabel.textColor = [ObjectiveCScripts darkColor];
 		self.subTypeLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.subTypeLabel];
@@ -59,6 +59,22 @@
 		float kRow1 = kTopEdge+30;
 		float kRow2 = kTopEdge+30+15;
 		float kRow3 = kTopEdge+32+30;
+
+		UILabel * totalLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, kRow1-14, 163, 22)];
+		totalLabel.backgroundColor = [UIColor clearColor];
+		totalLabel.textAlignment = NSTextAlignmentLeft;
+		totalLabel.textColor = [UIColor blackColor];
+		totalLabel.font = [UIFont boldSystemFontOfSize:11];
+		totalLabel.text = @"Total";
+		[self.bgView addSubview:totalLabel];
+
+		UILabel * changeLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, kRow1-14, 163, 22)];
+		changeLabel.backgroundColor = [UIColor clearColor];
+		changeLabel.textAlignment = NSTextAlignmentLeft;
+		changeLabel.textColor = [UIColor blackColor];
+		changeLabel.font = [UIFont boldSystemFontOfSize:11];
+		changeLabel.text = @"Change This Month";
+		[self.bgView addSubview:changeLabel];
 
 		UILabel * balanceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(kleftEdge, kRow1, 163, 22)];
 		balanceNameLabel.backgroundColor = [UIColor clearColor];
@@ -147,21 +163,21 @@
 		self.equityChangeLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.equityChangeLabel];
 		
-		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(210, kTopEdge, 100, 22)];
+		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 47, 30, 22)];
 		self.statement_dayLabel.font = [UIFont boldSystemFontOfSize:15];
 		self.statement_dayLabel.adjustsFontSizeToFitWidth = YES;
 		self.statement_dayLabel.minimumScaleFactor = .8;
-		self.statement_dayLabel.text = @"Day";
+		self.statement_dayLabel.text = @"15";
 		self.statement_dayLabel.textAlignment = NSTextAlignmentCenter;
 		self.statement_dayLabel.textColor = [UIColor blackColor];
 		self.statement_dayLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.statement_dayLabel];
 		
-		self.statement_dayLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(210, kTopEdge+11, 100, 22)];
+		self.statement_dayLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 68, 60, 22)];
 		self.statement_dayLabel2.font = [UIFont boldSystemFontOfSize:8];
 		self.statement_dayLabel2.adjustsFontSizeToFitWidth = YES;
 		self.statement_dayLabel2.minimumScaleFactor = .8;
-		self.statement_dayLabel2.text = @"Statement Day";
+		self.statement_dayLabel2.text = @"Due Day";
 		self.statement_dayLabel2.textAlignment = NSTextAlignmentCenter;
 		self.statement_dayLabel2.textColor = [ObjectiveCScripts darkColor];
 		self.statement_dayLabel2.backgroundColor = [UIColor clearColor];
@@ -198,8 +214,23 @@
 		cell.statement_dayLabel2.text=@"";
 	} else {
 		cell.statement_dayLabel.text = obj.statement_day;
-		cell.statement_dayLabel2.text = @"Statement Day";
+		cell.statement_dayLabel2.text = @"Due Day";
 	}
+
+	if([@"Asset" isEqualToString:obj.type]) {
+		cell.balanceLabel.hidden=YES;
+		cell.balanceChangeLabel.hidden=YES;
+		cell.equityLabel.hidden=YES;
+		cell.equityChangeLabel.hidden=YES;
+	}
+	if([@"Debt" isEqualToString:obj.type]) {
+		cell.valueLabel.hidden=YES;
+		cell.valueChangeLabel.hidden=YES;
+		cell.equityLabel.hidden=YES;
+		cell.equityChangeLabel.hidden=YES;
+	}
+//	NSLog(@"+++%@ %@", obj.name, obj.type);
+//	if(obj.type)
 	
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:obj.type];
 	

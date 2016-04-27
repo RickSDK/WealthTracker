@@ -1,12 +1,12 @@
 //
-//  UpdateDetails.m
+//  UpdatePortfolioVC.m
 //  WealthTracker
 //
-//  Created by Rick Medved on 7/13/15.
-//  Copyright (c) 2015 Rick Medved. All rights reserved.
+//  Created by Rick Medved on 4/27/16.
+//  Copyright (c) 2016 Rick Medved. All rights reserved.
 //
 
-#import "UpdateDetails.h"
+#import "UpdatePortfolioVC.h"
 #import "EditItemVC.h"
 #import "ObjectiveCScripts.h"
 #import "MultiLineDetailCellWordWrap.h"
@@ -21,79 +21,35 @@
 #import "BreakdownByMonthVC.h"
 #import "UpdatePortfolioVC.h"
 
-@interface UpdateDetails ()
+@interface UpdatePortfolioVC ()
 
 @end
 
-@implementation UpdateDetails
-
--(void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
-	
-	NSManagedObject *mo = [CoreDataLib managedObjFromId:self.itemObject.rowId managedObjectContext:self.managedObjectContext];
-	self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-
-	[self setupData];
-	
-
-}
+@implementation UpdatePortfolioVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:self.itemObject.name];
-	
+
 	self.valuesArray = [[NSMutableArray alloc] init];
 	self.namesArray = [[NSMutableArray alloc] init];
 	self.colorsArray = [[NSMutableArray alloc] init];
-	
+
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	self.nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
-	self.graphYear = self.nowYear;
 
-//	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
-
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Update" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
-	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-																					 action:@selector(handleSwipeLeft:)];
-	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-	[self.mainTableView addGestureRecognizer:recognizer];
+	[self setTitle:self.itemObject.name];
 	
-	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
-	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 }
 
--(IBAction)menuButtonPressed:(id)sender {
-	[self mainMenuButtonClicked];
-}
-
--(void)mainMenuButtonClicked {
-	[self.navigationController popToRootViewControllerAnimated:YES];
-}
-
--(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
-	[self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)handleSwipeLeft:(UISwipeGestureRecognizer *)gestureRecognizer {
-	[self breakdownLink];
-
-//	CGPoint location = [gestureRecognizer locationInView:self.mainTableView];
-//	//Get the corresponding index path within the table view
-//	NSIndexPath *indexPath = [self.mainTableView indexPathForRowAtPoint:location];
-//	if(indexPath.section==0) {
-//		[self breakdownLink];
-//	}
-}
-
--(ItemObject *)refreshObjFromObj:(ItemObject *)obj {
-	NSManagedObject *mo = [CoreDataLib managedObjFromId:obj.rowId managedObjectContext:self.managedObjectContext];
-	return [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+-(void)editButtonPressed {
+	EditItemVC *detailViewController = [[EditItemVC alloc] initWithNibName:@"EditItemVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.itemObject = self.itemObject;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(BOOL)textField:(UITextField *)textFieldlocal shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -159,23 +115,12 @@
 	return @"";
 }
 
--(void)displayTopBar {
-	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMMM"];
-	
-	self.statusImageView.image=[ObjectiveCScripts imageForStatus:self.itemObject.status];
-	
-	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:self.nowMonth year:self.nowYear field:nil context:self.managedObjectContext numMonths:1 type:0];
-	[ObjectiveCScripts displayNetChangeLabel:self.amountLabel amount:equityChange lightFlg:YES revFlg:NO];
-}
-
 
 -(void)setupData {
 	[self.namesArray removeAllObjects];
 	[self.valuesArray removeAllObjects];
 	[self.colorsArray removeAllObjects];
 	
-	[self displayTopBar];
-
 	NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear, self.displayMonth];
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year_month = %@ AND item_id = %d", year_month, [self.itemObject.rowId intValue]];
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
@@ -189,8 +134,6 @@
 		interest = [[mo valueForKey:@"interest"] doubleValue];
 	}
 	
-	if(balance<=0)
-		self.payoffButton.enabled=NO;
 	
 	int type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 	if(type!=3) {
@@ -209,7 +152,7 @@
 		[self.namesArray addObject:@"Interest Rate"];
 		[self.valuesArray addObject:[self format:self.itemObject.interest_rate type:3]];
 		[self.colorsArray addObject:[UIColor blackColor]];
-
+		
 		[self.namesArray addObject:@"Interest Amount"];
 		[self.valuesArray addObject:[NSString stringWithFormat:@"%@/month", [ObjectiveCScripts convertNumberToMoneyString:(int)interest]]];
 		[self.colorsArray addObject:[UIColor blackColor]];
@@ -219,7 +162,7 @@
 		[self.namesArray addObject:@"Monthly Payment"];
 		[self.valuesArray addObject:[self format:self.itemObject.monthly_payment type:1]];
 		[self.colorsArray addObject:[UIColor blackColor]];
-
+		
 		if(type==1) {
 			[self.namesArray addObject:@"Homeowner Dues"];
 			[self.valuesArray addObject:[self format:self.itemObject.homeowner_dues type:1]];
@@ -235,10 +178,10 @@
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%d%%", percent]];
 			[self.colorsArray addObject:[UIColor blackColor]];
 		}
-
+		
 	}
 	
-
+	
 	[self.namesArray addObject:@"Statement Day"];
 	[self.valuesArray addObject:[self format:self.itemObject.statement_day type:2]];
 	[self.colorsArray addObject:[UIColor blackColor]];
@@ -255,7 +198,7 @@
 		[self.namesArray addObject:@"Equity"];
 		[self.valuesArray addObject:[NSString stringWithFormat:@"%@ (%@)", [ObjectiveCScripts convertNumberToMoneyString:equity], percentStr]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:equity lightFlg:NO]];
-
+		
 		int equityToday = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
 		int equityLastMonth = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
 		int equityLastQuarter = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
@@ -264,11 +207,11 @@
 		[self addNetChangeLineWithName:@"Equity This Month" amount:equityToday-equityLastMonth revFlg:NO];
 		[self addNetChangeLineWithName:@"Equity Last 3 Months" amount:equityToday-equityLastQuarter revFlg:NO];
 		[self addNetChangeLineWithName:@"Equity Last 12 Months" amount:equityToday-equityLastYear revFlg:NO];
-
+		
 	}
 	if(value>0) {
 		[self addBlankLine];
-
+		
 		double valueToday = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
 		double value30 = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
 		double valueLastYear = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
@@ -277,7 +220,7 @@
 		[self.namesArray addObject:@"Value"];
 		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:value]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:value lightFlg:NO]];
-
+		
 		[self addNetChangePercentLineWithName:@"Value This Month" amount:valueToday prevAmount:value30 revFlg:NO];
 		[self addNetChangePercentLineWithName:[NSString stringWithFormat:@"Value in %d", self.displayYear] amount:valueToday prevAmount:valueLastDec revFlg:NO];
 		[self addNetChangePercentLineWithName:@"Value Last 12 Months" amount:valueToday prevAmount:valueLastYear revFlg:NO];
@@ -289,12 +232,12 @@
 		double bal30 = [self balanceForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
 		double bal90 = [self balanceForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
 		double balLastYear = [self balanceForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
-
-
+		
+		
 		[self.namesArray addObject:@"Loan Balance"];
 		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:balance]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:-1 lightFlg:NO]];
-
+		
 		if(value>0 && type==1) {
 			[self.namesArray addObject:@"LTV"];
 			int ltv = balance*100/value;
@@ -308,9 +251,6 @@
 		int principalPaid = [ObjectiveCScripts calculatePaydownRate:balToday balLastYear:balLastYear bal30:bal30 bal90:bal90];
 		if(principalPaid>0) {
 			
-			if(principalPaid>balToday)
-				self.payoffButton.enabled=NO;
-
 			[self.namesArray addObject:@"Debt Reduction Rate"];
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%@ / month", [ObjectiveCScripts convertNumberToMoneyString:principalPaid]]];
 			[self.colorsArray addObject:[UIColor blackColor]];
@@ -397,13 +337,6 @@
 }
 
 
--(void)editButtonPressed {
-	UpdatePortfolioVC *detailViewController = [[UpdatePortfolioVC alloc] initWithNibName:@"UpdatePortfolioVC" bundle:nil];
-	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.itemObject = self.itemObject;
-	[self.navigationController pushViewController:detailViewController animated:YES];
-}
-
 -(int)numRecordsForYear:(int)year month:(int)month {
 	NSString *year_month = [NSString stringWithFormat:@"%d%02d", year, month];
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year_month = %@ and item_id = %d", year_month, [self.itemObject.rowId intValue]];
@@ -416,60 +349,128 @@
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
 	if(indexPath.section==0) {
-		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
-		GraphCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		UpdateCell *cell = [[UpdateCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		if(cell==nil)
-			cell = [[GraphCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		cell.titleLabel.text = self.itemObject.name;
 		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
 		[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
 		[cell.nextYearButton addTarget:self action:@selector(nextMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
 		
-
 		BOOL nextFlg = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
 		if(nextFlg)
 			[cell.nextYearButton setTitle:@"Next" forState:UIControlStateNormal];
 		else
 			[cell.nextYearButton setTitle:@"-" forState:UIControlStateNormal];
 		
-		cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear];
-
+		cell.loanAmountTextField.delegate=self;
+		cell.valueTextField.delegate=self;
+		
+		if([ObjectiveCScripts getUserDefaultValue:@"allowDecFlg"].length==0) {
+			cell.loanAmountTextField.keyboardType=UIKeyboardTypeNumberPad;
+			cell.valueTextField.keyboardType=UIKeyboardTypeNumberPad;
+		} else {
+			cell.loanAmountTextField.keyboardType=UIKeyboardTypeDecimalPad;
+			cell.valueTextField.keyboardType=UIKeyboardTypeDecimalPad;
+		}
+		
+		self.balanceTextField = cell.loanAmountTextField;
+		self.valueTextField = cell.valueTextField;
+		
+		cell.valueLabel.text = [NSString stringWithFormat:@"%@ %d Value", [self monthNameForNumber:self.displayMonth], self.displayYear];
+		cell.loanAmountLabel.text = [NSString stringWithFormat:@"%@ %d Balance", [self monthNameForNumber:self.displayMonth], self.displayYear];
+		
+		NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear, self.displayMonth];
+		NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year_month = %@ AND item_id = %d", year_month, [self.itemObject.rowId intValue]];
+		
+		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+		
+		self.valueTextField.text = @"";
+		self.balanceTextField.text = @"";
+		
+		BOOL bal_confirm_flg = NO;
+		BOOL val_confirm_flg = NO;
+		
+		self.updateValueButton=cell.updateValueButton;
+		self.updateValueButton.enabled=NO;
+		self.updateBalanceButton=cell.updateBalanceButton;
+		self.updateBalanceButton.enabled=NO;
+		
+		if(items.count>0) {
+			NSManagedObject *mo = [items objectAtIndex:0];
+			double value = [[mo valueForKey:@"asset_value"] doubleValue];
+			double balance = [[mo valueForKey:@"balance_owed"] doubleValue];
+			
+			if(value==0 || [self.itemObject.statement_day intValue] == self.nowDay)
+				self.updateValueButton.enabled=YES;
+			if(balance==0 || [self.itemObject.statement_day intValue] == self.nowDay)
+				self.updateBalanceButton.enabled=YES;
+			
+			bal_confirm_flg = [[mo valueForKey:@"bal_confirm_flg"] boolValue];
+			val_confirm_flg = [[mo valueForKey:@"val_confirm_flg"] boolValue];
+			
+			self.valueTextField.text = [ObjectiveCScripts convertNumberToMoneyString:value];
+			self.balanceTextField.text = [ObjectiveCScripts convertNumberToMoneyString:balance];
+		}
+		
+		
+		BOOL hideAssetFlg = [@"Asset" isEqualToString:self.itemObject.type];
+		cell.updateBalanceButton.hidden=hideAssetFlg;
+		cell.loanAmountTextField.hidden=hideAssetFlg;
+		cell.loanAmountLabel.hidden=hideAssetFlg;
+		cell.balanceStatusImageView.hidden=hideAssetFlg;
+		
+		BOOL hideDebtFlg = [@"Debt" isEqualToString:self.itemObject.type];
+		cell.updateValueButton.hidden=hideDebtFlg;
+		cell.valueTextField.hidden=hideDebtFlg;
+		cell.valueLabel.hidden=hideDebtFlg;
+		cell.valueStatusImageView.hidden=hideDebtFlg;
+		
+		cell.balanceStatusImageView.image = (bal_confirm_flg)?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
+		cell.valueStatusImageView.image = (val_confirm_flg)?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
+		
+		[cell.updateValueButton addTarget:self action:@selector(updateValueButtonPressed) forControlEvents:UIControlEventTouchDown];
+		[cell.updateBalanceButton addTarget:self action:@selector(updateBalanceButtonPressed) forControlEvents:UIControlEventTouchDown];
+		
+		if (self.displayYear>self.nowYear ||  (self.displayYear==self.nowYear && self.displayMonth>self.nowMonth)) {
+			cell.valueTextField.enabled=NO;
+			cell.valueTextField.textColor=[UIColor orangeColor];
+			cell.loanAmountTextField.enabled=NO;
+			cell.loanAmountTextField.textColor=[UIColor orangeColor];
+			cell.balanceStatusImageView.image = [UIImage imageNamed:@"yellow.png"];
+			cell.valueStatusImageView.image = [UIImage imageNamed:@"yellow.png"];
+		} else {
+			cell.valueTextField.enabled=YES;
+			cell.valueTextField.textColor=[UIColor blackColor];
+			cell.loanAmountTextField.enabled=YES;
+			cell.loanAmountTextField.textColor=[UIColor blackColor];
+		}
+		
+		if([@"Leasing" isEqualToString:self.itemObject.payment_type]) {
+			cell.valueTextField.enabled=NO;
+			cell.valueTextField.backgroundColor=[UIColor grayColor];
+			cell.loanAmountTextField.enabled=NO;
+			cell.loanAmountTextField.backgroundColor=[UIColor grayColor];
+		}
+		
 		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
-
+		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if(indexPath.section==1) {
-		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
-		GraphCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	} else if (indexPath.section==1) {
+		UpdateWebCell *cell = [[UpdateWebCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		if(cell==nil)
-			cell = [[GraphCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		if(indexPath.row==1 || [@"Debt" isEqualToString:self.itemObject.type]) {
+			[cell.updateButton setTitle:@"Check Balance" forState:UIControlStateNormal];
+			cell.messageLabel.text = @"Enter the current balance from this month's statement.";
+			[cell.updateButton addTarget:self action:@selector(webViewBalanceButtonPressed) forControlEvents:UIControlEventTouchDown];
+			cell.statusImageView.image = (self.itemObject.balanceUrl.length>0)?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
+		} else {
+			[cell.updateButton setTitle:@"Check Value" forState:UIControlStateNormal];
+			[cell.updateButton addTarget:self action:@selector(webViewButtonPressed) forControlEvents:UIControlEventTouchDown];
+			cell.statusImageView.image = (self.itemObject.valueUrl.length>0)?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
+		}
 		
-		cell.titleLabel.text = self.itemObject.name;
-		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
-		[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
-		[cell.nextYearButton addTarget:self action:@selector(nextMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
-		
-		
-		BOOL nextFlg = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
-		if(nextFlg)
-			[cell.nextYearButton setTitle:@"Next" forState:UIControlStateNormal];
-		else
-			[cell.nextYearButton setTitle:@"-" forState:UIControlStateNormal];
-		
-		int type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
-		BOOL reverseColorFlg=NO;
-		if(type==3)
-			reverseColorFlg=YES; // debt
-		
-		NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0 displayTotalFlg:NO];
-		
-		cell.graphImageView.image = [GraphLib graphBarsWithItems:graphArray];
-
-		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
+		cell.iconImageView.image = [ObjectiveCScripts imageIconForType:self.itemObject.type];
 		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -525,9 +526,9 @@
 }
 
 -(void)nextMonthButtonPressed {
-	 if (self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth)
-		 return;
-
+	if (self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth)
+		return;
+	
 	self.displayMonth++;
 	if(self.displayMonth>=13) {
 		self.displayYear++;
@@ -559,6 +560,11 @@
 	[self resetView];
 }
 
+-(ItemObject *)refreshObjFromObj:(ItemObject *)obj {
+	NSManagedObject *mo = [CoreDataLib managedObjFromId:obj.rowId managedObjectContext:self.managedObjectContext];
+	return [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+}
+
 -(BOOL)checkFlag:(NSString *)flag {
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", self.displayYear, self.displayMonth, [self.itemObject.rowId intValue]];
 	
@@ -577,7 +583,7 @@
 		[ObjectiveCScripts showAlertPopup:@"Error" message:@"Value blank"];
 		return;
 	}
-
+	
 	if([self checkFlag:@"val_confirm_flg"])
 		[ObjectiveCScripts showConfirmationPopup:@"Overwrite Existing Data?" message:@"You can only have one entry per month. Overwrite the existing entry?" delegate:self tag:1];
 	else
@@ -614,46 +620,16 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 3;
+	return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 1;
+	if(section==1 && ([@"Vehicle" isEqualToString:self.itemObject.type] || [@"Real Estate" isEqualToString:self.itemObject.type]))
+		return 2;
+	else
+		return 1;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==0) {
-		self.displayBarsFlg=!self.displayBarsFlg;
-		[self setupData];
-	}
-	if((self.itemObject.status>0 && indexPath.section==3)) {
-		
-		[self drillDown];
-	}
-}
-
--(IBAction)payoffButtonPressed:(id)sender {
-	[self drillDown];
-}
-
--(void)breakdownLink {
-	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
-	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.itemObject = self.itemObject;
-	detailViewController.displayYear=self.nowYear;
-	[self.navigationController pushViewController:detailViewController animated:YES];
-}
-
--(IBAction)breakdownButtonPressed:(id)sender {
-	[self breakdownLink];
-}
-
--(void)drillDown {
-	PayoffVC *detailViewController = [[PayoffVC alloc] initWithNibName:@"PayoffVC" bundle:nil];
-	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.row_id=[self.itemObject.rowId intValue];
-	[self.navigationController pushViewController:detailViewController animated:YES];
-}
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -661,6 +637,7 @@
 }
 
 -(void)scrollToHeight:(float)height {
+	return;
 	UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, height, 0.0);
 	self.mainTableView.contentInset = contentInsets;
 	self.mainTableView.scrollIndicatorInsets = contentInsets;
@@ -687,7 +664,7 @@
 	if(textField==self.balanceTextField) {
 		self.editTextFieldNum=2;
 	}
-
+	
 	if(self.itemObject.status==1 && self.itemObject.day>self.nowDay && self.displayMonth==self.nowMonth && self.displayYear==self.nowYear) {
 		[ObjectiveCScripts showConfirmationPopup:@"Notice" message:@"You are attempting to edit a value before it's statement date has arrived. Continue?" delegate:self tag:45];
 		return;
@@ -701,12 +678,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section<2)
-		return [ObjectiveCScripts chartHeightForSize:254];
+	if(indexPath.section==0)
+		return 132;
 	else
-		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
-																			  tableView:self.mainTableView
-																   labelWidthProportion:0.6]+20;
+		return 90;
 }
+
 
 @end

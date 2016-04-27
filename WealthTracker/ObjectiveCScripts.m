@@ -17,6 +17,11 @@
 @implementation ObjectiveCScripts
 
 
++(NSString *)appName {
+	return @"Wealth Tracker";
+//	return @"Broke to Baron";
+}
+
 +(NSString *)getProjectDisplayVersion
 {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
@@ -571,7 +576,7 @@
 }
 
 +(int)calculateIdealNetWorth:(int)annual_income {
-	int idealNetWorth = annual_income*10; // ideally you would like to retire and make the same amount
+	int idealNetWorth = annual_income*7; // ideally you would like to retire and make the same amount
 	if(idealNetWorth<400000)
 		idealNetWorth=400000; // at least 400,000
 	if(idealNetWorth>10000000)
@@ -848,6 +853,25 @@
 	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
 	
 	return [NSString stringWithFormat:@"%@ %@", [self faIconOfType:type], [titles objectAtIndex:type]];
+}
+
++(double)averageNetWorth:(NSManagedObjectContext *)context {
+	int age = [CoreDataLib getNumberFromProfile:@"age" mOC:context];
+	if(age<22)
+		age=22;
+	if(age>70)
+		age=70;
+	return (age-20)*(age-20)*80;
+}
+
++(double)idealNetWorth:(NSManagedObjectContext *)context {
+	int age = [CoreDataLib getNumberFromProfile:@"age" mOC:context];
+	if(age<22)
+		age=22;
+	if(age>70)
+		age=70;
+	double averageAmount = (age-20)*(age-20)*80;
+	return averageAmount*6;
 }
 
 

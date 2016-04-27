@@ -15,6 +15,7 @@
 
 @interface ObjectiveCScripts : NSObject
 
++(NSString *)appName;
 +(NSString *)getProjectDisplayVersion;
 +(UIColor *)darkColor;
 +(UIColor *)mediumkColor;
@@ -72,5 +73,7 @@
 +(NSString *)fontAwesomeTextForType:(int)type;
 +(NSString *)fontAwesomeTextAltForType:(int)type;
 +(NSString *)faIconOfType:(int)type;
++(double)averageNetWorth:(NSManagedObjectContext *)context;
++(double)idealNetWorth:(NSManagedObjectContext *)context;
 
 @end

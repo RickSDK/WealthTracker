@@ -103,13 +103,13 @@
 		self.debt2ImageView.image = [UIImage imageNamed:@"red.png"];
 
 	//------------Wealth-----------
+	
 	self.wealthImageView.image = [UIImage imageNamed:@"green.png"];
 	int netWorth = totalvalue-totalDebt;
-	int idealNetWorth = [ObjectiveCScripts calculateIdealNetWorth:annual_income];
-
-	if(netWorth<idealNetWorth*.8)
+	
+	if(netWorth<[ObjectiveCScripts idealNetWorth:self.managedObjectContext])
 		self.wealthImageView.image = [UIImage imageNamed:@"yellow.png"];
-	if(netWorth<=0)
+	if(netWorth<[ObjectiveCScripts averageNetWorth:self.managedObjectContext])
 		self.wealthImageView.image = [UIImage imageNamed:@"red.png"];
 	
 	//------------Home-----------
@@ -135,6 +135,8 @@
 	if(vehiclePercentage>60)
 		self.autoImageView.image = [UIImage imageNamed:@"red.png"];
 }
+
+
 
 
 -(IBAction)myPlanButtonClicked:(id)sender

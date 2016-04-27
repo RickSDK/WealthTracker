@@ -12,6 +12,7 @@
 #import "RetirementVC.h"
 #import "AutoBuyVC.h"
 #import "EducationVC.h"
+#import "FinancesVC.h"
 
 #define kMenu1	@"Education"
 #define kMenu2	@"Finances"
@@ -81,9 +82,8 @@
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 	if([kMenu2 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
-		RetirementVC *detailViewController = [[RetirementVC alloc] initWithNibName:@"RetirementVC" bundle:nil];
+		FinancesVC *detailViewController = [[FinancesVC alloc] initWithNibName:@"FinancesVC" bundle:nil];
 		detailViewController.managedObjectContext=self.managedObjectContext;
-		detailViewController.finFlg=YES;
 		detailViewController.title = @"Finances";
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
