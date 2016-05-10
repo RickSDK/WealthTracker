@@ -256,9 +256,13 @@
 	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19];
 	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfType:(int)indexPath.section+1], cell.nameLabel.text];
 	
+	if(obj.equityChange>0)
+		cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+	if(obj.equityChange<0)
+		cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
 	
-		if(self.nextItemDue == [obj.rowId intValue] && obj.status>0)
-			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:.5 alpha:1];
+//		if(self.nextItemDue == [obj.rowId intValue] && obj.status>0)
+//			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:.5 alpha:1];
 		
 		if(obj.status==2)
 			cell.bgView.backgroundColor = [UIColor yellowColor];
@@ -282,7 +286,7 @@
 		float width=0;
 		if(self.maxBalance>0)
 			width = [obj.loan_balance floatValue]*316/self.maxBalance;
-		cell.redLineView.frame=CGRectMake(0, 85, width, 5);
+		cell.redLineView.frame=CGRectMake(0, cell.redLineView.frame.origin.y, width, 5);
 		cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
 		cell.accessoryType = (offset==0)?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
 		cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section+1];
@@ -420,7 +424,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 95;
+	return 50;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

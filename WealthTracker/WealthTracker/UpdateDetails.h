@@ -23,6 +23,7 @@
 @property (nonatomic, strong) UIButton *updateValueButton;
 @property (nonatomic, strong) UIButton *updateBalanceButton;
 
+@property (nonatomic, strong) IBOutlet UIView *topView;
 @property (nonatomic, strong) IBOutlet UIButton *payoffButton;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
@@ -36,6 +37,8 @@
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int monthOffset;
 @property (nonatomic) int editTextFieldNum;
+@property (nonatomic) double highValue;
+@property (nonatomic) double lowValue;
 
 @property (nonatomic) int graphYear;
 @property (nonatomic) BOOL displayBarsFlg;

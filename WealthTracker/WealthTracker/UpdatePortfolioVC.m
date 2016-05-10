@@ -170,11 +170,12 @@
 			
 		}
 		
-		int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
-		if(annual_income>0) {
+		int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+		int annualIncome = monthlyIncome*12*1.2;
+		if(annualIncome>0) {
 			[self.namesArray addObject:@"% of Gross Income"];
 			double totalPayment = [self.itemObject.monthly_payment doubleValue]+[self.itemObject.homeowner_dues doubleValue];
-			int percent = round(totalPayment*1200/annual_income);
+			int percent = round(totalPayment*1200/annualIncome);
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%d%%", percent]];
 			[self.colorsArray addObject:[UIColor blackColor]];
 		}

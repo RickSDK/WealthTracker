@@ -49,8 +49,7 @@
 	[self.multiLineArray removeAllObjects];
 	[self.graphArray removeAllObjects];
 	
-	double monthlyIncome = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
-	monthlyIncome/=12;
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
 	double incomeTaxes = monthlyIncome*.2;
 
 	NSArray *cashItems = [CoreDataLib selectRowsFromEntity:@"CASH_FLOW" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];

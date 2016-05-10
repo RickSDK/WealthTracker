@@ -23,9 +23,8 @@
 #import "GraphObject.h"
 #import "UnLockAppVC.h"
 #import <LocalAuthentication/LocalAuthentication.h>
-#import "NSString+FontAwesome.h"
-#import "UIFont+FontAwesome.h"
 #import "PlanningVC.h"
+#import "BudgetVC.h"
 
 @interface MainMenuVC ()
 
@@ -50,7 +49,12 @@
 	self.chartsButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
 	[self.chartsButton setTitle:[NSString stringWithFormat:@"%@ Charts", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forState:UIControlStateNormal];
 	self.myPlanButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.myPlanButton setTitle:[NSString stringWithFormat:@"%@ Plan", [NSString fontAwesomeIconStringForEnum:FAFileText]] forState:UIControlStateNormal];
+	[self.myPlanButton setTitle:@"" forState:UIControlStateNormal];
+	
+	self.budgetLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	self.budgetLabel.textColor = [UIColor colorWithRed:0 green:.2 blue:.5 alpha:1];
+	self.budgetLabel.text = [NSString stringWithFormat:@"%@ Budget", [NSString fontAwesomeIconStringForEnum:FAMoney]];
+	self.myPlanButton.titleLabel.frame = CGRectMake(0, 0, 100, 100);
 	self.analysisButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
 	[self.analysisButton setTitle:[NSString stringWithFormat:@"%@ Advisor", [NSString fontAwesomeIconStringForEnum:FAUser]] forState:UIControlStateNormal];
 	
@@ -94,7 +98,7 @@
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
 	
 	self.messageView.hidden=YES;
@@ -125,6 +129,7 @@
 		self.appLockedFlg=NO;
 	}
 	[self setupData];
+	
 	
 }
 
@@ -256,6 +261,7 @@
 		self.displaySwitch.enabled=NO;
 		self.initStep=0;
 		self.graphImageView.hidden=YES;
+		self.budgetLabel.textColor = [UIColor grayColor];
 		self.showChartFlg=NO;
 	} else {
 		self.initStep=-1;
@@ -401,8 +407,14 @@
 		return NO;
 }
 
--(void)infoButtonPressed {
-	InfoVC *detailViewController = [[InfoVC alloc] initWithNibName:@"InfoVC" bundle:nil];
+-(void)planButtonPressed {
+	int incomeTotal=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	if(incomeTotal==0) {
+		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your income on the 'Budget' page before checking this feature."];
+		return;
+	}
+
+	PlanningVC *detailViewController = [[PlanningVC alloc] initWithNibName:@"PlanningVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -541,7 +553,7 @@
 }
 
 -(IBAction)myPlanButtonClicked:(id)sender {
-	PlanningVC *detailViewController = [[PlanningVC alloc] initWithNibName:@"PlanningVC" bundle:nil];
+	BudgetVC *detailViewController = [[BudgetVC alloc] initWithNibName:@"BudgetVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -560,6 +572,12 @@
 }
 
 -(IBAction)analysisButtonClicked:(id)sender {
+	int incomeTotal=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	if(incomeTotal==0) {
+		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your income on the 'Budget' page before checking analysis."];
+		return;
+	}
+
 	AnalysisVC *detailViewController = [[AnalysisVC alloc] initWithNibName:@"AnalysisVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -594,35 +612,40 @@
 			break;
   case 3:
 			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+50, self.myPlanButton.frame.origin.y+100);
-			self.messageLabel.text = @"Follow the plan here to get yourself out of debt, build wealth and plan for retirement. We call it going from Broke to Baron.";
+			self.messageLabel.text = @"Use the 'Budget' tracker too keep track of every dollar you spend. Getting on a budget is the key.";
 			break;
   case 4:
 			self.arrowImage.center = CGPointMake(self.chartsButton.frame.origin.x+50, self.chartsButton.frame.origin.y+100);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
-			self.messageLabel.text = @"View the 'Charts' button to see month by month tracking of your money.";
+			self.messageLabel.text = @"View the 'Charts' to see month by month tracking of your money.";
 			break;
   case 5:
 			self.arrowImage.center = CGPointMake(self.analysisButton.frame.origin.x+50, self.analysisButton.frame.origin.y+100);
-			self.messageLabel.text = @"Under 'Financial Advisor' you will get a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
+			self.messageLabel.text = @"The Financial Advisor will give you a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
 			break;
   case 6:
+			self.arrowImage.center = CGPointMake(40, self.myPlanButton.frame.origin.y+40);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
+			self.messageLabel.text = @"Check out the Planning section for tips and financial strategy. There is a step by step plan called 'Broke to Baron' to help you achieve your financial goals!";
+			break;
+  case 7:
 			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+100, self.myPlanButton.frame.origin.y+40);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
 			self.messageLabel.text = @"There are more options and features for this app if you click on the 'Options' button.";
 			break;
-  case 7:
+  case 8:
 			[self.arrowImage setImage:[UIImage imageNamed:@"blueArrowDown.png"]];
 			self.graphImageView.hidden=NO;
 			self.arrowImage.center = CGPointMake(self.netWorthView.center.x, self.analysisButton.frame.origin.y+30);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
 			self.messageLabel.text = [NSString stringWithFormat:@"The graph on the main menu tracks your net worth on a monthly basis. This chart will start making more sense once you have been using %@ for a few months.", [ObjectiveCScripts appName]];
 			break;
-  case 8:
+  case 9:
 			self.arrowImage.hidden=YES;
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
 			self.messageLabel.text = [NSString stringWithFormat:@"Congratulations! You are ready to start using %@. Contact us if you have any questions or suggestions for this app.", [ObjectiveCScripts appName]];
 			break;
-  case 9:
+  case 10:
 			self.initStep=-1;
 			self.financesButton.hidden=YES;
 			self.messageView.hidden=YES;
@@ -631,6 +654,7 @@
 			self.myPlanButton.enabled=YES;
 			self.chartsButton.enabled=YES;
 			self.analysisButton.enabled=YES;
+			self.budgetLabel.textColor=[ObjectiveCScripts darkColor];
 			self.showChartFlg=YES;
 			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"financesFlg"];
 			break;

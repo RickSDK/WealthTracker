@@ -22,7 +22,8 @@
 
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Strategy" style:UIBarButtonItemStyleBordered target:self action:@selector(tipsButtonPressed)];
 	
-	self.annualIncome = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	self.annualIncome = monthlyIncome*12*1.2;
 	self.monthlyTakehome = self.annualIncome*.8/12;
 	self.annualIncomeLabel.text = [ObjectiveCScripts convertNumberToMoneyString:self.monthlyTakehome];
 	

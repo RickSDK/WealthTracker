@@ -15,6 +15,7 @@
                 <outlet property="assetNameLabel" destination="lbz-1z-bax" id="UWb-wZ-0f8"/>
                 <outlet property="assetsLabel" destination="QLx-Ur-Hyp" id="WuI-LA-D7A"/>
                 <outlet property="botView" destination="xxk-67-dKc" id="zMc-UT-5xG"/>
+                <outlet property="budgetLabel" destination="QhE-1u-bvN" id="wvz-R1-8Z4"/>
                 <outlet property="chartLabel" destination="SyA-hj-Zol" id="bP4-D9-iBM"/>
                 <outlet property="chartSegmentControl" destination="tNg-Ke-h4U" id="fn7-Kb-Ggf"/>
                 <outlet property="chartsButton" destination="Z4i-hK-oSI" id="Z4F-I3-Lci"/>
@@ -81,7 +82,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ndZ-m8-Fb8" customClass="CustomButton">
-                            <rect key="frame" x="165.00000002055336" y="10" width="145" height="50"/>
+                            <rect key="frame" x="165.00000002055333" y="10" width="145" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -107,7 +108,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R0A-1V-g3a" customClass="CustomButton">
-                            <rect key="frame" x="165.00000002055336" y="65" width="145" height="50"/>
+                            <rect key="frame" x="165.00000002055333" y="65" width="145" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -119,6 +120,13 @@
                                 <action selector="analysisButtonClicked:" destination="-1" eventType="touchDown" id="hrf-BB-TgL"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Budget Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QhE-1u-bvN">
+                            <rect key="frame" x="165.00000002055333" y="23" width="145" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
@@ -305,7 +313,7 @@
                     <rect key="frame" x="17" y="16" width="282" height="192"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wealth Tracker!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZAj-xP-Fnl">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wealth Tracker!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZAj-xP-Fnl">
                             <rect key="frame" x="8" y="4" width="266" height="148"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>

@@ -7,17 +7,18 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CashFlowEditItemVC">
             <connections>
+                <outlet property="FAtypeLabel" destination="zhX-0g-pNb" id="gkM-pT-bWB"/>
                 <outlet property="amountTextField" destination="oWw-RC-lqh" id="zUN-Fz-XMW"/>
                 <outlet property="bgView" destination="h88-hG-beA" id="Nri-8E-9tn"/>
-                <outlet property="confirmLabel" destination="W4g-6v-mHA" id="bOE-Fm-arM"/>
-                <outlet property="confirmSwitch" destination="RQv-xl-XXe" id="2jL-Im-3v7"/>
+                <outlet property="billSwitch" destination="zct-tn-vZu" id="z8N-4u-XK9"/>
                 <outlet property="dayTextField" destination="SVu-D0-ek0" id="XVl-O0-GZX"/>
                 <outlet property="deleteButton" destination="1OX-JR-UMy" id="pMh-bW-w9f"/>
                 <outlet property="nameTextField" destination="1U1-oh-dBs" id="LGb-y2-VJ7"/>
                 <outlet property="selectButton" destination="KF1-eU-5So" id="AWp-FV-2er"/>
                 <outlet property="submitButton" destination="YBz-rs-JhE" id="82A-mr-KQ5"/>
+                <outlet property="typeButton" destination="byb-Yx-DiC" id="3q6-3w-bhb"/>
+                <outlet property="typeDescLabel" destination="zLX-oH-Ug2" id="Dby-6t-Tk8"/>
                 <outlet property="typeLabel" destination="Dqo-FT-Y0i" id="Ajd-qF-bdE"/>
-                <outlet property="typeSwitch" destination="zct-tn-vZu" id="yYf-wH-KEm"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -31,7 +32,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
                 <view contentMode="scaleToFill" id="h88-hG-beA" customClass="CustomView">
-                    <rect key="frame" x="8" y="8" width="304" height="313"/>
+                    <rect key="frame" x="8" y="8" width="304" height="325"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" minimumFontSize="17" clearButtonMode="whileEditing" id="1U1-oh-dBs">
@@ -67,7 +68,7 @@
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="thumbTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="typeSwitchPressed:" destination="-1" eventType="valueChanged" id="W6i-qh-PzL"/>
+                                <action selector="billSwitchPressed:" destination="-1" eventType="valueChanged" id="aXn-H7-EOa"/>
                             </connections>
                         </switch>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bill (outflow)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="Dqo-FT-Y0i">
@@ -78,7 +79,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YBz-rs-JhE">
-                            <rect key="frame" x="8" y="122" width="145" height="49"/>
+                            <rect key="frame" x="8" y="174" width="160" height="49"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -90,23 +91,8 @@
                                 <action selector="submitButtonPressed:" destination="-1" eventType="touchDown" id="EXN-eD-XMs"/>
                             </connections>
                         </button>
-                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="RQv-xl-XXe">
-                            <rect key="frame" x="210" y="122" width="51" height="31"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="confirmSwitchPressed:" destination="-1" eventType="valueChanged" id="RL6-40-CO1"/>
-                            </connections>
-                        </switch>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not yet posted" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="W4g-6v-mHA">
-                            <rect key="frame" x="161" y="156" width="130" height="36"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter monthly bills and income using this form. Record all known inflows and outflows of your monthly income." lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JEc-I6-ZnT">
-                            <rect key="frame" x="8" y="199" width="283" height="106"/>
+                            <rect key="frame" x="8" y="231" width="283" height="86"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -122,6 +108,30 @@
                                 <action selector="selectButtonPressed:" destination="-1" eventType="touchDown" id="VPa-K4-Juc"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="byb-Yx-DiC" customClass="CustomButton">
+                            <rect key="frame" x="122" y="122" width="46" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="type">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="typeButtonPressed:" destination="-1" eventType="touchDown" id="ADO-dI-AUh"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zhX-0g-pNb">
+                            <rect key="frame" x="8" y="126" width="29" height="23"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" id="zLX-oH-Ug2">
+                            <rect key="frame" x="38" y="127" width="76" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="0.82178730870000005" green="0.82178730870000005" blue="0.82178730870000005" alpha="1" colorSpace="calibratedRGB"/>
                 </view>

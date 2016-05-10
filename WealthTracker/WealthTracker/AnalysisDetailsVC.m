@@ -56,9 +56,11 @@
 	self.valuesArray2 = [[NSMutableArray alloc] init];
 	self.colorsArray2 = [[NSMutableArray alloc] init];
 	
-	NSLog(@"+++%d", self.tag);
 	
 	[self setTitle:[ObjectiveCScripts fontAwesomeTextForType:self.tag]];
+	self.monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	NSLog(@"+++tag: %d, monthlyIncome: %d", self.tag, self.monthlyIncome);
+
 
 	self.graphImageView.layer.cornerRadius = 8.0;
 	self.graphImageView.layer.masksToBounds = YES;
@@ -188,14 +190,12 @@
 	[self.valuesArray2 removeAllObjects];
 	[self.colorsArray2 removeAllObjects];
 
-	int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
+	int annualIncome = self.monthlyIncome*12*1.2;
 
 	[self setupTitles];
 	
 	switch (self.tag) {
   case 1:	{ // Home (Real estate)
-	  int monthlyIncome = annual_income*.8/12;
-	  
 	  ValueObj *totalValueObj = [self populateTopCellForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext tag:self.tag];
 
 	  if(totalValueObj.monthlyPayment==0)
@@ -212,15 +212,15 @@
 
 	  [self addBlankLine];
 	  [self addBlackLabelForMoneyWithName:@"Total Monthly Payment" amount:totalValueObj.monthlyPayment];
-	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:monthlyIncome];
+	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:self.monthlyIncome];
 	  
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Net Income" amount:totalValueObj.monthlyPayment otherAmount:monthlyIncome low:25 high:40 revFlg:NO];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Net Income" amount:totalValueObj.monthlyPayment otherAmount:self.monthlyIncome low:25 high:40 revFlg:NO];
  
-	  int idealMortgage = monthlyIncome/4;
+	  int idealMortgage = self.monthlyIncome/4;
 	  idealMortgage = (idealMortgage/100)*100; // rounding!
 	  [self addBlackLabelForMoneyWithName:@"Your Ideal Mortgage" amount:idealMortgage];
 
-	  int idealLoan = (monthlyIncome*118.53/4); // this calculation is based on 4% loan on 15 years
+	  int idealLoan = (self.monthlyIncome*118.53/4); // this calculation is based on 4% loan on 15 years
 	  idealLoan = (idealLoan/25000)*25000; // rounding!
 	  
 	  [self addBlackLabelForMoneyWithName:@"Your Ideal Loan" amount:idealLoan];
@@ -252,8 +252,8 @@
 	  [self addNetChangeLabel:[NSString stringWithFormat:@"Value Change in %d", self.displayYear] amount:valueToday-valueAtEndOfLastYear revFlg:NO];
 	  [self addNetChangeLabel:@"Value Change Last 12 mo" amount:valueToday-valueLastYear revFlg:NO];
 	  [self addBlackLabelForMoneyWithName:@"Value of Vehicles" amount:totalValueObj.value];
-	  [self addBlackLabelForMoneyWithName:@"Annual Income" amount:annual_income];
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annual_income low:25 high:55 revFlg:NO];
+	  [self addBlackLabelForMoneyWithName:@"Annual Income" amount:annualIncome];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Income" amount:totalValueObj.value otherAmount:annualIncome low:25 high:55 revFlg:NO];
 
 	  self.topRightlabel.text = [NSString stringWithFormat:@"%@", [ObjectiveCScripts convertNumberToMoneyString:valueToday]];
 	  self.topRightlabel.textColor = [ObjectiveCScripts colorBasedOnNumber:valueToday lightFlg:NO];
@@ -273,20 +273,20 @@
 	  int badDebtToIncome = 999;
 	  int dti = totalValueObj.balance*12/100;
 	  int homeDTI=(totalValueObj.balance-totalValueObj.badDebt)*12/100;
-	  if(annual_income>0) {
-		  badDebtToIncome = totalValueObj.badDebt*100/annual_income;
+	  if(annualIncome>0) {
+		  badDebtToIncome = totalValueObj.badDebt*100/annualIncome;
 	  }
 	  
-	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annual_income low:150 high:350 revFlg:NO];
-	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annual_income low:16 high:27 revFlg:NO];
-	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annual_income low:19 high:40 revFlg:NO];
+	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annualIncome low:150 high:350 revFlg:NO];
+	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annualIncome low:16 high:27 revFlg:NO];
+	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annualIncome low:19 high:40 revFlg:NO];
 	  
 	  
 	  int detbToAssets = [self addPercentLabelWithName:@"Debt to Assets" amount:totalValueObj.balance otherAmount:totalValueObj.value low:25 high:90 revFlg:NO];
 	  [self addBlackLabelForMoneyWithName:@"Interest per Month" amount:totalValueObj.interest];
 	  int interestToIncome = 999;
-	  if(annual_income>0)
-		  interestToIncome = totalValueObj.interest*100/(annual_income*.8/12);
+	  if(annualIncome>0)
+		  interestToIncome = totalValueObj.interest*100/(annualIncome*.8/12);
 
 	  int debtToday = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
 	  int debtLastMonth = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
@@ -354,7 +354,7 @@
 	  ValueObj *totalValueObj = [self populateTopCellForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext tag:self.tag];
 
 	  [self addMOneyLabel:@"Total Assets" amount:totalValueObj.value revFlg:NO];
-	  [self addMOneyLabel:@"Income" amount:annual_income revFlg:NO];
+	  [self addMOneyLabel:@"Income" amount:annualIncome revFlg:NO];
 	  [self addMOneyLabel:@"Debt" amount:totalValueObj.balance revFlg:YES];
 	  
 	  int netWorthToday = [self netWorthForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
@@ -399,7 +399,7 @@
 		  }
 	  } //<-- for
 	  
-	  [self addConclusionsForWealth:annual_income estValuePerYear:(double)estValuePerYear netWorthToday:netWorthToday monthlyChange:netWorthToday-netWorthLastMonth];
+	  [self addConclusionsForWealth:annualIncome estValuePerYear:(double)estValuePerYear netWorthToday:netWorthToday monthlyChange:netWorthToday-netWorthLastMonth];
 
 	  if(self.topSegment.selectedSegmentIndex==0)
 		  [ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:(netWorthToday-netWorthLastMonth) lightFlg:NO revFlg:NO];

@@ -13,11 +13,35 @@
 #import "CustomSegment.h"
 #import "NSString+FontAwesome.h"
 #import "UIFont+FontAwesome.h"
+#import "GraphLib.h"
+#import "GraphCell.h"
+#import "MultiLineDetailCellWordWrap.h"
 
 @interface TemplateVC : UIViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
+@property (nonatomic, strong) NSMutableArray *itemsArray;
+@property (nonatomic, strong) NSString *analysisStr;
+@property (nonatomic, strong) NSString *titleStr;
+@property (nonatomic, strong) NSString *altStr;
+@property (nonatomic, strong) NSMutableArray *graphObjects;
+@property (nonatomic, strong) IBOutlet UIImageView *chartImageView;
 @property (nonatomic, strong) IBOutlet CustomSegment *mainSegmentControl;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
+@property (nonatomic, strong) IBOutlet UILabel *monthLabel;
+@property (nonatomic, strong) IBOutlet UIView *popupView;
+@property (nonatomic, strong) IBOutlet UITextField *nameTextField;
+@property (nonatomic, strong) IBOutlet UITextField *amountTextField;
+@property (nonatomic) int step;
+@property (nonatomic) double monthlyBudget;
+@property (nonatomic) double monthlySpent;
+@property (nonatomic) double monthlyProjected;
+
+-(float)screenWidth;
+-(float)screenHeight;
+-(IBAction)xButtonClicked:(id)sender;
+-(IBAction)topSegmentChanged:(id)sender;
+-(NSString *)budgetAnalysis:(NSString *)name budget:(int)budget spent:(int)spent;
 
 @end

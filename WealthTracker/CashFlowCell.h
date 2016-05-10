@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomButton.h"
+#import "CashFlowObj.h"
 
 @interface CashFlowCell : UITableViewCell
 
@@ -16,5 +17,9 @@
 @property (nonatomic, retain) UILabel *amountLabel;
 @property (nonatomic, retain) UILabel *amountRemainingLabel;
 @property (nonatomic, retain) CustomButton *checkMarkButton;
+
++(void)populateCell:(CashFlowCell *)cell obj:(CashFlowObj *)obj;
++(NSString *)fASymbolForType:(int)type;
++(NSString *)fANameForType:(int)type;
 
 @end

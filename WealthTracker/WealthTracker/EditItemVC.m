@@ -59,10 +59,8 @@
 
 	[self setupData];
 	
-	if(!self.managedObj) {
-		self.deleteButton.enabled=NO;
+	if(self.type==0)
 		self.deleteButton.hidden=YES;
-	}
 	
 	self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonPressed)];
 
@@ -133,7 +131,6 @@
   case 0: // profile
 			self.topDescLabel.text = @"Profile: This is your basic financial information.";
 			if(self.sub_type==0) {
-			[self insertObjectWithTitle:@"annual_income" desc:@"Approx what is your total annual gross household income this year? Include rental income if you own rental property." value:self.profileObj.income flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"emergency_fund" desc:@"Approx how much is left in your bank account this month after paying bills? We will call this your 'Emergency Fund'." value:self.profileObj.emergency_fund flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"retirement_payments" desc:@"Are you paying into retirement? If so, approx how much per month are you putting into retirement accounts?" value:self.profileObj.retirement_payments flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"age" desc:@"What is your age? (This is only needed to calculate your projected retirement analysis)." value:self.profileObj.age flag:@"N" fieldType:2 listNumber:0];
@@ -192,6 +189,7 @@
 			[self insertObjectWithTitle:@"name" desc:@"Enter a name. Can be anything. Ex: 401k, Stocks, etc" value:self.itemObject.name flag:@"N" fieldType:0 listNumber:0];
 			if([self showThisEntry])
 				[self insertObjectWithTitle:@"value" desc:@"What is the current dollar value?" value:self.itemObject.valueStr flag:@"N" fieldType:1 listNumber:0];
+			[self insertObjectWithTitle:@"monthly_payment" desc:@"Monthly contributions to this account" value:self.itemObject.monthly_payment flag:@"N" fieldType:1 listNumber:0];
 			[self insertObjectWithTitle:@"statement_day" desc:@"What day of the month does your statement arrive?" value:statement_day flag:@"Y" fieldType:2 listNumber:0];
 			
 			break;
@@ -271,8 +269,8 @@
 		if(self.sub_type==1)
 			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"housingFlg"];
 		
-		double annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
-		[ObjectiveCScripts updateSalary:annual_income year:year context:self.managedObjectContext];
+//		double annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
+//		[ObjectiveCScripts updateSalary:annual_income year:year context:self.managedObjectContext];
 		
 		int emergencyFund = [[mo valueForKey:@"emergency_fund"] intValue];
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = 'Asset' AND name = 'Emergency Fund'"];
@@ -308,6 +306,7 @@
 		[keys addObject:obj.title];
 		[values addObject:obj.value];
 		[types addObject:[ObjectiveCScripts typeFromFieldType:obj.fieldType]];
+		NSLog(@"%@ = %@", obj.title, obj.value);
 	}
 	[CoreDataLib updateManagedObject:record keyList:keys valueList:values typeList:types mOC:self.managedObjectContext];
 }
@@ -321,11 +320,12 @@
 		cell = [[MoneyCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	
 	cell.backgroundColor=[UIColor clearColor];
-	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	ItemCellObj *obj = [self.cellObjArray objectAtIndex:indexPath.row];
 	
+	cell.updateButton.hidden=YES;
 	cell.updateButton.tag = indexPath.row;
 	[cell.updateButton addTarget:self
 						  action:@selector(updateButtonClicked:)
@@ -353,13 +353,16 @@
 
 
 
--(void)updateButtonClicked:(id)sender {
-	self.self.stuffChangedFlg=YES;
+-(void)updateButtonClicked:(UIButton *)button {
+	self.tagSelected = (int)button.tag;
+	[self updateRowItem];
+}
+
+-(void)updateRowItem {
+	self.stuffChangedFlg=YES;
 	
 	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"assetsFlg"]])
 		self.cancelButton.enabled=NO;
-	UIButton *button = sender;
-	self.tagSelected = (int)button.tag;
 	ItemCellObj *obj = [self.cellObjArray objectAtIndex:self.tagSelected];
 	if([@"Emergency Fund" isEqualToString:obj.value]) {
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You cannot change this field."];
@@ -450,6 +453,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	self.tagSelected = (int)indexPath.row;
+	[self updateRowItem];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

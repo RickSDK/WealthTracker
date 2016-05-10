@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 #import "ItemObject.h"
 #import <CoreData/CoreData.h>
+#import "NSString+FontAwesome.h"
+#import "UIFont+FontAwesome.h"
+#import "CoreDataLib.h"
 
 #define kTestMode	0
 
@@ -66,6 +69,7 @@
 +(UIImage *)imageForStatus:(int)status;
 +(int)nowYear;
 +(int)nowMonth;
++(int)nowDay;
 +(UIColor *)colorForType:(int)type;
 +(void)fontAwesomeButton:(UIButton *)button title:(NSString *)title icon:(NSString *)icon size:(float)size;
 +(void)fontAwesomeButton:(UIButton *)button type:(int)type size:(float)size;
@@ -75,5 +79,9 @@
 +(NSString *)faIconOfType:(int)type;
 +(double)averageNetWorth:(NSManagedObjectContext *)context;
 +(double)idealNetWorth:(NSManagedObjectContext *)context;
++(NSString *)monthNameForNum:(int)number;
++(int)autoIncrementNumber;
++(double)calculateExpenses:(NSManagedObjectContext *)context;
++(double)calculateIncome:(NSManagedObjectContext *)context;
 
 @end

@@ -39,19 +39,21 @@
 
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d", self.displayYear];
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"INCOME" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	double annual_income=0;
+	double annualIncome=0;
 	BOOL confirmFlg=NO;
 	if(items.count>0) {
 		NSManagedObject *mo = [items objectAtIndex:0];
-		annual_income = [[mo valueForKey:@"amount"] doubleValue];
+		annualIncome = [[mo valueForKey:@"amount"] doubleValue];
 		confirmFlg=YES;
 	}
 	
 	self.statusImageView.image=(confirmFlg)?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
-	if(annual_income==0)
-		annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
+	if(annualIncome==0) {
+		int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+		annualIncome = monthlyIncome*12*1.2;
+	}
 	
-	self.amountTextField.text = [ObjectiveCScripts convertNumberToMoneyString:annual_income];
+	self.amountTextField.text = [ObjectiveCScripts convertNumberToMoneyString:annualIncome];
 
 }
 

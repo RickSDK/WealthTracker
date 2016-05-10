@@ -55,7 +55,7 @@
 	
 	[self displayButtons];
 	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 
 	
 	
@@ -88,6 +88,8 @@
 
 	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
 
 	switch (self.myStep) {
   case 1: {
@@ -127,9 +129,8 @@
 			break;
   }
   case 4: {
-			double annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
 			double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
-	  double target = (annual_income*.8*.05)/12;
+	  double target = (annualIncome*.8*.05)/12;
 	  target = (int)(target/10)*10;
 			self.progressLabel.text = [NSString stringWithFormat:@"Step 4 Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
 			break;
@@ -145,9 +146,8 @@
 			break;
   }
   case 6: {
-			double annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
 			double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
-	  double target = (annual_income*.8*.1)/12;
+	  double target = (annualIncome*.8*.1)/12;
 	  target = (int)(target/10)*10;
 			self.progressLabel.text = [NSString stringWithFormat:@"Step 6 Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
 			break;

@@ -73,10 +73,10 @@
 	switch (self.type) {
   case 1:
 			self.titleLabel.text = @"Number of properties";
-			self.descLabel.text = @"Total number of properties owned.";
+			self.descLabel.text = @"Total number of properties.";
 			break;
   case 2:
-			self.titleLabel.text = @"Number of vehicles owned";
+			self.titleLabel.text = @"Number of vehicles.";
 			self.descLabel.text = @"Total number of all vehicles: Cars, motor-cycles, boats, RVs, anything with a motor.";
 			break;
   case 3:
@@ -84,7 +84,7 @@
 			self.descLabel.text = @"Total number of all credit cards or loans with balances (other than real estate and vehicles).";
 			break;
   case 4:
-			self.titleLabel.text = @"Number of assets";
+			self.titleLabel.text = @"Number of other assets";
 			self.descLabel.text = @"Total number of investment accounts (401k, retirement, stocks, valuable art, bank accounts, etc).";
 			break;
 			

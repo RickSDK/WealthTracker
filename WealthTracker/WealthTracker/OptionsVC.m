@@ -96,8 +96,8 @@
 					  [NSString fontAwesomeIconStringForEnum:FACreditCard],
 					  [NSString fontAwesomeIconStringForEnum:FAUsd],
 					  [NSString fontAwesomeIconStringForEnum:FAMoney],
-					  [NSString fontAwesomeIconStringForEnum:FAArrowUp],
-					  [NSString fontAwesomeIconStringForEnum:FAArrowDown],
+					  [NSString fontAwesomeIconStringForEnum:FACloudUpload],
+					  [NSString fontAwesomeIconStringForEnum:FACloudDownload],
 					  [NSString fontAwesomeIconStringForEnum:FAtrash],
 					  [NSString fontAwesomeIconStringForEnum:FAUser],
 					  [NSString fontAwesomeIconStringForEnum:FAbank],
@@ -145,6 +145,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.row==1) {
+		int expensesTotal=[ObjectiveCScripts calculateExpenses:self.managedObjectContext];
+		int incomeTotal=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+		if(expensesTotal==0 || incomeTotal==0) {
+			[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your expenses and income on the Budget Screen first."];
+			return;
+		}
+
+	}
 	if(indexPath.row<=4 && [ObjectiveCScripts getUserDefaultValue:@"emailAddress"].length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You must be logged in to use this feature."];
 		return;
@@ -167,11 +176,11 @@
 		[ObjectiveCScripts showConfirmationPopup:@"Export Data?" message:@"" delegate:self tag:kExportAlert];
 	}
 	if([kMenu4 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
-		NSArray *items = [CoreDataLib selectRowsFromEntity:@"PROFILE" predicate:nil sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-		if(items.count==0 || [CoreDataLib getAge:self.managedObjectContext]==99)
-			[ObjectiveCScripts showConfirmationPopup:@"Import Data?" message:@"" delegate:self tag:kImporttAlert];
-		else
-			[ObjectiveCScripts showAlertPopup:@"NOTICE" message:@"First delete all your data."];
+//		NSArray *items = [CoreDataLib selectRowsFromEntity:@"PROFILE" predicate:nil sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+//		if(items.count==0 || [CoreDataLib getAge:self.managedObjectContext]==99)
+			[ObjectiveCScripts showConfirmationPopup:@"Import Data?" message:@"Note this will wipe out existing data." delegate:self tag:kImporttAlert];
+//		else
+//			[ObjectiveCScripts showAlertPopup:@"NOTICE" message:@"First delete all your data."];
 	}
 	if([kMenu5 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
 		if([CoreDataLib getAge:self.managedObjectContext]==99)

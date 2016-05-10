@@ -9,6 +9,7 @@
 #import "CashFlowEditItemVC.h"
 #import "ObjectiveCScripts.h"
 #import "CoreDataLib.h"
+#import "CashFlowCell.h"
 
 @interface CashFlowEditItemVC ()
 
@@ -31,6 +32,10 @@
 	
 	self.buttonArray = [[NSMutableArray alloc] init];
 	
+	self.FAtypeLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	self.type = self.cashFlowObj.type;
+
+	
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
 	for(NSManagedObject *item in items) {
 		[self.buttonArray addObject:[item valueForKey:@"name"]];
@@ -46,7 +51,7 @@
 		if(amount<0)
 			amount*=-1;
 		else
-			self.typeSwitch.on=NO;
+			self.billSwitch.on=NO;
 		
 		self.amountTextField.text = [ObjectiveCScripts convertNumberToMoneyString:amount];
 		self.dayTextField.text = [NSString stringWithFormat:@"%d", [[self.managedObject valueForKey:@"statement_day"] intValue]];
@@ -61,7 +66,7 @@
 
 	
 	[self checkConfirmSwitch];
-	[self checkTypeSwitch];
+	[self checkbillSwitch];
 
 	[self checkSubmitButtonWithName:self.nameTextField.text amount:self.amountTextField.text day:self.dayTextField.text];
 	
@@ -69,9 +74,20 @@
 
 }
 
+-(void)displayFA {
+	if(self.billSwitch.on) {
+		self.FAtypeLabel.text = [CashFlowCell fASymbolForType:self.type];
+		self.typeDescLabel.text = [CashFlowCell fANameForType:self.type];
+	} else {
+		self.FAtypeLabel.text = [NSString fontAwesomeIconStringForEnum:FAMoney];
+		self.typeDescLabel.text = @"Income";
+	}
+
+}
+
 -(void)textFieldDidChangeNotification:(id)sender {
 	
-	if(self.nameTextField.text.length==0 && self.typeSwitch.on && !self.okToEditFlg) {
+	if(self.nameTextField.text.length==0 && self.billSwitch.on && !self.okToEditFlg) {
 		[self.nameTextField resignFirstResponder];
 		[ObjectiveCScripts showAlertPopup:@"Press Select First" message:@""];
 	}
@@ -137,9 +153,10 @@
 		self.managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"CASH_FLOW" inManagedObjectContext:self.managedObjectContext];
 	[self.managedObject setValue:self.nameTextField.text forKey:@"name"];
 	double amount = [ObjectiveCScripts convertMoneyStringToDouble:self.amountTextField.text];
-	if(self.typeSwitch.on)
+	if(self.billSwitch.on)
 		amount*=-1;
 	[self.managedObject setValue:[NSNumber numberWithInt:(int)amount] forKey:@"amount"];
+	[self.managedObject setValue:[NSNumber numberWithInt:(int)self.type] forKey:@"type"];
 	[self.managedObject setValue:[NSNumber numberWithBool:self.confirmSwitch.on] forKey:@"confirmFlg"];
 	[self.managedObject setValue:[NSNumber numberWithInt:[self.dayTextField.text intValue]] forKey:@"statement_day"];
 	[self.managedObjectContext save:nil];
@@ -147,19 +164,20 @@
 	
 }
 
-- (IBAction) typeSwitchPressed: (id) sender {
-	[self checkTypeSwitch];
+- (IBAction) billSwitchPressed: (id) sender {
+	[self checkbillSwitch];
 }
 
--(void)checkTypeSwitch {
-	if(self.typeSwitch.on) {
+-(void)checkbillSwitch {
+	if(self.billSwitch.on) {
 		self.typeLabel.text = @"Bill (outflow)";
 		self.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
 	} else {
 		self.typeLabel.text = @"Income";
 		self.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
 	}
-	self.selectButton.enabled=self.typeSwitch.on;
+	self.selectButton.enabled=self.billSwitch.on;
+	[self displayFA];
 }
 
 - (IBAction) confirmSwitchPressed: (id) sender {
@@ -208,6 +226,13 @@
 			[self.nameTextField becomeFirstResponder];
 		}
 	}
+}
+
+- (IBAction) typeButtonPressed: (id) sender {
+	self.type++;
+	if(self.type>8)
+		self.type=0;
+	[self displayFA];
 }
 
 

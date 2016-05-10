@@ -39,6 +39,7 @@
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
 @property (nonatomic) int monthOffset;
+@property (nonatomic) int monthlyIncome;
 @property (nonatomic) CGPoint startTouchPosition;
 @property (nonatomic) float startDegree;
 

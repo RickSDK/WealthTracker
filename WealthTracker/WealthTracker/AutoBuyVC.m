@@ -20,17 +20,18 @@
     [super viewDidLoad];
 	[self setTitle:@"Auto Purchase"];
 	
-	int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
-	if(annual_income<=0)
-		annual_income=20000;
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
+	if(annualIncome<=0)
+		annualIncome=20000;
 	
-	int amount = (annual_income/200)*100;
+	int amount = (annualIncome/200)*100;
 	self.topLabel.text = [NSString stringWithFormat:@"Note: The real-time value of your vehicles combined, should not exceed 50%% of your annual Income. So in your case, your vehicles should not exceed %@.", [ObjectiveCScripts convertNumberToMoneyString:amount]];
 
 	int vehicleAmount = [self vehicleValueForMonth:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] context:self.managedObjectContext tag:1];
 	
 	self.totalLabel.text = [ObjectiveCScripts convertNumberToMoneyString:vehicleAmount];
-	self.percentLabel.text = [NSString stringWithFormat:@"%d%%", vehicleAmount*100/annual_income];
+	self.percentLabel.text = [NSString stringWithFormat:@"%d%%", vehicleAmount*100/annualIncome];
 	
 	int amountRemaining = amount-vehicleAmount;
 	if(amountRemaining<0)

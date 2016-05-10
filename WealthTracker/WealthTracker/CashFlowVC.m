@@ -11,6 +11,7 @@
 #import "ObjectiveCScripts.h"
 #import "CoreDataLib.h"
 #import "CashFlowCell.h"
+#import "CashFlowObj.h"
 
 @interface CashFlowVC ()
 
@@ -68,7 +69,9 @@
 	
 	[self.mainTableView reloadData];
 	
-	if(minimum+emergency<0)
+	if(self.amountTextField.text.length<3)
+		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"How much money is currently in your bank account? Enter that number in the bank account field."];
+	else if(minimum+emergency<0)
 		[ObjectiveCScripts showAlertPopup:@"Notice!!" message:@"You are in danger of overdrawing your account!"];
 	
 	[self.mainTableView reloadData];
@@ -106,45 +109,27 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%d", (long)indexPath.section, (int)indexPath.row];
 	CashFlowCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	NSManagedObject *mo = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	
 	if(cell==nil) {
 		cell = [[CashFlowCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	}
-	cell.dayLabel.text = [NSString stringWithFormat:@"%d", [[mo valueForKey:@"statement_day"] intValue]];
-	cell.nameLabel.text = [mo valueForKey:@"name"];
-	double amount = [[mo valueForKey:@"amount"] doubleValue];
+
+	NSManagedObject *mo = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	CashFlowObj *obj = [CashFlowObj objFromMO:mo context:self.managedObjectContext];
+	[CashFlowCell populateCell:cell obj:obj];
 
 	cell.checkMarkButton.tag=indexPath.row;
 	[cell.checkMarkButton addTarget:self action:@selector(checkMarkPressed:) forControlEvents:UIControlEventTouchDown];
 
-	if([[mo valueForKey:@"confirmFlg"] boolValue]) {
-		cell.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
-		[cell.checkMarkButton setBackgroundImage:[UIImage imageNamed:@"checkMark.jpg"] forState:UIControlStateNormal];
-	} else {
-		[cell.checkMarkButton setBackgroundImage:nil forState:UIControlStateNormal];
-		if(amount>=0)
-			cell.backgroundColor=[UIColor colorWithRed:.9 green:1 blue:.9 alpha:1];
-		else
-			cell.backgroundColor=[UIColor colorWithRed:1 green:.9 blue:.9 alpha:1];
-	}
-
-	cell.amountLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:amount lightFlg:NO];
-	if(amount<0)
-		amount*=-1;
-	cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:amount];
-	
 	double amountRemaining = [[self.amountsArray objectAtIndex:indexPath.row] doubleValue];
 	cell.amountRemainingLabel.text = [NSString stringWithFormat:@"(%@)", [ObjectiveCScripts convertNumberToMoneyString:amountRemaining]];
 	cell.amountRemainingLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:amountRemaining lightFlg:NO];
 
-	
-	cell.accessoryType= UITableViewCellAccessoryNone;
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	return cell;
 }
 
@@ -214,9 +199,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	NSManagedObject *mo = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	CashFlowEditItemVC *detailViewController = [[CashFlowEditItemVC alloc] initWithNibName:@"CashFlowEditItemVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	detailViewController.managedObject = mo;
+	detailViewController.cashFlowObj = [CashFlowObj objFromMO:mo context:self.managedObjectContext];
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 

@@ -143,6 +143,24 @@
 		6BB455FB1CAC52350082F38C /* FinancesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB455F91CAC52340082F38C /* FinancesVC.m */; };
 		6BB455FC1CAC52350082F38C /* FinancesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB455FA1CAC52340082F38C /* FinancesVC.xib */; };
 		6BB455FE1CAC725E0082F38C /* bundles.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6BB455FD1CAC725E0082F38C /* bundles.rtf */; };
+		6BB68BA11CDBD80C00D71701 /* BudgetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68B9F1CDBD80C00D71701 /* BudgetVC.m */; };
+		6BB68BA21CDBD80C00D71701 /* BudgetVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BA01CDBD80C00D71701 /* BudgetVC.xib */; };
+		6BB68BA51CDBDB4D00D71701 /* BalanceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BA41CDBDB4D00D71701 /* BalanceButton.m */; };
+		6BB68BA91CDBDBFB00D71701 /* StatsPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BA71CDBDBFB00D71701 /* StatsPageVC.m */; };
+		6BB68BAA1CDBDBFB00D71701 /* StatsPageVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BA81CDBDBFB00D71701 /* StatsPageVC.xib */; };
+		6BB68BAE1CDC097300D71701 /* FixedExpensesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BAC1CDC097300D71701 /* FixedExpensesVC.m */; };
+		6BB68BAF1CDC097300D71701 /* FixedExpensesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BAD1CDC097300D71701 /* FixedExpensesVC.xib */; };
+		6BB68BB21CDC098000D71701 /* ItemTemplateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BB11CDC098000D71701 /* ItemTemplateVC.m */; };
+		6BB68BB61CDC099F00D71701 /* AdjustBudgetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BB41CDC099F00D71701 /* AdjustBudgetVC.m */; };
+		6BB68BB71CDC099F00D71701 /* AdjustBudgetVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BB51CDC099F00D71701 /* AdjustBudgetVC.xib */; };
+		6BB68BBB1CDC09CE00D71701 /* EditBudgetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BB91CDC09CE00D71701 /* EditBudgetVC.m */; };
+		6BB68BBC1CDC09CE00D71701 /* EditBudgetVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BBA1CDC09CE00D71701 /* EditBudgetVC.xib */; };
+		6BB68BC51CDC5B2000D71701 /* CashFlowObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BC41CDC5B2000D71701 /* CashFlowObj.m */; };
+		6BB68BD01CDDA0FF00D71701 /* DebtSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BCF1CDDA0FF00D71701 /* DebtSegment.m */; };
+		6BB68BD41CDE431D00D71701 /* PurchaseObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD31CDE431D00D71701 /* PurchaseObj.m */; };
+		6BB68BD71CDE446200D71701 /* PurchaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD61CDE446200D71701 /* PurchaseCell.m */; };
+		6BB68BDB1CDE592100D71701 /* IncomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD91CDE592100D71701 /* IncomeVC.m */; };
+		6BB68BDC1CDE592100D71701 /* IncomeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BDA1CDE592100D71701 /* IncomeVC.xib */; };
 		6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE51BF3C47F001D372F /* vault.jpg */; };
 		6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */; };
 		6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */; };
@@ -389,6 +407,37 @@
 		6BB455F91CAC52340082F38C /* FinancesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FinancesVC.m; sourceTree = "<group>"; };
 		6BB455FA1CAC52340082F38C /* FinancesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FinancesVC.xib; sourceTree = "<group>"; };
 		6BB455FD1CAC725E0082F38C /* bundles.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = bundles.rtf; sourceTree = "<group>"; };
+		6BB68B9E1CDBD80C00D71701 /* BudgetVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BudgetVC.h; sourceTree = "<group>"; };
+		6BB68B9F1CDBD80C00D71701 /* BudgetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BudgetVC.m; sourceTree = "<group>"; };
+		6BB68BA01CDBD80C00D71701 /* BudgetVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BudgetVC.xib; sourceTree = "<group>"; };
+		6BB68BA31CDBDB4D00D71701 /* BalanceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalanceButton.h; sourceTree = "<group>"; };
+		6BB68BA41CDBDB4D00D71701 /* BalanceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalanceButton.m; sourceTree = "<group>"; };
+		6BB68BA61CDBDBFB00D71701 /* StatsPageVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsPageVC.h; sourceTree = "<group>"; };
+		6BB68BA71CDBDBFB00D71701 /* StatsPageVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsPageVC.m; sourceTree = "<group>"; };
+		6BB68BA81CDBDBFB00D71701 /* StatsPageVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StatsPageVC.xib; sourceTree = "<group>"; };
+		6BB68BAB1CDC097300D71701 /* FixedExpensesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixedExpensesVC.h; sourceTree = "<group>"; };
+		6BB68BAC1CDC097300D71701 /* FixedExpensesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FixedExpensesVC.m; sourceTree = "<group>"; };
+		6BB68BAD1CDC097300D71701 /* FixedExpensesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FixedExpensesVC.xib; sourceTree = "<group>"; };
+		6BB68BB01CDC098000D71701 /* ItemTemplateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemTemplateVC.h; sourceTree = "<group>"; };
+		6BB68BB11CDC098000D71701 /* ItemTemplateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemTemplateVC.m; sourceTree = "<group>"; };
+		6BB68BB31CDC099F00D71701 /* AdjustBudgetVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdjustBudgetVC.h; sourceTree = "<group>"; };
+		6BB68BB41CDC099F00D71701 /* AdjustBudgetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdjustBudgetVC.m; sourceTree = "<group>"; };
+		6BB68BB51CDC099F00D71701 /* AdjustBudgetVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdjustBudgetVC.xib; sourceTree = "<group>"; };
+		6BB68BB81CDC09CE00D71701 /* EditBudgetVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditBudgetVC.h; sourceTree = "<group>"; };
+		6BB68BB91CDC09CE00D71701 /* EditBudgetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditBudgetVC.m; sourceTree = "<group>"; };
+		6BB68BBA1CDC09CE00D71701 /* EditBudgetVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditBudgetVC.xib; sourceTree = "<group>"; };
+		6BB68BC31CDC5B2000D71701 /* CashFlowObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CashFlowObj.h; sourceTree = "<group>"; };
+		6BB68BC41CDC5B2000D71701 /* CashFlowObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CashFlowObj.m; sourceTree = "<group>"; };
+		6BB68BCE1CDDA0FF00D71701 /* DebtSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebtSegment.h; sourceTree = "<group>"; };
+		6BB68BCF1CDDA0FF00D71701 /* DebtSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebtSegment.m; sourceTree = "<group>"; };
+		6BB68BD11CDE3B5F00D71701 /* WealthTracker 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "WealthTracker 2.xcdatamodel"; sourceTree = "<group>"; };
+		6BB68BD21CDE431D00D71701 /* PurchaseObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseObj.h; sourceTree = "<group>"; };
+		6BB68BD31CDE431D00D71701 /* PurchaseObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseObj.m; sourceTree = "<group>"; };
+		6BB68BD51CDE446200D71701 /* PurchaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseCell.h; sourceTree = "<group>"; };
+		6BB68BD61CDE446200D71701 /* PurchaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseCell.m; sourceTree = "<group>"; };
+		6BB68BD81CDE592100D71701 /* IncomeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncomeVC.h; sourceTree = "<group>"; };
+		6BB68BD91CDE592100D71701 /* IncomeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomeVC.m; sourceTree = "<group>"; };
+		6BB68BDA1CDE592100D71701 /* IncomeVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncomeVC.xib; sourceTree = "<group>"; };
 		6BBEDEE51BF3C47F001D372F /* vault.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vault.jpg; sourceTree = "<group>"; };
 		6BBEDEE71BF3C4AC001D372F /* LockAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockAppVC.h; sourceTree = "<group>"; };
 		6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockAppVC.m; sourceTree = "<group>"; };
@@ -500,6 +549,26 @@
 				6B416EEF1B506E0B009C9834 /* MainMenuVC.h */,
 				6B416EF01B506E0B009C9834 /* MainMenuVC.m */,
 				6B2E23E11B54372B00CC2851 /* MainMenuVC.xib */,
+				6BB68B9E1CDBD80C00D71701 /* BudgetVC.h */,
+				6BB68B9F1CDBD80C00D71701 /* BudgetVC.m */,
+				6BB68BA01CDBD80C00D71701 /* BudgetVC.xib */,
+				6BB68BB81CDC09CE00D71701 /* EditBudgetVC.h */,
+				6BB68BB91CDC09CE00D71701 /* EditBudgetVC.m */,
+				6BB68BBA1CDC09CE00D71701 /* EditBudgetVC.xib */,
+				6BB68BB31CDC099F00D71701 /* AdjustBudgetVC.h */,
+				6BB68BB41CDC099F00D71701 /* AdjustBudgetVC.m */,
+				6BB68BB51CDC099F00D71701 /* AdjustBudgetVC.xib */,
+				6BB68BA61CDBDBFB00D71701 /* StatsPageVC.h */,
+				6BB68BA71CDBDBFB00D71701 /* StatsPageVC.m */,
+				6BB68BA81CDBDBFB00D71701 /* StatsPageVC.xib */,
+				6BB68BB01CDC098000D71701 /* ItemTemplateVC.h */,
+				6BB68BB11CDC098000D71701 /* ItemTemplateVC.m */,
+				6BB68BAB1CDC097300D71701 /* FixedExpensesVC.h */,
+				6BB68BAC1CDC097300D71701 /* FixedExpensesVC.m */,
+				6BB68BAD1CDC097300D71701 /* FixedExpensesVC.xib */,
+				6BB68BD81CDE592100D71701 /* IncomeVC.h */,
+				6BB68BD91CDE592100D71701 /* IncomeVC.m */,
+				6BB68BDA1CDE592100D71701 /* IncomeVC.xib */,
 				6B2353BA1C932B50008947AF /* PlanningVC.h */,
 				6B2353BB1C932B50008947AF /* PlanningVC.m */,
 				6B2353BC1C932B50008947AF /* PlanningVC.xib */,
@@ -721,6 +790,10 @@
 				6B2353C01C9391FF008947AF /* ListChartSegment.m */,
 				6B2353C71C948150008947AF /* PieChartSegment.h */,
 				6B2353C81C948150008947AF /* PieChartSegment.m */,
+				6BB68BCE1CDDA0FF00D71701 /* DebtSegment.h */,
+				6BB68BCF1CDDA0FF00D71701 /* DebtSegment.m */,
+				6BB68BA31CDBDB4D00D71701 /* BalanceButton.h */,
+				6BB68BA41CDBDB4D00D71701 /* BalanceButton.m */,
 				6B3C180A1B70381E0039733B /* CustomView.h */,
 				6B3C180B1B70381E0039733B /* CustomView.m */,
 				6B416F141B509FC2009C9834 /* WebServiceView.h */,
@@ -766,6 +839,8 @@
 				6BC472271B6151D400F68341 /* UpdateWebCell.m */,
 				6B3C18071B7015550039733B /* CashFlowCell.h */,
 				6B3C18081B7015550039733B /* CashFlowCell.m */,
+				6BB68BD51CDE446200D71701 /* PurchaseCell.h */,
+				6BB68BD61CDE446200D71701 /* PurchaseCell.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -781,10 +856,14 @@
 				6BE6B2F61B6A90B700C434BA /* ValueObj.m */,
 				6B8EB9911B5218BD00F8A20B /* ProfileObj.h */,
 				6B8EB9921B5218BD00F8A20B /* ProfileObj.m */,
+				6BB68BC31CDC5B2000D71701 /* CashFlowObj.h */,
+				6BB68BC41CDC5B2000D71701 /* CashFlowObj.m */,
 				6B6940F51B646C5D00088D55 /* GraphObject.h */,
 				6B6940F61B646C5D00088D55 /* GraphObject.m */,
 				6BD0D8E31B83DB320062E152 /* MultiLineObj.h */,
 				6BD0D8E41B83DB320062E152 /* MultiLineObj.m */,
+				6BB68BD21CDE431D00D71701 /* PurchaseObj.h */,
+				6BB68BD31CDE431D00D71701 /* PurchaseObj.m */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -871,11 +950,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B63899B1B7BA2A100260656 /* Icon-76.png in Resources */,
+				6BB68BAA1CDBDBFB00D71701 /* StatsPageVC.xib in Resources */,
 				6B2353B41C911928008947AF /* HomeBuyVC.xib in Resources */,
 				6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */,
 				6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */,
 				6B63899C1B7BA2A100260656 /* Icon-80.png in Resources */,
 				6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */,
+				6BB68BBC1CDC09CE00D71701 /* EditBudgetVC.xib in Resources */,
 				6B416ED51B506D53009C9834 /* Main.storyboard in Resources */,
 				6B644CBE1B68204900483F98 /* PrivacyPolicyVC.xib in Resources */,
 				6B0444421B59DD48001E7007 /* redCircle.png in Resources */,
@@ -901,6 +982,7 @@
 				6B416F031B508DFB009C9834 /* green.png in Resources */,
 				6B2E24031B55BB2200CC2851 /* AnalysisDetailsVC.xib in Resources */,
 				6B38E3DC1B6C565000EF8D40 /* CreditScoreTracker.xib in Resources */,
+				6BB68BDC1CDE592100D71701 /* IncomeVC.xib in Resources */,
 				6B416F2B1B519211009C9834 /* VehiclesVC.xib in Resources */,
 				6B8EB9901B51DF7F00F8A20B /* SelectListVC.xib in Resources */,
 				6B63899D1B7BA2A100260656 /* Icon-120.png in Resources */,
@@ -917,6 +999,7 @@
 				6B416EF61B507022009C9834 /* greenGradient.png in Resources */,
 				6B644CB41B68201800483F98 /* LoginVC.xib in Resources */,
 				6B5B87F01B668EF600BBE741 /* asset.png in Resources */,
+				6BB68BAF1CDC097300D71701 /* FixedExpensesVC.xib in Resources */,
 				6B416EDA1B506D53009C9834 /* LaunchScreen.xib in Resources */,
 				6B42B0031BA8BBEA00CC649C /* RateVC.xib in Resources */,
 				6BB354E71B744C1F0003987A /* pieChart.png in Resources */,
@@ -931,6 +1014,7 @@
 				6B2E23E21B54372B00CC2851 /* MainMenuVC.xib in Resources */,
 				6B42B00D1BAB309400CC649C /* TipsVC.xib in Resources */,
 				6B644CC51B6828C100483F98 /* activityPopup.png in Resources */,
+				6BB68BB71CDC099F00D71701 /* AdjustBudgetVC.xib in Resources */,
 				6BB354E61B744C1F0003987A /* lineChart.png in Resources */,
 				6B2E23F91B556FAB00CC2851 /* AnalysisVC.xib in Resources */,
 				6B8EB9841B51B38000F8A20B /* EditItemVC.xib in Resources */,
@@ -943,6 +1027,7 @@
 				6BFE31BB1B73E143002F2343 /* checkMark.jpg in Resources */,
 				6BB33B9D1CD1519200C32AF1 /* UpdatePortfolioVC.xib in Resources */,
 				6B63899F1B7BA2A100260656 /* Icon-152.png in Resources */,
+				6BB68BA21CDBD80C00D71701 /* BudgetVC.xib in Resources */,
 				6B38E3E01B6C678900EF8D40 /* karma.png in Resources */,
 				6B644CB91B68203400483F98 /* NewAccountVC.xib in Resources */,
 				6B2A7FD51B8149CE009AF987 /* BreakdownSingleMonthVC.xib in Resources */,
@@ -988,10 +1073,13 @@
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
 				6B2353BD1C932B50008947AF /* PlanningVC.m in Sources */,
 				6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */,
+				6BB68BA51CDBDB4D00D71701 /* BalanceButton.m in Sources */,
 				6B644CC21B68206000483F98 /* InAppPurchaseVC.m in Sources */,
+				6BB68BD71CDE446200D71701 /* PurchaseCell.m in Sources */,
 				6B416F261B50CF81009C9834 /* MoneyCell.m in Sources */,
 				6B644CB81B68203400483F98 /* NewAccountVC.m in Sources */,
 				6B416ECF1B506D53009C9834 /* MasterViewController.m in Sources */,
+				6BB68BD41CDE431D00D71701 /* PurchaseObj.m in Sources */,
 				6B04442E1B58973A001E7007 /* ChartsVC.m in Sources */,
 				6B2353C11C9391FF008947AF /* ListChartSegment.m in Sources */,
 				6BD0D8E11B83D9D70062E152 /* MonthlySpendingVC.m in Sources */,
@@ -1004,7 +1092,10 @@
 				6B2E240C1B582E6F00CC2851 /* GraphLib.m in Sources */,
 				6B8EB99F1B52273100F8A20B /* NSString+ATTString.m in Sources */,
 				6B416ECC1B506D53009C9834 /* WealthTracker.xcdatamodeld in Sources */,
+				6BB68BB21CDC098000D71701 /* ItemTemplateVC.m in Sources */,
+				6BB68BAE1CDC097300D71701 /* FixedExpensesVC.m in Sources */,
 				6B5B87F71B681C0D00BBE741 /* OptionsVC.m in Sources */,
+				6BB68BB61CDC099F00D71701 /* AdjustBudgetVC.m in Sources */,
 				6BBEDEF61C0E2F88001D372F /* NSString+FontAwesome.m in Sources */,
 				6B3C180C1B70381E0039733B /* CustomView.m in Sources */,
 				6BBEDEFC1C0E2F93001D372F /* UIImage+FontAwesome.m in Sources */,
@@ -1015,14 +1106,19 @@
 				6BDCEF191B5FFCD500DDA3AC /* BreakdownByMonthVC.m in Sources */,
 				6B8EB9991B5226FC00F8A20B /* CoreDataLib.m in Sources */,
 				6B416F171B509FC2009C9834 /* CustomButton.m in Sources */,
+				6BB68BA11CDBD80C00D71701 /* BudgetVC.m in Sources */,
 				6BB33B9C1CD1519200C32AF1 /* UpdatePortfolioVC.m in Sources */,
 				6B2353C91C948150008947AF /* PieChartSegment.m in Sources */,
 				6B3C18051B6FEE170039733B /* CashFlowEditItemVC.m in Sources */,
 				6B9673FE1B6B286400641C7F /* CustomImageView.m in Sources */,
+				6BB68BC51CDC5B2000D71701 /* CashFlowObj.m in Sources */,
 				6BBEDEFB1C0E2F93001D372F /* UIFont+FontAwesome.m in Sources */,
 				6B644CB31B68201800483F98 /* LoginVC.m in Sources */,
+				6BB68BA91CDBDBFB00D71701 /* StatsPageVC.m in Sources */,
 				6BDCEF1D1B600C3500DDA3AC /* BreakdownCell.m in Sources */,
 				6BE6B2F71B6A90B700C434BA /* ValueObj.m in Sources */,
+				6BB68BDB1CDE592100D71701 /* IncomeVC.m in Sources */,
+				6BB68BBB1CDC09CE00D71701 /* EditBudgetVC.m in Sources */,
 				6B8EB98F1B51DF7F00F8A20B /* SelectListVC.m in Sources */,
 				6B8EB9A21B530EFB00F8A20B /* ItemCell.m in Sources */,
 				6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */,
@@ -1032,6 +1128,7 @@
 				6B416F161B509FC2009C9834 /* SoundsLib.m in Sources */,
 				6B416F0A1B509109009C9834 /* ObjectiveCScripts.m in Sources */,
 				6B416EC91B506D52009C9834 /* AppDelegate.m in Sources */,
+				6BB68BD01CDDA0FF00D71701 /* DebtSegment.m in Sources */,
 				6BE6B2F31B6A855000C434BA /* InfoVC.m in Sources */,
 				6B8EB98B1B51D75A00F8A20B /* ItemObject.m in Sources */,
 				6B2E24091B58268E00CC2851 /* GraphCell.m in Sources */,
@@ -1276,9 +1373,10 @@
 		6B416ECA1B506D53009C9834 /* WealthTracker.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6BB68BD11CDE3B5F00D71701 /* WealthTracker 2.xcdatamodel */,
 				6B416ECB1B506D53009C9834 /* WealthTracker.xcdatamodel */,
 			);
-			currentVersion = 6B416ECB1B506D53009C9834 /* WealthTracker.xcdatamodel */;
+			currentVersion = 6BB68BD11CDE3B5F00D71701 /* WealthTracker 2.xcdatamodel */;
 			path = WealthTracker.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

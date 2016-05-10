@@ -55,6 +55,8 @@
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
 	self.graphYear = self.nowYear;
+	
+	self.topView.backgroundColor = [ObjectiveCScripts mediumkColor];
 
 //	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
 
@@ -168,6 +170,30 @@
 	[ObjectiveCScripts displayNetChangeLabel:self.amountLabel amount:equityChange lightFlg:YES revFlg:NO];
 }
 
+-(void)checkHighLow {
+	self.highValue=0;
+	self.lowValue=9999999;
+	int month = self.displayMonth;
+	int year = self.displayYear-1;
+	for(int i=1; i<=13; i++) {
+		NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", year, month, [self.itemObject.rowId intValue]];
+		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+		if(items.count>0) {
+			NSManagedObject *mo = [items objectAtIndex:0];
+			double value = [[mo valueForKey:@"asset_value"] doubleValue];
+			if(value>self.highValue)
+				self.highValue=value;
+			if(value<self.lowValue)
+				self.lowValue=value;
+		}
+		month++;
+		if(month>12) {
+			month=1;
+			year++;
+		}
+	}
+}
+
 
 -(void)setupData {
 	[self.namesArray removeAllObjects];
@@ -188,6 +214,8 @@
 		balance = [[mo valueForKey:@"balance_owed"] doubleValue];
 		interest = [[mo valueForKey:@"interest"] doubleValue];
 	}
+	
+	[self checkHighLow];
 	
 	if(balance<=0)
 		self.payoffButton.enabled=NO;
@@ -227,11 +255,12 @@
 			
 		}
 		
-		int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
-		if(annual_income>0) {
+		int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+		int annualIncome = monthlyIncome*12*1.2;
+		if(annualIncome>0) {
 			[self.namesArray addObject:@"% of Gross Income"];
 			double totalPayment = [self.itemObject.monthly_payment doubleValue]+[self.itemObject.homeowner_dues doubleValue];
-			int percent = round(totalPayment*1200/annual_income);
+			int percent = round(totalPayment*1200/annualIncome);
 			[self.valuesArray addObject:[NSString stringWithFormat:@"%d%%", percent]];
 			[self.colorsArray addObject:[UIColor blackColor]];
 		}
@@ -244,6 +273,10 @@
 	[self.colorsArray addObject:[UIColor blackColor]];
 	
 	double loan_balance=balance;
+	int equityToday = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
+	int equityLastYear = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
+	int equityLast12 = equityToday-equityLastYear;
+	double valueLastYear = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 	
 	if(type<3) {
 		[self addBlankLine];
@@ -256,31 +289,49 @@
 		[self.valuesArray addObject:[NSString stringWithFormat:@"%@ (%@)", [ObjectiveCScripts convertNumberToMoneyString:equity], percentStr]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:equity lightFlg:NO]];
 
-		int equityToday = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
 		int equityLastMonth = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
 		int equityLastQuarter = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-3]];
-		int equityLastYear = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 		
 		[self addNetChangeLineWithName:@"Equity This Month" amount:equityToday-equityLastMonth revFlg:NO];
 		[self addNetChangeLineWithName:@"Equity Last 3 Months" amount:equityToday-equityLastQuarter revFlg:NO];
 		[self addNetChangeLineWithName:@"Equity Last 12 Months" amount:equityToday-equityLastYear revFlg:NO];
 
 	}
+	
+	int investment = ([self.itemObject.monthly_payment intValue] + [self.itemObject.homeowner_dues intValue])*12;
+	if(investment>0) {
+		[self.namesArray addObject:@"Investment Last 12 months"];
+		[self.valuesArray addObject:[self format:[NSString stringWithFormat:@"%d", investment] type:1]];
+		[self.colorsArray addObject:[UIColor blackColor]];
+
+		[self addNetChangePercentLineWithName:@"Annual ROI" amount:valueLastYear+equityLast12-investment prevAmount:valueLastYear revFlg:NO];
+	}
+
 	if(value>0) {
 		[self addBlankLine];
 
 		double valueToday = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
 		double value30 = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-1]];
-		double valueLastYear = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
 		double valueLastDec = [self valueForMonth:[NSString stringWithFormat:@"%d%02d", self.displayYear-1, 12]];
 		
 		[self.namesArray addObject:@"Value"];
 		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:value]];
 		[self.colorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:value lightFlg:NO]];
+		
+		[self.namesArray addObject:@"12 Month High"];
+		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:self.highValue]];
+		[self.colorsArray addObject:[UIColor blackColor]];
+		
+		[self.namesArray addObject:@"12 Month Low"];
+		[self.valuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:self.lowValue]];
+		[self.colorsArray addObject:[UIColor blackColor]];
+		
+		[self addNetChangePercentLineWithName:@"Change This Month" amount:valueToday prevAmount:value30 revFlg:NO];
+		[self addNetChangePercentLineWithName:@"Current Annual Rate" amount:value30+((valueToday-value30)*12) prevAmount:value30 revFlg:NO];
+		[self addNetChangePercentLineWithName:[NSString stringWithFormat:@"Change in %d", self.displayYear] amount:valueToday prevAmount:valueLastDec revFlg:NO];
+		[self addNetChangePercentLineWithName:@"Change Last 12 Months" amount:valueToday prevAmount:valueLastYear revFlg:NO];
+		
 
-		[self addNetChangePercentLineWithName:@"Value This Month" amount:valueToday prevAmount:value30 revFlg:NO];
-		[self addNetChangePercentLineWithName:[NSString stringWithFormat:@"Value in %d", self.displayYear] amount:valueToday prevAmount:valueLastDec revFlg:NO];
-		[self addNetChangePercentLineWithName:@"Value Last 12 Months" amount:valueToday prevAmount:valueLastYear revFlg:NO];
 	}
 	
 	if(loan_balance>0) {
@@ -302,8 +353,8 @@
 			[self.colorsArray addObject:[UIColor blackColor]];
 		}
 		
-		[self addNetChangeLineWithName:@"Balance This Month" amount:balToday-bal30 revFlg:YES];
-		[self addNetChangeLineWithName:@"Balance Last 3 Months" amount:balToday-bal90 revFlg:YES];
+		[self addNetChangeLineWithName:@"Change This Month" amount:balToday-bal30 revFlg:YES];
+		[self addNetChangeLineWithName:@"Change Last 3 Months" amount:balToday-bal90 revFlg:YES];
 		
 		int principalPaid = [ObjectiveCScripts calculatePaydownRate:balToday balLastYear:balLastYear bal30:bal30 bal90:bal90];
 		if(principalPaid>0) {

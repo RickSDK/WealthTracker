@@ -14,6 +14,7 @@
 #import "RetirementVC.h"
 #import "HomeBuyVC.h"
 #import "AutoBuyVC.h"
+#import "PlanningVC.h"
 
 @interface AnalysisVC ()
 
@@ -44,6 +45,15 @@
 	self.advisorLabel.text = [NSString fontAwesomeIconStringForEnum:FAUser];
 	
 	[self checkStatusLights];
+	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
+
+}
+
+-(void)planButtonPressed {
+	PlanningVC *detailViewController = [[PlanningVC alloc] initWithNibName:@"PlanningVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(void)retirementButtonPressed {
@@ -53,7 +63,8 @@
 }
 
 -(void)checkStatusLights {
-	int annual_income = [CoreDataLib getNumberFromProfile:@"annual_income" mOC:self.managedObjectContext];
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
 	
 	
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"name" mOC:self.managedObjectContext ascendingFlg:NO];
@@ -86,9 +97,9 @@
 	
 	int debtToIncome=999;
 	int badDebtToIncome=999;
-	if(annual_income>0) {
-		debtToIncome = totalDebt*100/annual_income;
-		badDebtToIncome = totalBadDebt*100/annual_income;
+	if(annualIncome>0) {
+		debtToIncome = totalDebt*100/annualIncome;
+		badDebtToIncome = totalBadDebt*100/annualIncome;
 	}
 	self.debt1ImageView.image = [UIImage imageNamed:@"green.png"];
 	if(badDebtToIncome>10)
@@ -114,7 +125,6 @@
 	
 	//------------Home-----------
 	self.homeImageView.image = [UIImage imageNamed:@"green.png"];
-	int monthlyIncome = annual_income*.8/12;
 	int payPercentage = 99;
 	if(monthlyIncome>0)
 		payPercentage = totalMonthly_payment*100/monthlyIncome;
@@ -127,8 +137,8 @@
 	//------------Auto-----------
 	self.autoImageView.image = [UIImage imageNamed:@"green.png"];
 	int vehiclePercentage = 99;
-	if(annual_income>0)
-		vehiclePercentage = totalVehicleValue*100/annual_income;
+	if(annualIncome>0)
+		vehiclePercentage = totalVehicleValue*100/annualIncome;
 	
 	if(vehiclePercentage>50)
 		self.autoImageView.image = [UIImage imageNamed:@"yellow.png"];

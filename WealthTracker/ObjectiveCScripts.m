@@ -769,6 +769,7 @@
 }
 
 +(UIColor *)colorForType:(int)type {
+	return [ObjectiveCScripts mediumkColor];
 	if(type==1)
 		return [UIColor colorWithRed:.5 green:.4 blue:.3 alpha:1];
 	if(type==2)
@@ -814,6 +815,11 @@
 +(int)nowMonth {
 	return [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 }
+
++(int)nowDay {
+	return [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
+}
+
 
 +(void)fontAwesomeButton:(UIButton *)button title:(NSString *)title icon:(NSString *)icon size:(float)size {
 	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
@@ -873,6 +879,54 @@
 	double averageAmount = (age-20)*(age-20)*80;
 	return averageAmount*6;
 }
+
++(NSString *)monthNameForNum:(int)number {
+	NSArray *months = [NSArray arrayWithObjects:
+					   @"January",
+					   @"February",
+					   @"March",
+					   @"April",
+					   @"May",
+					   @"June",
+					   @"July",
+					   @"August",
+					   @"September",
+					   @"October",
+					   @"November",
+					   @"December",
+					   nil];
+	return [months objectAtIndex:number];
+}
+
++(int)autoIncrementNumber {
+	int number = [[ObjectiveCScripts getUserDefaultValue:@"rowId"] intValue];
+	number++;
+	[ObjectiveCScripts setUserDefaultValue:[NSString stringWithFormat:@"%d", number] forKey:@"rowId"];
+	return number;
+}
+
++(double)calculateExpenses:(NSManagedObjectContext *)context {
+	double expenses = 0;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"amount < 0"];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"CASH_FLOW" predicate:predicate sortColumn:@"statement_day" mOC:context ascendingFlg:YES];
+	for (NSManagedObject *mo in items) {
+		expenses += [[mo valueForKey:@"amount"] intValue]*-1;
+	}
+	return expenses;
+}
+
++(double)calculateIncome:(NSManagedObjectContext *)context {
+	double amount = 0;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"amount > 0"];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"CASH_FLOW" predicate:predicate sortColumn:@"statement_day" mOC:context ascendingFlg:YES];
+	for (NSManagedObject *mo in items) {
+		amount += [[mo valueForKey:@"amount"] intValue];
+	}
+	return amount;
+}
+
+
+
 
 
 
