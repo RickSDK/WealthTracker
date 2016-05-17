@@ -375,6 +375,13 @@
 	  
 	  int accumRate = estValuePerYear/12;
 	  accumRate = accumRate/100*100;
+	  if(accumRate==0) {
+		  int yearsInvesting = age-25;
+		  if(yearsInvesting<1)
+			  yearsInvesting=1;
+		  accumRate=netWorth/yearsInvesting;
+	  }
+	  estValuePerYear = accumRate*12;
 	  
 	  [self addPerMonthLabelWithName:@"Accumulation Rate" amount:accumRate];
 	  [self addBlankLine];

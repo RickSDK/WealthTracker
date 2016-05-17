@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TemplateVC.h"
 
-@interface AnalysisVC : UIViewController
+@interface AnalysisVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
@@ -26,6 +27,9 @@
 @property (nonatomic, strong) IBOutlet UIButton *homeButton;
 @property (nonatomic, strong) IBOutlet UIButton *autoButton;
 
+@property (nonatomic, strong) IBOutlet UITextField *ageTextField;
+@property (nonatomic, strong) IBOutlet UITextField *retirementTextField;
+
 @property (nonatomic, strong) IBOutlet UILabel *currentStepLabel;
 @property (nonatomic, strong) IBOutlet UILabel *advisorLabel;
 
@@ -33,5 +37,6 @@
 -(IBAction)detailsButtonClicked:(id)sender;
 -(IBAction)homeButtonPressed;
 -(IBAction)autoButtonPressed;
+-(IBAction)submitButtonClicked:(id)sender;
 
 @end

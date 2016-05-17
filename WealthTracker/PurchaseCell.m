@@ -83,7 +83,8 @@
 	cell.dateLabel.text = obj.day;
 	cell.timeLabel.text = obj.time;
 	cell.amountLabel.text = obj.amountStr;
-	cell.iconLabel.text = [self iconForBucket:obj.bucket];
+	int icon = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dIcon", obj.bucket]] intValue];
+	cell.iconLabel.text = [ObjectiveCScripts fontAwesomeIconForNumber:icon];
 	cell.nameLabel.text = obj.name;
 	return cell;
 	

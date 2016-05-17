@@ -26,6 +26,7 @@
 @property (nonatomic, retain) UILabel *equityChangeLabel;
 @property (nonatomic, retain) UILabel *statement_dayLabel;
 @property (nonatomic, retain) UILabel *statement_dayLabel2;
+@property (nonatomic, retain) UILabel *rightLabel;
 
 +(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj;
 

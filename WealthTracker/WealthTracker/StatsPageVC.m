@@ -63,7 +63,7 @@
 	[self setBarValue:budget-self.totalSpent max:budget];
 	
 	
-	self.analysisStr = [self budgetAnalysis:[self.titles objectAtIndex:self.bucket] budget:budget spent:self.totalSpent];
+	self.analysisStr = [self budgetAnalysis:[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.bucket]] budget:budget spent:self.totalSpent];
 
 	[self populateGraph];
 	[self.mainTableView reloadData];
@@ -120,8 +120,7 @@
 	self.deleteButton.hidden=YES;
 	self.editDateButton.hidden=YES;
 	self.editingFlg=NO;
-	NSArray *titles = [NSArray arrayWithObjects:@"Snack Purchase", @"Meal Purchase", @"Grocery Purchase", @"Shopping Purchase", @"Entertainment", @"Misc Purchase", nil];
-	self.nameTextField.text = [titles objectAtIndex:self.bucket];
+	self.nameTextField.text = [NSString stringWithFormat:@"%@ Purchase", [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.bucket]]];
 	self.amountTextField.text = @"";
 	[self.amountTextField becomeFirstResponder];
 }
@@ -170,10 +169,6 @@
 	[CoreDataLib saveNumberToProfile:@"bankAccount" value:amountRemaining-value context:self.managedObjectContext];
 }
 
--(NSArray *)titles {
-	return [NSArray arrayWithObjects:@"Snacks", @"Meals", @"Groceries", @"Shopping", @"Entertainment", @"Misc", nil];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
@@ -191,7 +186,7 @@
 		
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:1 labelProportion:0];
 		
-		cell.mainTitle = [self.titles objectAtIndex:self.bucket];
+		cell.mainTitle = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.bucket]];
 		int budget = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"budget%dAmount", self.bucket]] intValue];
 		cell.alternateTitle = [ObjectiveCScripts convertNumberToMoneyString:budget];
 		
@@ -214,7 +209,7 @@
 		} else {
 			MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:12 labelProportion:.5];
 			
-			cell.mainTitle = [self.titles objectAtIndex:self.bucket];
+			cell.mainTitle = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.bucket]];
 			int budget = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"budget%dAmount", self.bucket]] intValue];
 			cell.alternateTitle = [ObjectiveCScripts convertNumberToMoneyString:budget];
 			

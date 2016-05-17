@@ -24,6 +24,14 @@
 @property (nonatomic, strong) IBOutlet UILabel *budget4Label;
 @property (nonatomic, strong) IBOutlet UILabel *budget5Label;
 
+@property (nonatomic, strong) IBOutlet UILabel *name0Label;
+@property (nonatomic, strong) IBOutlet UILabel *name1Label;
+@property (nonatomic, strong) IBOutlet UILabel *name2Label;
+@property (nonatomic, strong) IBOutlet UILabel *name3Label;
+@property (nonatomic, strong) IBOutlet UILabel *name4Label;
+@property (nonatomic, strong) IBOutlet UILabel *name5Label;
+@property (nonatomic, strong) IBOutlet UILabel *popupLabel;
+
 @property (nonatomic, strong) IBOutlet UILabel *budgetRemainingLabel;
 
 @property (nonatomic, strong) NSArray *sliders;
@@ -34,6 +42,8 @@
 @property (nonatomic) int selectedSlider;
 
 -(IBAction)sliderMoved:(id)sender;
+-(IBAction)exactButtonPressed:(id)sender;
+-(IBAction)submitButtonPressed:(id)sender;
 
 
 @end

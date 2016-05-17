@@ -83,5 +83,7 @@
 +(int)autoIncrementNumber;
 +(double)calculateExpenses:(NSManagedObjectContext *)context;
 +(double)calculateIncome:(NSManagedObjectContext *)context;
++(NSString *)faIconOfTypeString:(NSString *)type;
++(NSString *)fontAwesomeIconForNumber:(int)number;
 
 @end

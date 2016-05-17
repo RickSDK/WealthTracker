@@ -35,7 +35,7 @@
 		self.valStatusImage.alpha=1;
 		[self.bgView addSubview:self.valStatusImage];
 		
-		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
+		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 7, 30, 30)];
 		self.statement_dayLabel.font = [UIFont boldSystemFontOfSize:15];
 		self.statement_dayLabel.adjustsFontSizeToFitWidth = YES;
 		self.statement_dayLabel.minimumScaleFactor = .8;
@@ -70,13 +70,13 @@
 		float kRow3 = kTopEdge+32+30;
 
 
-		UILabel * changeLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, kTopEdge-2, 120, 22)];
-		changeLabel.backgroundColor = [UIColor clearColor];
-		changeLabel.textAlignment = NSTextAlignmentCenter;
-		changeLabel.textColor = [UIColor blackColor];
-		changeLabel.font = [UIFont boldSystemFontOfSize:11];
-		changeLabel.text = @"This Month";
-		[self.bgView addSubview:changeLabel];
+		self.rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, kTopEdge-2, 120, 22)];
+		self.rightLabel.backgroundColor = [UIColor clearColor];
+		self.rightLabel.textAlignment = NSTextAlignmentCenter;
+		self.rightLabel.textColor = [UIColor blackColor];
+		self.rightLabel.font = [UIFont boldSystemFontOfSize:11];
+		self.rightLabel.text = @"This Month";
+		[self.bgView addSubview:self.rightLabel];
 
 		
 		float kCol1 = kleftEdge+75;
@@ -177,20 +177,7 @@
 		cell.statement_dayLabel.text = obj.statement_day;
 		cell.statement_dayLabel2.text = @"Due Day";
 	}
-/*
-	if([@"Asset" isEqualToString:obj.type]) {
-		cell.balanceLabel.hidden=YES;
-		cell.balanceChangeLabel.hidden=YES;
-		cell.equityLabel.hidden=YES;
-		cell.equityChangeLabel.hidden=YES;
-	}
-	if([@"Debt" isEqualToString:obj.type]) {
-		cell.valueLabel.hidden=YES;
-		cell.valueChangeLabel.hidden=YES;
-		cell.equityLabel.hidden=YES;
-		cell.equityChangeLabel.hidden=YES;
-	}
-*/
+
 	cell.balanceLabel.hidden=YES;
 	cell.balanceChangeLabel.hidden=YES;
 	cell.valueLabel.hidden=YES;
@@ -198,7 +185,6 @@
 	cell.equityLabel.hidden=YES;
 	cell.equityChangeLabel.hidden=NO;
 
-	
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:obj.type];
 	
 }

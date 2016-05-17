@@ -30,6 +30,13 @@
 	self.expenseView.backgroundColor = [ObjectiveCScripts darkColor];
 	self.incomeView.backgroundColor = [ObjectiveCScripts darkColor];
 	self.cashFlowView.backgroundColor = [ObjectiveCScripts mediumkColor];
+	
+	if([ObjectiveCScripts getUserDefaultValue:@"button0Name"].length==0)
+		[self initialyzeButtonNames];
+
+	self.iconButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17.f];
+	self.editView.hidden=YES;
+
 
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(editBUdget)];
 	
@@ -39,12 +46,7 @@
 {
 	[super viewWillAppear:animated];
 
-	[self.balButton1 setButtonTitleForType:0 delegate:self sel:@selector(mainButtonClicked:)];
-	[self.balButton2 setButtonTitleForType:1 delegate:self sel:@selector(mainButtonClicked:)];
-	[self.balButton3 setButtonTitleForType:2 delegate:self sel:@selector(mainButtonClicked:)];
-	[self.balButton4 setButtonTitleForType:3 delegate:self sel:@selector(mainButtonClicked:)];
-	[self.balButton5 setButtonTitleForType:4 delegate:self sel:@selector(mainButtonClicked:)];
-	[self.balButton6 setButtonTitleForType:5 delegate:self sel:@selector(mainButtonClicked:)];
+	[self setupButtons];
 
 	if(self.topSegment.selectedSegmentIndex!=0) {
 		self.topSegment.selectedSegmentIndex=0;
@@ -87,6 +89,74 @@
 	[self loadData];
 	[self populateGraph];
 }
+
+-(void)setupButtons {
+	[self.balButton1 setButtonTitleForType:0 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+	[self.balButton2 setButtonTitleForType:1 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+	[self.balButton3 setButtonTitleForType:2 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+	[self.balButton4 setButtonTitleForType:3 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+	[self.balButton5 setButtonTitleForType:4 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+	[self.balButton6 setButtonTitleForType:5 delegate:self sel:@selector(mainButtonClicked:) editSel:@selector(editButtonClicked:)];
+}
+
+-(void)initialyzeButtonNames {
+	[ObjectiveCScripts setUserDefaultValue:@"Snacks" forKey:@"button0Name"];
+	[ObjectiveCScripts setUserDefaultValue:@"Meals" forKey:@"button1Name"];
+	[ObjectiveCScripts setUserDefaultValue:@"Groceries" forKey:@"button2Name"];
+	[ObjectiveCScripts setUserDefaultValue:@"Shop" forKey:@"button3Name"];
+	[ObjectiveCScripts setUserDefaultValue:@"Fun" forKey:@"button4Name"];
+	[ObjectiveCScripts setUserDefaultValue:@"Other" forKey:@"button5Name"];
+	
+	[ObjectiveCScripts setUserDefaultValue:@"Coffee" forKey:@"button0SubName"];
+	[ObjectiveCScripts setUserDefaultValue:@"Restaurant" forKey:@"button1SubName"];
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"button2SubName"];
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"button3SubName"];
+	[ObjectiveCScripts setUserDefaultValue:@"" forKey:@"button4SubName"];
+	[ObjectiveCScripts setUserDefaultValue:@"Fuel/Misc" forKey:@"button5SubName"];
+	
+	[ObjectiveCScripts setUserDefaultValue:@"0" forKey:@"button0Icon"];
+	[ObjectiveCScripts setUserDefaultValue:@"1" forKey:@"button1Icon"];
+	[ObjectiveCScripts setUserDefaultValue:@"2" forKey:@"button2Icon"];
+	[ObjectiveCScripts setUserDefaultValue:@"3" forKey:@"button3Icon"];
+	[ObjectiveCScripts setUserDefaultValue:@"4" forKey:@"button4Icon"];
+	[ObjectiveCScripts setUserDefaultValue:@"5" forKey:@"button5Icon"];
+}
+
+-(void)editButtonClicked:(UIButton *)button {
+	self.editView.hidden=NO;
+	self.editButton = (int)button.tag;
+	NSString *name = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.editButton]];
+	NSString *subName = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dSubName", self.editButton]];
+	self.editIcon = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dIcon", self.editButton]] intValue];
+	
+	self.nameTextField.text = name;
+	self.subNameTextField.text = subName;
+	[self.iconButton setTitle:[ObjectiveCScripts fontAwesomeIconForNumber:self.editIcon] forState:UIControlStateNormal];
+}
+
+-(void)resignKeyboard {
+	[self.nameTextField resignFirstResponder];
+	[self.subNameTextField resignFirstResponder];
+}
+
+-(IBAction)xButtonClicked:(id)sender {
+	self.editView.hidden=YES;
+	[self resignKeyboard];
+}
+-(IBAction)symbolButtonClicked:(id)sender {
+	self.editIcon++;
+	[self.iconButton setTitle:[ObjectiveCScripts fontAwesomeIconForNumber:self.editIcon] forState:UIControlStateNormal];
+}
+-(IBAction)submitButtonClicked:(id)sender {
+	self.editView.hidden=YES;
+	[ObjectiveCScripts setUserDefaultValue:self.nameTextField.text forKey:[NSString stringWithFormat:@"button%dName", self.editButton]];
+	[ObjectiveCScripts setUserDefaultValue:self.subNameTextField.text forKey:[NSString stringWithFormat:@"button%dSubName", self.editButton]];
+	[ObjectiveCScripts setUserDefaultValue:[NSString stringWithFormat:@"%d", self.editIcon] forKey:[NSString stringWithFormat:@"button%dIcon", self.editButton]];
+	[self resignKeyboard];
+	[self setupButtons];
+}
+
+
 
 -(void)populateGraph {
 	int year = [ObjectiveCScripts nowYear];

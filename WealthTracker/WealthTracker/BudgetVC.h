@@ -26,6 +26,17 @@
 @property (nonatomic, strong) IBOutlet UILabel *expenseTotalLabel;
 @property (nonatomic, strong) IBOutlet UILabel *incomeTotalLabel;
 
+@property (nonatomic, strong) IBOutlet UITextField *nameTextField;
+@property (nonatomic, strong) IBOutlet UITextField *subNameTextField;
+@property (nonatomic, strong) IBOutlet UIView *editView;
+@property (nonatomic, strong) IBOutlet UIButton *iconButton;
+@property (nonatomic) int editButton;
+@property (nonatomic) int editIcon;
+
+-(IBAction)xButtonClicked:(id)sender;
+-(IBAction)symbolButtonClicked:(id)sender;
+-(IBAction)submitButtonClicked:(id)sender;
+
 
 @property (nonatomic) double expensesTotal;
 @property (nonatomic) double incomeTotal;

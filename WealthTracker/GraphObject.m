@@ -10,4 +10,14 @@
 
 @implementation GraphObject
 
++(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg currentMonthFlg:(BOOL)currentMonthFlg {
+	GraphObject *obj = [[GraphObject alloc] init];
+	obj.name=name;
+	obj.amount=amout;
+	obj.rowId=rowId;
+	obj.reverseColorFlg=reverseColorFlg;
+	obj.currentMonthFlg=currentMonthFlg;
+	return obj;
+}
+
 @end

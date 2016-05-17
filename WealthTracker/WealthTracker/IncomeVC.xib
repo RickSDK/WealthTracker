@@ -100,7 +100,7 @@
                 </tableView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SXH-rG-2Fa">
                     <rect key="frame" x="0.0" y="432" width="320" height="31"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.14924298020000001" green="0.53710119499999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Track Cash Flow">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -119,7 +119,7 @@
                 </label>
                 <view contentMode="scaleToFill" id="v3C-Lz-h9X" customClass="CustomView">
                     <rect key="frame" x="10" y="35" width="304" height="207"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Income" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hz9-Xt-rm1">
                             <rect key="frame" x="8" y="8" width="288" height="21"/>

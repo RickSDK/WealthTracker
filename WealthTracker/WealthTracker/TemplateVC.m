@@ -39,8 +39,14 @@
 	NSString *dateStr = [[NSDate date] convertDateToStringWithFormat:@"MMMM YYYY"];
 	self.monthLabel.text = [NSString stringWithFormat:@"%@ %@", [NSString fontAwesomeIconStringForEnum:FACalendar], dateStr];
 	self.monthLabel.backgroundColor = [ObjectiveCScripts mediumkColor];
-	
+
+	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
+
 	self.popupView.hidden=YES;
+}
+
+-(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -173,6 +179,7 @@
 	self.popupView.hidden=YES;
 	[self.nameTextField resignFirstResponder];
 	[self.amountTextField resignFirstResponder];
+	[self.dueDayTextField resignFirstResponder];
 }
 
 -(IBAction)topSegmentChanged:(id)sender {

@@ -25,6 +25,13 @@
 	self.labels = [[NSArray alloc] initWithArray:[NSArray arrayWithObjects:self.budget0Label, self.budget1Label, self.budget2Label, self.budget3Label, self.budget4Label, self.budget5Label, nil]];
 
 
+	self.name0Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 0]];
+	self.name1Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 1]];
+	self.name2Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 2]];
+	self.name3Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 3]];
+	self.name4Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 4]];
+	self.name5Label.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", 5]];
+	
 	self.remainingBudget = self.totalBudget;
 	int i=0;
 	for (UISlider *slider in self.sliders) {
@@ -54,6 +61,10 @@
 	if(self.remainingBudget<0) {
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You are over budget!"];
 		return;
+	}
+	if(self.step==3) {
+		self.step++;
+		[ObjectiveCScripts setUserDefaultValue:[NSString stringWithFormat:@"%d", self.step] forKey:@"step"];
 	}
 	[self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
@@ -99,6 +110,28 @@
 		i++;
 	}
 	
+}
+
+-(IBAction)exactButtonPressed:(UIButton *)button {
+	self.selectedSlider=(int)button.tag;
+	UISlider *slider = [self.sliders objectAtIndex:self.selectedSlider];
+	self.amountTextField.text = [NSString stringWithFormat:@"%d", (int)slider.value];
+	self.popupLabel.text = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", (int)button.tag]];
+	self.popupView.hidden=NO;
+}
+
+-(IBAction)submitButtonPressed:(id)sender {
+	UISlider *slider = [self.sliders objectAtIndex:self.selectedSlider];
+	float value = [self.amountTextField.text floatValue];
+	float max = slider.maximumValue;
+	if(value>max)
+		value=max;
+	
+	slider.value = value;
+	UILabel *label = [self.labels objectAtIndex:self.selectedSlider];
+	label.text = [ObjectiveCScripts convertNumberToMoneyString:value];
+	[self displayAmountsForSlider:self.selectedSlider value:value];
+	self.popupView.hidden=YES;
 }
 
 

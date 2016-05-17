@@ -33,10 +33,15 @@
 @property (nonatomic, strong) IBOutlet UIView *popupView;
 @property (nonatomic, strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) IBOutlet UITextField *amountTextField;
+@property (nonatomic, strong) IBOutlet UITextField *dueDayTextField;
+
 @property (nonatomic) int step;
 @property (nonatomic) double monthlyBudget;
 @property (nonatomic) double monthlySpent;
 @property (nonatomic) double monthlyProjected;
+@property (nonatomic) CGPoint startTouchPosition;
+@property (nonatomic) float startDegree;
+@property (nonatomic) BOOL expiredFlg;
 
 -(float)screenWidth;
 -(float)screenHeight;

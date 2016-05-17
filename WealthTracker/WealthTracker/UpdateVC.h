@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSMutableArray *assetArray;
 
 @property (nonatomic, strong) NSMutableArray *amountArray;
+@property (nonatomic, strong) NSMutableArray *graphArray;
 
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;
@@ -38,7 +39,6 @@
 @property (nonatomic, strong) IBOutlet ChartSegmentControl *pieSegment;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
 
-@property (nonatomic, strong) NSMutableArray *graphArray;
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;

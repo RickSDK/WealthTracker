@@ -25,6 +25,8 @@
 #import <LocalAuthentication/LocalAuthentication.h>
 #import "PlanningVC.h"
 #import "BudgetVC.h"
+#import "PortfolioVC.h"
+#import "AssetsDebtsVC.h"
 
 @interface MainMenuVC ()
 
@@ -58,6 +60,12 @@
 	self.analysisButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
 	[self.analysisButton setTitle:[NSString stringWithFormat:@"%@ Advisor", [NSString fontAwesomeIconStringForEnum:FAUser]] forState:UIControlStateNormal];
 	
+	self.b2bButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20.f];
+	[self.b2bButton setTitle:[NSString stringWithFormat:@"%@ Broke to Baron", [NSString fontAwesomeIconStringForEnum:FAStar]] forState:UIControlStateNormal];
+	[self.b2bButton setBackgroundColor:[ObjectiveCScripts lightColor]];
+	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+	
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
@@ -80,6 +88,7 @@
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:kFontAwesomeFamilyName size:20.f] forKey:UITextAttributeFont]];
 	
+	self.chartSegmentControl.selectedSegmentIndex=1;
 /*
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
 											 [UIFont fontWithName:kFontAwesomeFamilyName size:20.f], UITextAttributeFont,
@@ -91,12 +100,6 @@
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-	
-	if(![ObjectiveCScripts isStartupCompleted]) {
-		StartupVC *detailViewController = [[StartupVC alloc] initWithNibName:@"StartupVC" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		[self.navigationController pushViewController:detailViewController animated:YES];
-	}
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
@@ -140,7 +143,6 @@
 	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
 	self.percentUpdatedLabel.hidden = (status==0);
 	
-	self.chartSegmentControl.center = CGPointMake(self.graphImageView.center.x, self.graphImageView.center.y+self.graphImageView.frame.size.height/2+15);
 	
 	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
 		self.percentUpdatedLabel.center = CGPointMake(self.percentUpdatedLabel.center.x, self.botView.frame.origin.y-25);
@@ -179,12 +181,13 @@
 	
 	int displayYear = self.nowYear-1;
 	int displayMonth = 12;
-//	if(self.nowMonth<=10) { // go back 12 months
-		displayMonth=self.nowMonth;
-		self.chartLabel.text = @"Net Worth Changes Per Month";
-//	}
+	displayMonth=self.nowMonth;
+	int numberOfItems=0;
+	self.chartLabel.text = (self.chartSegmentControl.selectedSegmentIndex==0)?@"Net Worth Changes Per Month":@"My Finances";
+
 	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	numberOfItems=itemsPre.count;
 	for (NSManagedObject *mo in itemsPre) {
 		prevValue += [[mo valueForKey:@"asset_value"] doubleValue];
 		prevBalance += [[mo valueForKey:@"balance_owed"] doubleValue];
@@ -251,26 +254,31 @@
 		
 	} //<-- for month
 	
-	if(![@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"financesFlg"]]) {
-		self.portfolioButton.enabled = NO;
-		self.myPlanButton.enabled = NO;
-		self.chartsButton.enabled = NO;
-		self.analysisButton.enabled = NO;
-		self.showChartFlg = NO;
-		self.displaySwitch.on=NO;
-		self.displaySwitch.enabled=NO;
-		self.initStep=0;
-		self.graphImageView.hidden=YES;
-		self.budgetLabel.textColor = [UIColor grayColor];
-		self.showChartFlg=NO;
-	} else {
-		self.initStep=-1;
-		self.showChartFlg=YES;
-	}
 	
-	self.currentYearLabel.hidden =!self.showChartFlg;
-	self.financesButton.hidden = self.showChartFlg;
-	self.financesButton.enabled = !self.showChartFlg;
+	NSLog(@"numberOfItems: %d", numberOfItems);
+	BOOL isDataReady=YES;
+	if(numberOfItems==0) {
+		self.arrowImage.center = CGPointMake(70, self.botView.frame.origin.y-55);
+		self.messageView.center = CGPointMake(150, self.botView.frame.origin.y-150);
+		self.messageLabel.text = @"Welcome to Wealth Tracker! Update your assets.";
+		isDataReady=NO;
+	} else if([ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
+		self.arrowImage.center = CGPointMake(self.screenWidth-70, self.botView.frame.origin.y-55);
+		self.messageView.center = CGPointMake(self.screenWidth-150, self.botView.frame.origin.y-150);
+		self.messageLabel.text = @"Now update your debts.";
+		isDataReady=NO;
+	}
+
+	self.arrowImage.hidden=isDataReady;
+	self.messageView.hidden=isDataReady;
+
+	self.chartSegmentControl.enabled=isDataReady;
+	self.b2bButton.enabled=isDataReady;
+	self.portfolioButton.enabled = isDataReady;
+	self.myPlanButton.enabled = isDataReady;
+	self.chartsButton.enabled = isDataReady;
+	self.analysisButton.enabled = isDataReady;
+	self.budgetLabel.textColor = (isDataReady)?[ObjectiveCScripts darkColor]:[UIColor grayColor];
 
 	[self displayBottomLabels];
 	
@@ -297,6 +305,8 @@
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
 
 }
+
+
 
 -(void)displayBottomLabels {
 	
@@ -413,6 +423,12 @@
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your income on the 'Budget' page before checking this feature."];
 		return;
 	}
+	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
+	if(yearBorn==0) {
+		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your age on the 'Advisor' page before checking this feature."];
+		return;
+	}
+
 
 	PlanningVC *detailViewController = [[PlanningVC alloc] initWithNibName:@"PlanningVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
@@ -442,8 +458,8 @@
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
 	
-	if(self.initStep>=0) // intro phase
-		return;
+//	if(self.initStep>=0) // intro phase
+//		return;
 	
 	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition)) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
@@ -455,11 +471,9 @@
 		return;
 	}
 	if(CGRectContainsPoint(self.botView.frame, self.startTouchPosition)) {
-		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
+		AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.tag=(self.startTouchPosition.x>[[UIScreen mainScreen] bounds].size.width/2)?11:12;
-		detailViewController.fieldType=(self.startTouchPosition.x>[[UIScreen mainScreen] bounds].size.width/2)?1:0;
-		detailViewController.type=0;
+		detailViewController.assetsFlg=(self.startTouchPosition.x<[[UIScreen mainScreen] bounds].size.width/2);
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		return;
 	}
@@ -552,14 +566,26 @@
 	
 }
 
--(IBAction)myPlanButtonClicked:(id)sender {
+-(IBAction)budgetButtonClicked:(id)sender {
 	BudgetVC *detailViewController = [[BudgetVC alloc] initWithNibName:@"BudgetVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
--(IBAction)updateButtonClicked:(id)sender {
-	UpdateVC *detailViewController = [[UpdateVC alloc] initWithNibName:@"UpdateVC" bundle:nil];
+-(IBAction)myPlanButtonClicked:(id)sender {
+	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
+	if(yearBorn==0) {
+		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your age on the 'Advisor' page before checking this feature."];
+		return;
+	}
+
+	MyPlanVC *detailViewController = [[MyPlanVC alloc] initWithNibName:@"MyPlanVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)portfolioButtonClicked:(id)sender {
+	PortfolioVC *detailViewController = [[PortfolioVC alloc] initWithNibName:@"PortfolioVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.expiredFlg=self.expiredFlg;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -583,20 +609,6 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
--(IBAction)financesButtonClicked:(id)sender {
-	if([@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"financesFlg"]])
-		return;
-	
-	self.initStep=0;
-	self.financesButton.hidden=YES;
-	self.chartSegmentControl.hidden=YES;
-	self.messageView.hidden=NO;
-	self.arrowImage.hidden=NO;
-	
-	self.arrowImage.center = CGPointMake(self.netWorthView.frame.origin.x+120, self.netWorthView.frame.origin.y-55);
-	self.messageView.center = CGPointMake(self.netWorthView.center.x, self.netWorthView.center.y-220);
-	self.messageLabel.text = @"Wealth Tracker!\n\nThe first thing to understand about finances, is to know your net worth. Which is simply the total of all your assets minus what you owe in debts.";
-}
 
 -(IBAction)okButtonClicked:(id)sender {
 	self.initStep++;
@@ -655,7 +667,7 @@
 			self.chartsButton.enabled=YES;
 			self.analysisButton.enabled=YES;
 			self.budgetLabel.textColor=[ObjectiveCScripts darkColor];
-			self.showChartFlg=YES;
+//			self.showChartFlg=YES;
 			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"financesFlg"];
 			break;
 			

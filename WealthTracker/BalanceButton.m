@@ -9,7 +9,6 @@
 #import "BalanceButton.h"
 #import "ObjectiveCScripts.h"
 
-#define kWidth	130
 #define kHeight	85
 
 
@@ -36,6 +35,8 @@
 - (void)commonInit
 {
 //	self.layer.cornerRadius = 5;
+	float kWidth = [[UIScreen mainScreen] bounds].size.width/2;
+	
 	self.layer.masksToBounds = YES;				// clips background images to rounded corners
 	self.layer.borderColor = [UIColor blackColor].CGColor;
 	self.layer.borderColor = [UIColor colorWithRed:.3 green:.3 blue:.3 alpha:1].CGColor;
@@ -75,57 +76,31 @@
 	self.budgetLabel.text = @"$0";
 	[self addSubview:self.budgetLabel];
 	
+	self.editButton = [[UIButton alloc] initWithFrame:CGRectMake(kWidth-60, 0, 60, 30)];
+	self.editButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:15.f];
+	[self.editButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+	[self.editButton setTitle:[NSString stringWithFormat:@"%@", [NSString fontAwesomeIconStringForEnum:FAPencilSquareO]] forState:UIControlStateNormal];
+	[self addSubview:self.editButton];
+
+	
 }
 
--(void)setButtonTitleForType:(int)type delegate:(id)delegate sel:(SEL)sel {
+-(void)setButtonTitleForType:(int)type delegate:(id)delegate sel:(SEL)sel editSel:(SEL)editSel {
 	self.budgetButton.tag=type;
 	int budget = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"budget%dAmount", (int)self.budgetButton.tag]] intValue];
 	self.budgetLabel.text = [ObjectiveCScripts convertNumberToMoneyString:budget];
 	[self.budgetButton addTarget:delegate action:sel forControlEvents:UIControlEventTouchDown];
-	switch (type) {
-  case 0: {
-			NSString *title = [NSString stringWithFormat:@"%@ Snacks", [NSString fontAwesomeIconStringForEnum:FACoffee]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-			self.descriptionLabel.hidden=NO;
-		    self.descriptionLabel.text = @"(Coffee)";
-			break;
-  }
-  case 1: {
-			NSString *title = [NSString stringWithFormat:@"%@ Meals", [NSString fontAwesomeIconStringForEnum:FACutlery]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-			self.descriptionLabel.hidden=NO;
-		    self.descriptionLabel.text = @"(Restaurant)";
-			break;
-  }
-  case 2: {
-			NSString *title = [NSString stringWithFormat:@"%@ Groceries", [NSString fontAwesomeIconStringForEnum:FAShoppingCart]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-			self.descriptionLabel.hidden=YES;
-			break;
-  }
-  case 3: {
-			NSString *title = [NSString stringWithFormat:@"%@ Shop", [NSString fontAwesomeIconStringForEnum:FABriefcase]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-			self.descriptionLabel.hidden=YES;
-			break;
-  }
-  case 4: {
-			NSString *title = [NSString stringWithFormat:@"%@ Fun", [NSString fontAwesomeIconStringForEnum:FATicket]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-			self.descriptionLabel.hidden=YES;
-			break;
-  }
-  case 5: {
-			NSString *title = [NSString stringWithFormat:@"%@ Other", [NSString fontAwesomeIconStringForEnum:FAUsd]];
-			[self.budgetButton setTitle:title forState:UIControlStateNormal];
-		    self.descriptionLabel.text = @"(Fuel/Misc)";
-			self.descriptionLabel.hidden=NO;
-			break;
-  }
-			
-  default:
-			break;
-	}
+	self.editButton.tag=type;
+	[self.editButton addTarget:delegate action:editSel forControlEvents:UIControlEventTouchDown];
+	
+	NSString *name = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", type]];
+	NSString *subName = [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dSubName", type]];
+	int iconNum = [[ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dIcon", type]] intValue];
+	
+	[self.budgetButton setTitle:[NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts fontAwesomeIconForNumber:iconNum], name] forState:UIControlStateNormal];
+	self.descriptionLabel.hidden=subName.length==0;
+	self.descriptionLabel.text = [NSString stringWithFormat:@"(%@)", subName];
+	
 }
 
 -(double)updateBudgetAmount:(NSManagedObjectContext *)context {

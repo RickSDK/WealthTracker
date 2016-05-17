@@ -18,4 +18,6 @@
 @property (nonatomic) BOOL existsFlg;
 @property (nonatomic) BOOL currentMonthFlg;
 
++(GraphObject *)graphObjectWithName:(NSString *)name amount:(double)amout rowId:(int)rowId reverseColorFlg:(BOOL)reverseColorFlg currentMonthFlg:(BOOL)currentMonthFlg;
+
 @end

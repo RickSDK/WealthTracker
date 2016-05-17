@@ -344,6 +344,12 @@
 		NSManagedObject *mo = [profile objectAtIndex:0];
 		[mo setValue:[NSNumber numberWithDouble:value] forKey:field];
 		[context save:nil];
+	} else {
+		NSManagedObject *mo = [NSEntityDescription insertNewObjectForEntityForName:@"PROFILE" inManagedObjectContext:context];
+		[mo setValue:[NSNumber numberWithInt:1] forKey:@"planStep"];
+		[mo setValue:[NSNumber numberWithDouble:value] forKey:field];
+		[context save:nil];
+			NSLog(@"Inserting new record!");
 	}
 }
 
@@ -434,6 +440,7 @@
 		multHistory=1;
 	}
 	multFuture=1; //<-- new strategy, don't try to predict
+	multHistory=1;
 	
 	int itemType = [ObjectiveCScripts typeNumberFromTypeString:obj.type];
 	float interest_rate = [obj.interest_rate floatValue];
@@ -443,9 +450,7 @@
 	[updateRecord setValue:[NSNumber numberWithDouble:amount] forKey:field];
 	[updateRecord setValue:[NSString stringWithFormat:@"%g", amount] forKey:fieldString];
 
-	int nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
-	if(nowDay>=[obj.statement_day intValue])
-		[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag];
+	[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag];
 	
 	[self updateHistory:[obj.rowId intValue] multiplyer:multHistory field:field flag:flag month:month year:year amount:amount moc:moc type:itemType interest_rate:interest_rate statement_day:[obj.statement_day intValue]];
 
@@ -486,12 +491,10 @@
 			[updateRecord setValue:[NSNumber numberWithInt:type] forKey:@"type"];
 		}
 		BOOL confirm_flg = [[updateRecord valueForKey:flag] boolValue];
-		if(confirm_flg)
+		if(confirm_flg) {
+			NSLog(@"History record confirmed: %@", year_month);
 			return; // that's as far as we go!
-		
-		double currentVal = [[updateRecord valueForKey:field] doubleValue];
-		if(currentVal==0 && [ObjectiveCScripts isStartupCompleted])
-			return; //don't create history if none existed
+		}
 		
 		[updateRecord setValue:[NSNumber numberWithInt:amount] forKey:field];
 		
@@ -499,15 +502,7 @@
 			int interest = (interest_rate*amount)/100/12;
 			[updateRecord setValue:[NSNumber numberWithInt:interest] forKey:@"interest"];
 		}
-		
-		int nowDay = [[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue];
-		if(nowDay<statement_day && i==1) {
-			[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag]; // Set last month's flag
-			NSLog(@"Setting flag! %@", flag);
-		}
-		
-			
-		NSLog(@"%@ = %d", year_month, amount);
+		NSLog(@"History: %@ = %d", year_month, amount);
 	}
 	
 }
@@ -554,7 +549,7 @@
 			[updateRecord setValue:[NSNumber numberWithInt:interest] forKey:@"interest"];
 		}
 
-		NSLog(@"%@ = %d", year_month, amount);
+		NSLog(@"Future: %@ = %d", year_month, amount);
 	}
 	
 }

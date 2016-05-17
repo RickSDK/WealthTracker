@@ -36,6 +36,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *budgetLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *popupValImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *popupBalImageView;
+@property (nonatomic, strong) IBOutlet UIButton *b2bButton;
 
 @property (nonatomic, strong) IBOutlet UIImageView *redCircleImageView;
 @property (nonatomic, strong) IBOutlet UILabel *needsUpdatingLabel;
@@ -75,13 +76,13 @@
 @property (nonatomic) CGPoint startTouchPosition;
 @property (nonatomic) float startDegree;
 
--(IBAction)myPlanButtonClicked:(id)sender;
--(IBAction)updateButtonClicked:(id)sender;
+-(IBAction)budgetButtonClicked:(id)sender;
+-(IBAction)portfolioButtonClicked:(id)sender;
 -(IBAction)chartsButtonClicked:(id)sender;
 -(IBAction)analysisButtonClicked:(id)sender;
 -(IBAction)displaySwitchChanged:(id)sender;
--(IBAction)financesButtonClicked:(id)sender;
 -(IBAction)okButtonClicked:(id)sender;
 -(IBAction)segmentClicked:(id)sender;
+-(IBAction)myPlanButtonClicked:(id)sender;
 
 @end

@@ -64,8 +64,6 @@
 					   kMenu3,
 					   kMenu4,
 					   kMenu5,
-					   kMenu10,
-					   kMenu9,
 					   kMenu6,
 					   kMenu7,
 					   kMenu11,
@@ -99,8 +97,6 @@
 					  [NSString fontAwesomeIconStringForEnum:FACloudUpload],
 					  [NSString fontAwesomeIconStringForEnum:FACloudDownload],
 					  [NSString fontAwesomeIconStringForEnum:FAtrash],
-					  [NSString fontAwesomeIconStringForEnum:FAUser],
-					  [NSString fontAwesomeIconStringForEnum:FAbank],
 					  [NSString fontAwesomeIconStringForEnum:FAEnvelope],
 					  [NSString fontAwesomeIconStringForEnum:FAStar],
 					  [NSString fontAwesomeIconStringForEnum:FALock],
@@ -183,7 +179,7 @@
 //			[ObjectiveCScripts showAlertPopup:@"NOTICE" message:@"First delete all your data."];
 	}
 	if([kMenu5 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
-		if([CoreDataLib getAge:self.managedObjectContext]==99)
+		if(1)
 			[ObjectiveCScripts showConfirmationPopup:@"WARNING!!" message:@"This will delete and erase ALL data currently saved on this device. Proceed?" delegate:self tag:kEraseDBAlert];
 		else
 			[ObjectiveCScripts showAlertPopup:@"Notice" message:@"As a safety guard, first set your age to 99, under the profile screen. Then come back to this screen to delete the data."];

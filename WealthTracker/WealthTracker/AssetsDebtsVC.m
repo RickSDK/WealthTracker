@@ -1,0 +1,379 @@
+//
+//  AssetsDebtsVC.m
+//  WealthTracker
+//
+//  Created by Rick Medved on 5/12/16.
+//  Copyright (c) 2016 Rick Medved. All rights reserved.
+//
+
+#import "AssetsDebtsVC.h"
+#import "BreakdownByMonthVC.h"
+#import "ItemCell.h"
+#import "UpdateDetails.h"
+
+@interface AssetsDebtsVC ()
+
+@end
+
+@implementation AssetsDebtsVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	
+	[self setTitle:(self.assetsFlg)?@"Assets":@"Debts"];
+	
+	self.bottomView.backgroundColor = [ObjectiveCScripts darkColor];
+	if(self.showPopup)
+		[self addNewItem];
+	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addNewItem)];
+
+	self.iconButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	self.keyboardButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[self.keyboardButton setTitle:[NSString fontAwesomeIconStringForEnum:FAKeyboardO] forState:UIControlStateNormal];
+	self.type=1;
+	self.subType=0;
+	[self displayButtons];
+
+	[self setupData];
+	
+	if(!self.assetsFlg && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
+		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"Enter all loans and debts"];
+		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"DebtsCheckFlg"];
+	}
+}
+
+-(void)displayButtons {
+	[self.iconButton setTitle:[ObjectiveCScripts faIconOfType:self.type] forState:UIControlStateNormal];
+	[self.subTypeButton setTitle:[self subTypeStringForSubType:self.subType type:self.type] forState:UIControlStateNormal];
+	self.typeLabel.text = [ObjectiveCScripts typeNameForType:self.type];
+	self.valueTextField.hidden=(self.type==3);
+	self.balanceTextField.hidden=(self.type==4);
+	self.interestTextField.hidden=(self.type==4);
+	self.interestRateLabel.hidden=(self.type==4);
+	self.paymentTextField.hidden=(self.type>2);
+	self.duesTextField.hidden=(self.type>1);
+	NSLog(@"type: %d", self.type);
+}
+
+-(NSString *)subTypeStringForSubType:(int)subType type:(int)type {
+	NSMutableArray *values = [[NSMutableArray alloc] init];
+	switch (type) {
+  case 1:
+			[values addObject:@"Primary Residence"];
+			[values addObject:@"Rental"];
+			[values addObject:@"Other Property"];
+			break;
+  case 2:
+			[values addObject:@"Auto"];
+			[values addObject:@"Motorcycle"];
+			[values addObject:@"RV"];
+			[values addObject:@"ATV"];
+			[values addObject:@"Jet Ski"];
+			[values addObject:@"Snomobile"];
+			[values addObject:@"Other"];
+			break;
+  case 3:
+			[values addObject:@"Credit Card"];
+			[values addObject:@"Student Loan"];
+			[values addObject:@"Loan"];
+			[values addObject:@"Medical"];
+			[values addObject:@"Other"];
+			break;
+  case 4:
+			[values addObject:@"401k"];
+			[values addObject:@"Retirement"];
+			[values addObject:@"Stocks"];
+			[values addObject:@"College Fund"];
+			[values addObject:@"Bank Account"];
+			[values addObject:@"Other Asset"];
+			break;
+			
+  default:
+			break;
+	}
+	return [values objectAtIndex:subType%values.count];
+}
+
+-(void)setupData {
+	[self.graphObjects removeAllObjects];
+	[self.itemsArray removeAllObjects];
+	self.totalAmount=0;
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		BOOL isAsset = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Asset" isEqualToString:obj.type]);
+		BOOL isDebt = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Debt" isEqualToString:obj.type]);
+		if(self.assetsFlg && isAsset)
+			[self.itemsArray addObject:obj];
+		else if(!self.assetsFlg && isDebt)
+			[self.itemsArray addObject:obj];
+		
+		double amount = (self.assetsFlg)?obj.value:obj.balance;
+		self.totalAmount+=amount;
+		
+			GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:!self.assetsFlg currentMonthFlg:NO];
+		if(amount>0)
+			[self.graphObjects addObject:gObj];
+		
+	}
+	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:!self.assetsFlg];
+	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
+	self.messageLabel.hidden=self.itemsArray.count>0;
+	if(!self.assetsFlg)
+		self.messageLabel.text = @"Press the '+' button above to enter debts";
+	[self.mainTableView reloadData];
+}
+
+-(void)addNewItem {
+	self.popupView.hidden=NO;
+	self.nameTextField.text=@"";
+	self.valueTextField.text=@"";
+	self.balanceTextField.text=@"";
+	self.paymentTextField.text=@"";
+	self.interestTextField.text=@"";
+	self.dueDayTextField.text = @"1";
+	[self.nameTextField becomeFirstResponder];
+}
+
+-(IBAction)breakdownButtonClicked:(id)sender {
+	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.tag=(self.assetsFlg)?11:12;
+	detailViewController.fieldType=!self.assetsFlg;
+	detailViewController.type=0;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
+	
+	
+	if(indexPath.section==0) {
+		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		
+		if(cell==nil)
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		
+		cell.backgroundView = [[UIImageView alloc] initWithImage:self.chartImageView.image];
+		
+		cell.accessoryType= UITableViewCellAccessoryNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		return cell;
+	}
+
+	
+	ItemCell *cell=nil;
+	
+	cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	
+	if(cell==nil) {
+		cell = [[ItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+	}
+	ItemObject *obj = [self.itemsArray objectAtIndex:indexPath.row];
+	
+	cell.bgView.backgroundColor = [UIColor whiteColor];
+	
+	if(obj)
+		[ItemCell updateCell:cell obj:obj];
+	
+	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19];
+
+	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfTypeString:obj.type], cell.nameLabel.text];
+	
+	if(obj.equityChange>0)
+		cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+	if(obj.equityChange<0)
+		cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+	
+	if(self.assetsFlg) {
+		cell.rightLabel.text = @"Value";
+		self.totalAmount+=obj.value;
+		[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:obj.value lightFlg:NO revFlg:NO];
+	} else {
+		cell.rightLabel.text = @"Balance";
+		self.totalAmount+=obj.balance;
+		[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:obj.balance lightFlg:NO revFlg:YES];
+		if(obj.balance==0)
+			cell.bgView.backgroundColor=[UIColor grayColor];
+	}
+	
+	cell.textLabel.textColor = [UIColor blackColor];
+	
+	
+	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+	
+	cell.redLineView.hidden=YES;
+	cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section+1];
+	
+	return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section==0)
+		return [ObjectiveCScripts chartHeightForSize:190];
+	else
+		return 50;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if(section==0)
+		return 1;
+	
+	return self.itemsArray.count;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(indexPath.section==0)
+		return;
+	
+	if(self.expiredFlg)
+		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
+	else {
+		ItemObject *obj = [self.itemsArray objectAtIndex:indexPath.row];
+		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+		detailViewController.managedObjectContext = self.managedObjectContext;
+		detailViewController.itemObject = obj;
+		[self.navigationController pushViewController:detailViewController animated:YES];
+	}
+}
+
+-(IBAction)xButtonClicked:(id)sender {
+	self.popupView.hidden=YES;
+	[self resignKeyboards];
+}
+
+-(void)resignKeyboards {
+	[self.nameTextField resignFirstResponder];
+	[self.amountTextField resignFirstResponder];
+	[self.dueDayTextField resignFirstResponder];
+	[self.valueTextField resignFirstResponder];
+	[self.balanceTextField resignFirstResponder];
+	[self.paymentTextField resignFirstResponder];
+	[self.interestTextField resignFirstResponder];
+	[self.duesTextField resignFirstResponder];
+}
+
+-(IBAction)keyboardButtonClicked:(id)sender {
+	[self resignKeyboards];
+}
+
+
+-(IBAction)submitButtonClicked:(id)sender {
+	if(self.nameTextField.text.length==0) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a name" message:@""];
+		return;
+	}
+	
+	if([self.valueTextField.text intValue]==0 && self.type!=3) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a current value amount" message:@""];
+		return;
+	}
+	if([self.balanceTextField.text intValue]==0 && self.type!=4) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a balance" message:@""];
+		return;
+	}
+	if([self.interestTextField.text intValue]==0 && self.type!=4) {
+		[ObjectiveCScripts showAlertPopup:@"Enter an interest rate" message:@""];
+		return;
+	}
+	if([self.paymentTextField.text intValue]==0 && self.type<=2) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a monthly payment amount" message:@""];
+		return;
+	}
+	self.popupView.hidden=YES;
+	[self resignKeyboards];
+	
+	[self createNewItem];
+	[self setupData];
+}
+
+-(IBAction)typeButtonClicked:(id)sender {
+	self.type++;
+	if(self.type>4)
+		self.type=1;
+	self.subType=0;
+	[self displayButtons];
+}
+-(IBAction)subtypeButtonClicked:(id)sender {
+	self.subType++;
+	[self displayButtons];
+}
+
+-(void)createNewItem {
+		NSManagedObject *mo = [NSEntityDescription insertNewObjectForEntityForName:@"ITEM" inManagedObjectContext:self.managedObjectContext];
+	[self initialyzeDatabaseRecord:mo];
+	ItemObject *itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+	
+	int nowYear = [ObjectiveCScripts nowYear];
+	int nowMonth = [ObjectiveCScripts nowMonth];
+	[CoreDataLib updateItemAmount:itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.valueStr doubleValue] moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
+	
+	[self setupData];
+	
+}
+
+-(void)initialyzeDatabaseRecord:(NSManagedObject *)record {
+	NSMutableArray *keys = [[NSMutableArray alloc] init];
+	NSMutableArray *values = [[NSMutableArray alloc] init];
+	NSMutableArray *types = [[NSMutableArray alloc] init];
+
+	[keys addObject:@"rowId"];
+	[values addObject:[CoreDataLib autoIncrementNumber]];
+	[types addObject:@"int"];
+	
+	[keys addObject:@"name"];
+	[values addObject:self.nameTextField.text];
+	[types addObject:@"text"];
+	
+	[keys addObject:@"value"];
+	[values addObject:self.valueTextField.text];
+	[types addObject:@"double"];
+
+	[keys addObject:@"loan_balance"];
+	[values addObject:self.balanceTextField.text];
+	[types addObject:@"double"];
+
+	[keys addObject:@"statement_day"];
+	[values addObject:self.dueDayTextField.text];
+	[types addObject:@"int"];
+	
+	[keys addObject:@"type"];
+	[values addObject:[ObjectiveCScripts typeNameForType:self.type]];
+	[types addObject:@"text"];
+	
+	[keys addObject:@"sub_type"];
+	[values addObject:[self subTypeStringForSubType:self.subType type:self.type]];
+	[types addObject:@"text"];
+	
+	[keys addObject:@"monthly_payment"];
+	[values addObject:self.paymentTextField.text];
+	[types addObject:@"double"];
+	
+	[keys addObject:@"homeowner_dues"];
+	[values addObject:self.duesTextField.text];
+	[types addObject:@"double"];
+	
+	[keys addObject:@"interest_rate"];
+	[values addObject:self.interestTextField.text];
+	[types addObject:@"text"];
+	
+	[CoreDataLib updateManagedObject:record keyList:keys valueList:values typeList:types mOC:self.managedObjectContext];
+}
+
+
+
+
+
+
+@end

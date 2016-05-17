@@ -46,6 +46,11 @@
 	
 	[self checkStatusLights];
 	
+	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
+	self.popupView.hidden = (yearBorn>0);
+	double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
+	NSLog(@"%d %f", yearBorn, retirement_payments);
+	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 
 }
@@ -174,6 +179,22 @@
 	AutoBuyVC *detailViewController = [[AutoBuyVC alloc] initWithNibName:@"AutoBuyVC" bundle:nil];
 	detailViewController.managedObjectContext=self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)submitButtonClicked:(id)sender {
+	if([self.ageTextField.text intValue]==0) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a valid age" message:@""];
+		return;
+	}
+	[self.ageTextField resignFirstResponder];
+	[self.retirementTextField resignFirstResponder];
+	
+	int yearBorn = [ObjectiveCScripts nowYear]-[self.ageTextField.text intValue];
+	[CoreDataLib saveNumberToProfile:@"yearBorn" value:yearBorn context:self.managedObjectContext];
+	[CoreDataLib saveNumberToProfile:@"age" value:[self.ageTextField.text intValue] context:self.managedObjectContext];
+	[CoreDataLib saveNumberToProfile:@"retirement_payments" value:[self.retirementTextField.text intValue] context:self.managedObjectContext];
+	self.popupView.hidden=YES;
+
 }
 
 

@@ -18,8 +18,8 @@
 
 
 +(NSString *)appName {
-	return @"Wealth Tracker";
-//	return @"Broke to Baron";
+//	return @"Wealth Tracker";
+	return @"Broke to Baron";
 }
 
 +(NSString *)getProjectDisplayVersion
@@ -855,6 +855,17 @@
 	return [icons objectAtIndex:type];
 }
 
++(NSString *)faIconOfTypeString:(NSString *)type {
+	if([@"Vehicle" isEqualToString:type])
+		return [NSString fontAwesomeIconStringForEnum:FAautomobile];
+	if([@"Debt" isEqualToString:type])
+		return [NSString fontAwesomeIconStringForEnum:FACreditCard];
+	if([@"Asset" isEqualToString:type])
+		return [NSString fontAwesomeIconStringForEnum:FAUsd];
+
+	return [NSString fontAwesomeIconStringForEnum:FAHome];
+}
+
 +(NSString *)fontAwesomeTextAltForType:(int)type {
 	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Vehicles", @"Debts", @"Assets", nil];
 	
@@ -924,6 +935,28 @@
 	}
 	return amount;
 }
+
++(NSString *)fontAwesomeIconForNumber:(int)number {
+	NSArray *icons = [NSArray arrayWithObjects:
+					  [NSString fontAwesomeIconStringForEnum:FACoffee],
+					  [NSString fontAwesomeIconStringForEnum:FACutlery],
+					  [NSString fontAwesomeIconStringForEnum:FAShoppingCart],
+					  [NSString fontAwesomeIconStringForEnum:FABriefcase],
+					  [NSString fontAwesomeIconStringForEnum:FATicket],
+					  [NSString fontAwesomeIconStringForEnum:FAUsd],
+					  [NSString fontAwesomeIconStringForEnum:FAinternetExplorer],
+					  [NSString fontAwesomeIconStringForEnum:FAautomobile],
+					  [NSString fontAwesomeIconStringForEnum:FAGift],
+					  [NSString fontAwesomeIconStringForEnum:FAPlane],
+					  [NSString fontAwesomeIconStringForEnum:FAGlass],
+					  [NSString fontAwesomeIconStringForEnum:FABeer],
+					  [NSString fontAwesomeIconStringForEnum:FApaw],
+					  [NSString fontAwesomeIconStringForEnum:FAHome],
+					  [NSString fontAwesomeIconStringForEnum:FAbed],
+					  nil];
+	return [icons objectAtIndex:number%icons.count];
+}
+
 
 
 

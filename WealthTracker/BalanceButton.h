@@ -16,8 +16,9 @@
 @property (nonatomic, strong) UIView *progressView;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (nonatomic, strong) UILabel *budgetLabel;
+@property (nonatomic, strong) UIButton *editButton;
 
--(void)setButtonTitleForType:(int)type delegate:(id)delegate sel:(SEL)sel;
+-(void)setButtonTitleForType:(int)type delegate:(id)delegate sel:(SEL)sel editSel:(SEL)editSel;
 -(void)setBarValue:(float)value max:(float)max;
 -(double)updateBudgetAmount:(NSManagedObjectContext *)context;
 
