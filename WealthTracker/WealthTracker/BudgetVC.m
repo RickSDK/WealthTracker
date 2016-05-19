@@ -86,6 +86,9 @@
 	if(abs(balance)>10 && self.incomeTotal>0 && self.expensesTotal>0)
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Your budget needs to be set. Click 'Edit' button above"];
 
+	double amountRemaining = [CoreDataLib getNumberFromProfile:@"bankAccount" mOC:self.managedObjectContext];
+	self.bankAccountTotalLabel.text = [ObjectiveCScripts convertNumberToMoneyString:amountRemaining];
+
 	[self loadData];
 	[self populateGraph];
 }

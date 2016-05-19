@@ -182,12 +182,12 @@
 	int displayYear = self.nowYear-1;
 	int displayMonth = 12;
 	displayMonth=self.nowMonth;
-	int numberOfItems=0;
-	self.chartLabel.text = (self.chartSegmentControl.selectedSegmentIndex==0)?@"Net Worth Changes Per Month":@"My Finances";
+	self.numberOfItems=0;
+	self.chartLabel.text = (self.chartSegmentControl.selectedSegmentIndex==0)?@"Net Worth Changes Per Month":@"Month by Month Tracking";
 
 	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	numberOfItems=itemsPre.count;
+	self.numberOfItems=(int)itemsPre.count;
 	for (NSManagedObject *mo in itemsPre) {
 		prevValue += [[mo valueForKey:@"asset_value"] doubleValue];
 		prevBalance += [[mo valueForKey:@"balance_owed"] doubleValue];
@@ -255,18 +255,25 @@
 	} //<-- for month
 	
 	
-	NSLog(@"numberOfItems: %d", numberOfItems);
 	BOOL isDataReady=YES;
-	if(numberOfItems==0) {
-		self.arrowImage.center = CGPointMake(70, self.botView.frame.origin.y-55);
-		self.messageView.center = CGPointMake(150, self.botView.frame.origin.y-150);
-		self.messageLabel.text = @"Welcome to Wealth Tracker! Update your assets.";
+	if(self.numberOfItems==0) {
+		self.arrowImage.center = CGPointMake(self.assetNameLabel.center.x, self.botView.frame.origin.y-55);
+		self.messageView.center = CGPointMake(160, self.botView.frame.origin.y-220);
+		self.messageLabel.text = [NSString stringWithFormat:@"Welcome to %@. The best financial app available!\n\nThe purpose of this app is to help you reduce debt and build wealth.\n\nLets start by updating your assets. Click on the assets button below to get started.", [ObjectiveCScripts appName]];
+		self.okButton.hidden=YES;
 		isDataReady=NO;
 	} else if([ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
-		self.arrowImage.center = CGPointMake(self.screenWidth-70, self.botView.frame.origin.y-55);
-		self.messageView.center = CGPointMake(self.screenWidth-150, self.botView.frame.origin.y-150);
-		self.messageLabel.text = @"Now update your debts.";
+		self.arrowImage.center = CGPointMake(self.debtNameLabel.center.x, self.botView.frame.origin.y-55);
+		self.messageView.center = CGPointMake(self.screenWidth-160, self.botView.frame.origin.y-220);
+		self.messageLabel.text = @"The next step in the process is to track your debts. \n\nClick on the debts button to enter your current debts.";
+		self.okButton.hidden=YES;
 		isDataReady=NO;
+	} else if([ObjectiveCScripts getUserDefaultValue:@"financesFlg"].length==0) {
+		self.arrowImage.center = CGPointMake(self.screenWidth/2, self.botView.frame.origin.y-115);
+		self.messageView.center = CGPointMake(self.screenWidth/2, self.botView.frame.origin.y-300);
+		self.messageLabel.text = @"Good job. You will want to update the Value and Balance of each item in your portfolio on a monthly bases.\n\nAt the bottom of this screen you can view your Net Worth.";
+		isDataReady=NO;
+		self.okButton.hidden=NO;
 	}
 
 	self.arrowImage.hidden=isDataReady;
@@ -461,7 +468,7 @@
 //	if(self.initStep>=0) // intro phase
 //		return;
 	
-	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition)) {
+	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition) && [ObjectiveCScripts getUserDefaultValue:@"financesFlg"].length>0) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.tag=4;
@@ -471,6 +478,9 @@
 		return;
 	}
 	if(CGRectContainsPoint(self.botView.frame, self.startTouchPosition)) {
+		if(self.numberOfItems==0 && self.startTouchPosition.x>=[[UIScreen mainScreen] bounds].size.width/2)
+			return;
+		
 		AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
 		detailViewController.assetsFlg=(self.startTouchPosition.x<[[UIScreen mainScreen] bounds].size.width/2);
@@ -611,6 +621,9 @@
 
 
 -(IBAction)okButtonClicked:(id)sender {
+	
+	
+	
 	self.initStep++;
 	switch (self.initStep) {
   case 1:
@@ -618,43 +631,42 @@
 			break;
   case 2:
 			[self.arrowImage setImage:[UIImage imageNamed:@"blueArrowUp.png"]];
-			self.arrowImage.center = CGPointMake(self.portfolioButton.frame.origin.x+50, self.portfolioButton.frame.origin.y+100);
-			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+220);
+			self.arrowImage.center = CGPointMake(self.portfolioButton.center.x, self.portfolioButton.frame.origin.y+120);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+240);
 			self.messageLabel.text = @"Use the 'Portfolio' button to track all your assets and debts. Once each month you will enter their values. This only takes a few seconds to update and will help track where your money is going.";
 			break;
   case 3:
-			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+50, self.myPlanButton.frame.origin.y+100);
+			self.arrowImage.center = CGPointMake(self.myPlanButton.center.x, self.myPlanButton.frame.origin.y+120);
 			self.messageLabel.text = @"Use the 'Budget' tracker too keep track of every dollar you spend. Getting on a budget is the key.";
 			break;
   case 4:
-			self.arrowImage.center = CGPointMake(self.chartsButton.frame.origin.x+50, self.chartsButton.frame.origin.y+100);
-			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
+			self.arrowImage.center = CGPointMake(self.chartsButton.center.x, self.chartsButton.frame.origin.y+120);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+290);
 			self.messageLabel.text = @"View the 'Charts' to see month by month tracking of your money.";
 			break;
   case 5:
-			self.arrowImage.center = CGPointMake(self.analysisButton.frame.origin.x+50, self.analysisButton.frame.origin.y+100);
+			self.arrowImage.center = CGPointMake(self.analysisButton.center.x, self.analysisButton.frame.origin.y+120);
 			self.messageLabel.text = @"The Financial Advisor will give you a very detailed breakdown of every area of your finances. Check it to see how you are progressing with your finances.";
 			break;
   case 6:
-			self.arrowImage.center = CGPointMake(40, self.myPlanButton.frame.origin.y+40);
+			self.arrowImage.center = CGPointMake(50, self.myPlanButton.frame.origin.y+60);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
-			self.messageLabel.text = @"Check out the Planning section for tips and financial strategy. There is a step by step plan called 'Broke to Baron' to help you achieve your financial goals!";
+			self.messageLabel.text = @"Check out the Planning section for tips and financial strategy. These tips will help you achieve your financial goals!";
 			break;
   case 7:
-			self.arrowImage.center = CGPointMake(self.myPlanButton.frame.origin.x+100, self.myPlanButton.frame.origin.y+40);
+			self.arrowImage.center = CGPointMake(self.screenWidth-50, self.myPlanButton.frame.origin.y+60);
 			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
 			self.messageLabel.text = @"There are more options and features for this app if you click on the 'Options' button.";
 			break;
   case 8:
-			[self.arrowImage setImage:[UIImage imageNamed:@"blueArrowDown.png"]];
 			self.graphImageView.hidden=NO;
-			self.arrowImage.center = CGPointMake(self.netWorthView.center.x, self.analysisButton.frame.origin.y+30);
-			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+270);
-			self.messageLabel.text = [NSString stringWithFormat:@"The graph on the main menu tracks your net worth on a monthly basis. This chart will start making more sense once you have been using %@ for a few months.", [ObjectiveCScripts appName]];
+			self.arrowImage.center = CGPointMake(self.b2bButton.center.x, self.myPlanButton.frame.origin.y+80);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+180);
+			self.messageLabel.text = @"Lastly. check out the Broke to Baron plan. This will help guide you to into a healthy financial status!";
 			break;
   case 9:
 			self.arrowImage.hidden=YES;
-			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+170);
+			self.messageView.center = CGPointMake(self.netWorthView.center.x, self.portfolioButton.center.y+180);
 			self.messageLabel.text = [NSString stringWithFormat:@"Congratulations! You are ready to start using %@. Contact us if you have any questions or suggestions for this app.", [ObjectiveCScripts appName]];
 			break;
   case 10:
@@ -666,8 +678,8 @@
 			self.myPlanButton.enabled=YES;
 			self.chartsButton.enabled=YES;
 			self.analysisButton.enabled=YES;
+			self.b2bButton.enabled=YES;
 			self.budgetLabel.textColor=[ObjectiveCScripts darkColor];
-//			self.showChartFlg=YES;
 			[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"financesFlg"];
 			break;
 			

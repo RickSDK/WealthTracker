@@ -199,10 +199,17 @@
 	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19];
 	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfType:(int)indexPath.section+1], cell.nameLabel.text];
 	
-	if(obj.equityChange>0)
-		cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
-	if(obj.equityChange<0)
-		cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+	if(self.topSegment.selectedSegmentIndex==0) {
+		if(obj.equity>0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+		if(obj.equity<0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+	} else {
+		if(obj.equityChange>0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+		if(obj.equityChange<0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
+	}
 	
 	if(self.topSegment.selectedSegmentIndex==0) {
 		cell.rightLabel.text = @"Equity";
@@ -218,9 +225,6 @@
 		[ObjectiveCScripts displayNetChangeLabel:cell.equityChangeLabel amount:obj.equityChange lightFlg:NO revFlg:NO];
 		
 	}
-	
-//	if(obj.status==2)
-//		cell.bgView.backgroundColor = [UIColor yellowColor];
 	
 	cell.textLabel.textColor = [UIColor blackColor];
 	

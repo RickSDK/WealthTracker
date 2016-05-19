@@ -445,7 +445,7 @@
 	int itemType = [ObjectiveCScripts typeNumberFromTypeString:obj.type];
 	float interest_rate = [obj.interest_rate floatValue];
 	double interest = (interest_rate*amount)/100/12;
-	if(type==1)
+	if(interest>0)
 		[updateRecord setValue:[NSNumber numberWithDouble:interest] forKey:@"interest"];
 	[updateRecord setValue:[NSNumber numberWithDouble:amount] forKey:field];
 	[updateRecord setValue:[NSString stringWithFormat:@"%g", amount] forKey:fieldString];

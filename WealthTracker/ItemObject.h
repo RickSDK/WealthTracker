@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
 @interface ItemObject : NSObject
 
@@ -40,5 +41,7 @@
 @property (nonatomic) float valueChange;
 @property (nonatomic) float equity;
 @property (nonatomic) float equityChange;
+
++(NSManagedObject *)moFromObject:(ItemObject *)obj context:(NSManagedObjectContext *)context;
 
 @end

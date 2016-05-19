@@ -21,6 +21,11 @@
 @property (nonatomic, strong) IBOutlet UIImageView *downArrow;
 @property (nonatomic, strong) IBOutlet UIView *colorView;
 
+@property (nonatomic, strong) IBOutlet UITextField *ageTextField;
+@property (nonatomic, strong) IBOutlet UITextField *retirementTextField;
+
 @property (nonatomic) BOOL finFlg;
+
+-(IBAction)submitButtonClicked:(id)sender;
 
 @end

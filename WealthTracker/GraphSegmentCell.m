@@ -116,8 +116,10 @@
 {
 	
 	float width=cellRect.size.width;
+	float height = cellRect.size.height;
+	NSLog(@"%f %f", height, [ObjectiveCScripts chartHeightForSize:290-30]);
 	
-	int height = [ObjectiveCScripts chartHeightForSize:194];
+//	int height = [ObjectiveCScripts chartHeightForSize:290-30];
 	
 	titleView.frame = CGRectMake(0, 0, width, 20);
 	titleLabel.frame = CGRectMake(0, 0, width, 20);
@@ -125,7 +127,7 @@
 	segmentView.frame = CGRectMake(0, 60, width, 34);
 	currentYearLabel.frame = CGRectMake(100, 20, width-200, 40);
 	nextYearButton.frame = CGRectMake(width-65, 23, 60, 34);
-	graphImageView.frame = CGRectMake(2, 94, width-4, height);
+	graphImageView.frame = CGRectMake(2, 94, width-4, height-94);
 }
 
 - (void)awakeFromNib {

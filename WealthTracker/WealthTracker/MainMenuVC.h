@@ -53,6 +53,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *myPlanButton;
 @property (nonatomic, strong) IBOutlet UIButton *chartsButton;
 @property (nonatomic, strong) IBOutlet UIButton *analysisButton;
+@property (nonatomic, strong) IBOutlet UIButton *okButton;
 
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
 @property (nonatomic, strong) IBOutlet UIImageView *vaultImageView;
@@ -70,6 +71,7 @@
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
 @property (nonatomic) int initStep;
+@property (nonatomic) int numberOfItems;
 @property (nonatomic) BOOL expiredFlg;
 @property (nonatomic) BOOL showChartFlg;
 @property (nonatomic) BOOL appLockedFlg;

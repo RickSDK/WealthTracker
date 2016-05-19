@@ -81,7 +81,35 @@
 		
 	} 
 	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 
 }
+
+-(void)editButtonPressed {
+	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
+	self.popupView.hidden = (yearBorn>0);
+	double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
+	self.ageTextField.text = [NSString stringWithFormat:@"%d", [ObjectiveCScripts nowYear]-yearBorn];
+	self.retirementTextField.text = [NSString stringWithFormat:@"%d", (int)retirement_payments];
+	self.popupView.hidden=NO;
+}
+
+-(IBAction)submitButtonClicked:(id)sender {
+	if([self.ageTextField.text intValue]==0) {
+		[ObjectiveCScripts showAlertPopup:@"Enter a valid age" message:@""];
+		return;
+	}
+	[self.ageTextField resignFirstResponder];
+	[self.retirementTextField resignFirstResponder];
+	
+	int yearBorn = [ObjectiveCScripts nowYear]-[self.ageTextField.text intValue];
+	[CoreDataLib saveNumberToProfile:@"yearBorn" value:yearBorn context:self.managedObjectContext];
+	[CoreDataLib saveNumberToProfile:@"age" value:[self.ageTextField.text intValue] context:self.managedObjectContext];
+	[CoreDataLib saveNumberToProfile:@"retirement_payments" value:[self.retirementTextField.text intValue] context:self.managedObjectContext];
+	self.popupView.hidden=YES;
+	[self drawStuff];
+	
+}
+
 
 @end

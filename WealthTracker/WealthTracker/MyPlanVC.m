@@ -67,6 +67,8 @@
 	[super viewWillAppear:animated];
 	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
 		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
+
+	[self displayProgressLabel];
 }
 
 -(double)classADebtForYear:(int)year month:(int)month {
@@ -112,11 +114,13 @@
 	  }
 	  
 	  if(classAMax>0) {
-		  float width = self.debtView.frame.size.width;
+//		  float width = self.debtView.frame.size.width;
+		  float width = self.screenWidth;
 		  float percent = classA*100/classAMax;
+		  NSLog(@"%f %f %f", width, percent, width*percent/100);
 		  self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
 		  self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
-		  if(percent<2)
+		  if(percent<1)
 			  self.remainingDebtView.hidden=YES;
 	  }
 	  

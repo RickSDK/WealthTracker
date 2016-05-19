@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TemplateVC.h"
 
-@interface MyPlanVC : UIViewController
+@interface MyPlanVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 

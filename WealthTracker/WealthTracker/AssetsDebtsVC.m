@@ -37,11 +37,19 @@
 
 	[self setupData];
 	
+	
 	if(!self.assetsFlg && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"Enter all loans and debts"];
 		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"DebtsCheckFlg"];
 	}
 }
+
+-(IBAction)topSegmentChanged:(id)sender {
+	[self.topSegment changeSegment];
+	[self setupData];
+	[self.mainTableView reloadData];
+}
+
 
 -(void)displayButtons {
 	[self.iconButton setTitle:[ObjectiveCScripts faIconOfType:self.type] forState:UIControlStateNormal];
@@ -53,6 +61,7 @@
 	self.interestRateLabel.hidden=(self.type==4);
 	self.paymentTextField.hidden=(self.type>2);
 	self.duesTextField.hidden=(self.type>1);
+	
 	NSLog(@"type: %d", self.type);
 }
 
@@ -110,6 +119,9 @@
 			[self.itemsArray addObject:obj];
 		
 		double amount = (self.assetsFlg)?obj.value:obj.balance;
+		if(self.topSegment.selectedSegmentIndex==1)
+			amount = (self.assetsFlg)?obj.valueChange:obj.balanceChange;
+			
 		self.totalAmount+=amount;
 		
 			GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:!self.assetsFlg currentMonthFlg:NO];
@@ -133,6 +145,8 @@
 	self.paymentTextField.text=@"";
 	self.interestTextField.text=@"";
 	self.dueDayTextField.text = @"1";
+	self.viewDetailsButton.enabled=NO;
+	self.titleLabel.text = @"New Item";
 	[self.nameTextField becomeFirstResponder];
 }
 
@@ -183,22 +197,32 @@
 
 	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfTypeString:obj.type], cell.nameLabel.text];
 	
-	if(obj.equityChange>0)
-		cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
-	if(obj.equityChange<0)
-		cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
-	
-	if(self.assetsFlg) {
-		cell.rightLabel.text = @"Value";
-		self.totalAmount+=obj.value;
-		[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:obj.value lightFlg:NO revFlg:NO];
+	if(self.topSegment.selectedSegmentIndex==0) {
+		if(obj.equity>0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+		if(obj.equity<0 || !self.assetsFlg)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
 	} else {
-		cell.rightLabel.text = @"Balance";
-		self.totalAmount+=obj.balance;
-		[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:obj.balance lightFlg:NO revFlg:YES];
-		if(obj.balance==0)
-			cell.bgView.backgroundColor=[UIColor grayColor];
+		if(obj.equityChange>0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
+		if(obj.equityChange<0)
+			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
 	}
+	
+	double amount=0;
+	BOOL revFlg=NO;
+	if(self.assetsFlg) {
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Value":@"Change";
+		amount = (self.topSegment.selectedSegmentIndex==0)?obj.value:obj.valueChange;
+	} else {
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Balance":@"Change";
+		amount = (self.topSegment.selectedSegmentIndex==0)?obj.balance:obj.balanceChange;
+		revFlg=YES;
+		if(obj.balance==0)
+			cell.bgView.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
+	}
+	[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:amount lightFlg:NO revFlg:revFlg];
+	self.totalAmount+=amount;
 	
 	cell.textLabel.textColor = [UIColor blackColor];
 	
@@ -239,12 +263,31 @@
 	if(self.expiredFlg)
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {
-		ItemObject *obj = [self.itemsArray objectAtIndex:indexPath.row];
-		UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
-		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.itemObject = obj;
-		[self.navigationController pushViewController:detailViewController animated:YES];
+		self.itemObject = [self.itemsArray objectAtIndex:indexPath.row];
+		self.viewDetailsButton.enabled=YES;
+		self.popupView.hidden=NO;
+		self.nameTextField.text=self.itemObject.name;
+		self.valueTextField.text=[NSString stringWithFormat:@"%d", (int)self.itemObject.value];
+		self.balanceTextField.text=[NSString stringWithFormat:@"%d", (int)self.itemObject.balance];
+		self.paymentTextField.text=self.itemObject.monthly_payment;
+		self.duesTextField.text=self.itemObject.homeowner_dues;
+		self.interestTextField.text=self.itemObject.interest_rate;
+		self.dueDayTextField.text = self.itemObject.statement_day;
+		self.titleLabel.text = @"Edit Item";
+		
+		self.type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
+		[self displayButtons];
+		[self.subTypeButton setTitle:self.itemObject.sub_type forState:UIControlStateNormal];
+		
+
 	}
+}
+
+-(IBAction)viewDetailsButtonClicked:(id)sender {
+	UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.itemObject = self.itemObject;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(IBAction)xButtonClicked:(id)sender {
@@ -274,22 +317,6 @@
 		return;
 	}
 	
-	if([self.valueTextField.text intValue]==0 && self.type!=3) {
-		[ObjectiveCScripts showAlertPopup:@"Enter a current value amount" message:@""];
-		return;
-	}
-	if([self.balanceTextField.text intValue]==0 && self.type!=4) {
-		[ObjectiveCScripts showAlertPopup:@"Enter a balance" message:@""];
-		return;
-	}
-	if([self.interestTextField.text intValue]==0 && self.type!=4) {
-		[ObjectiveCScripts showAlertPopup:@"Enter an interest rate" message:@""];
-		return;
-	}
-	if([self.paymentTextField.text intValue]==0 && self.type<=2) {
-		[ObjectiveCScripts showAlertPopup:@"Enter a monthly payment amount" message:@""];
-		return;
-	}
 	self.popupView.hidden=YES;
 	[self resignKeyboards];
 	
@@ -309,9 +336,19 @@
 	[self displayButtons];
 }
 
+
 -(void)createNewItem {
-		NSManagedObject *mo = [NSEntityDescription insertNewObjectForEntityForName:@"ITEM" inManagedObjectContext:self.managedObjectContext];
+	NSManagedObject *mo = nil;
+	if(self.itemObject.name.length>0) {
+		mo = [ItemObject moFromObject:self.itemObject context:self.managedObjectContext];
+	} else {
+		mo = [NSEntityDescription insertNewObjectForEntityForName:@"ITEM" inManagedObjectContext:self.managedObjectContext];
+		int rowId = [[CoreDataLib autoIncrementNumber] intValue];
+		[mo setValue:[NSNumber numberWithInt:rowId] forKey:@"rowId"];
+	}
+
 	[self initialyzeDatabaseRecord:mo];
+	
 	ItemObject *itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 	
 	int nowYear = [ObjectiveCScripts nowYear];
@@ -328,10 +365,6 @@
 	NSMutableArray *values = [[NSMutableArray alloc] init];
 	NSMutableArray *types = [[NSMutableArray alloc] init];
 
-	[keys addObject:@"rowId"];
-	[values addObject:[CoreDataLib autoIncrementNumber]];
-	[types addObject:@"int"];
-	
 	[keys addObject:@"name"];
 	[values addObject:self.nameTextField.text];
 	[types addObject:@"text"];

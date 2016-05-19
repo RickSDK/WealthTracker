@@ -25,6 +25,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *messageLabel;
 @property (nonatomic, strong) IBOutlet UILabel *expenseTotalLabel;
 @property (nonatomic, strong) IBOutlet UILabel *incomeTotalLabel;
+@property (nonatomic, strong) IBOutlet UILabel *bankAccountTotalLabel;
 
 @property (nonatomic, strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) IBOutlet UITextField *subNameTextField;
