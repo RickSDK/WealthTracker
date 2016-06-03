@@ -183,7 +183,12 @@
 	int displayMonth = 12;
 	displayMonth=self.nowMonth;
 	self.numberOfItems=0;
-	self.chartLabel.text = (self.chartSegmentControl.selectedSegmentIndex==0)?@"Net Worth Changes Per Month":@"Month by Month Tracking";
+	
+	self.chartLabel.text = @"Net Worth Changes Per Month";
+	if (self.chartSegmentControl.selectedSegmentIndex==1)
+		self.chartLabel.text = @"Month by Month Tracking";
+	if (self.chartSegmentControl.selectedSegmentIndex==2)
+		self.chartLabel.text = @"Changes This Month";
 
 	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
@@ -483,7 +488,7 @@
 		
 		AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.assetsFlg=(self.startTouchPosition.x<[[UIScreen mainScreen] bounds].size.width/2);
+		detailViewController.filterType=(self.startTouchPosition.x<[[UIScreen mainScreen] bounds].size.width/2)?1:2;
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		return;
 	}
@@ -595,7 +600,7 @@
 }
 
 -(IBAction)portfolioButtonClicked:(id)sender {
-	PortfolioVC *detailViewController = [[PortfolioVC alloc] initWithNibName:@"PortfolioVC" bundle:nil];
+	AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.expiredFlg=self.expiredFlg;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -637,7 +642,7 @@
 			break;
   case 3:
 			self.arrowImage.center = CGPointMake(self.myPlanButton.center.x, self.myPlanButton.frame.origin.y+120);
-			self.messageLabel.text = @"Use the 'Budget' tracker too keep track of every dollar you spend. Getting on a budget is the key.";
+			self.messageLabel.text = @"Use the 'Budget' tracker to keep track of every dollar you spend. Getting on a budget is the key.";
 			break;
   case 4:
 			self.arrowImage.center = CGPointMake(self.chartsButton.center.x, self.chartsButton.frame.origin.y+120);

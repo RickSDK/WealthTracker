@@ -69,7 +69,7 @@
 -(void)gotoAssetsPage:(BOOL)assetsFlg showPopup:(BOOL)showPopup {
 	AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.assetsFlg=assetsFlg;
+	detailViewController.filterType=assetsFlg;
 	detailViewController.showPopup=showPopup;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

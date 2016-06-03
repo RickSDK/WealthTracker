@@ -179,7 +179,8 @@
 //			[ObjectiveCScripts showAlertPopup:@"NOTICE" message:@"First delete all your data."];
 	}
 	if([kMenu5 isEqualToString:[self.menuItems objectAtIndex:indexPath.row]]) {
-		if(1)
+		BOOL flg=YES;
+		if(flg)
 			[ObjectiveCScripts showConfirmationPopup:@"WARNING!!" message:@"This will delete and erase ALL data currently saved on this device. Proceed?" delegate:self tag:kEraseDBAlert];
 		else
 			[ObjectiveCScripts showAlertPopup:@"Notice" message:@"As a safety guard, first set your age to 99, under the profile screen. Then come back to this screen to delete the data."];
@@ -346,6 +347,24 @@
 			nil];
 }
 
+-(NSArray *)keyTypesPurchases {
+	return [NSArray arrayWithObjects:
+			@"amount|double",
+			@"attrib01|text",
+			@"attrib02|int",
+			@"attrib03|double",
+			@"attrib04|bool",
+			@"boxCheckFlg|bool",
+			@"bucket|int",
+			@"dateStamp|date",
+			@"lastUpd|date",
+			@"month|int",
+			@"name|text",
+			@"purchaseId|int",
+			@"year|int",
+			nil];
+}
+
 -(void)eraseAllData {
 	[self eraseDataForEntity:@"PROFILE"];
 	[self eraseDataForEntity:@"ITEM"];
@@ -353,6 +372,7 @@
 	[self eraseDataForEntity:@"VALUE_UPDATE"];
 	[self eraseDataForEntity:@"CREDIT_SCORE"];
 	[self eraseDataForEntity:@"CASH_FLOW"];
+	[self eraseDataForEntity:@"PURCHASE"];
 	[self.managedObjectContext save:nil];
 }
 
@@ -367,6 +387,7 @@
 		[databaseItems addObject:[self dataForTable:@"VALUE_UPDATE" keyTypes:[self keyTypesValue]]];
 		[databaseItems addObject:[self dataForTable:@"CREDIT_SCORE" keyTypes:[self keyTypesCredit]]];
 		[databaseItems addObject:[self dataForTable:@"CASH_FLOW" keyTypes:[self keyTypesCashflow]]];
+		[databaseItems addObject:[self dataForTable:@"PURCHASE" keyTypes:[self keyTypesPurchases]]];
 		
 		[self sendExportedData:[databaseItems componentsJoinedByString:@"<table>"]];
 		[self.webServiceView stop];
@@ -391,6 +412,8 @@
 			[self importDataForTable:@"VALUE_UPDATE" data:[tables objectAtIndex:i++] keyTypes:[self keyTypesValue]];
 			[self importDataForTable:@"CREDIT_SCORE" data:[tables objectAtIndex:i++] keyTypes:[self keyTypesCredit]];
 			[self importDataForTable:@"CASH_FLOW" data:[tables objectAtIndex:i++] keyTypes:[self keyTypesCashflow]];
+			if(tables.count>i)
+				[self importDataForTable:@"PURCHASE" data:[tables objectAtIndex:i++] keyTypes:[self keyTypesPurchases]];
 			[self.managedObjectContext save:nil];
 			[ObjectiveCScripts showAlertPopup:@"Success!" message:@""];
 		} else

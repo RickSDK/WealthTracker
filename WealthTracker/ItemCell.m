@@ -25,9 +25,9 @@
 		self.bgView.layer.borderWidth = 1.;
 		[self.contentView addSubview:self.bgView];
 		
-		self.redLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, 316, 5)];
-		self.redLineView.backgroundColor=[UIColor redColor];
-		[self.bgView addSubview:self.redLineView];
+//		self.redLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, 316, 5)];
+//		self.redLineView.backgroundColor=[UIColor redColor];
+//		[self.bgView addSubview:self.redLineView];
 
 
 		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(4, 7, 30, 30)];
@@ -65,9 +65,9 @@
 		self.subTypeLabel.backgroundColor = [UIColor clearColor];
 		[self.bgView addSubview:self.subTypeLabel];
 		
-		float kRow1 = kTopEdge+30;
-		float kRow2 = kTopEdge+30+15;
-		float kRow3 = kTopEdge+32+30;
+//		float kRow1 = kTopEdge+30;
+//		float kRow2 = kTopEdge+30+15;
+//		float kRow3 = kTopEdge+32+30;
 
 
 		self.rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, kTopEdge-2, 120, 22)];
@@ -79,58 +79,58 @@
 		[self.bgView addSubview:self.rightLabel];
 
 		
-		float kCol1 = kleftEdge+75;
+//		float kCol1 = kleftEdge+75;
 		float kCol2 = kleftEdge+150;
 		
-		self.balanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow1, 163, 22)];
-		self.balanceLabel.font = [UIFont systemFontOfSize:15];
-		self.balanceLabel.adjustsFontSizeToFitWidth = YES;
-		self.balanceLabel.minimumScaleFactor = .8;
-		self.balanceLabel.text = @"";
-		self.balanceLabel.textAlignment = NSTextAlignmentLeft;
-		self.balanceLabel.textColor = [UIColor redColor];
-		self.balanceLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.balanceLabel];
+//		self.balanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow1, 163, 22)];
+//		self.balanceLabel.font = [UIFont systemFontOfSize:15];
+//		self.balanceLabel.adjustsFontSizeToFitWidth = YES;
+//		self.balanceLabel.minimumScaleFactor = .8;
+//		self.balanceLabel.text = @"";
+//		self.balanceLabel.textAlignment = NSTextAlignmentLeft;
+//		self.balanceLabel.textColor = [UIColor redColor];
+//		self.balanceLabel.backgroundColor = [UIColor clearColor];
+//		[self.bgView addSubview:self.balanceLabel];
 		
-		self.balanceChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, kRow1, 100, 22)];
-		self.balanceChangeLabel.font = [UIFont systemFontOfSize:15];
-		self.balanceChangeLabel.adjustsFontSizeToFitWidth = YES;
-		self.balanceChangeLabel.minimumScaleFactor = .8;
-		self.balanceChangeLabel.text = @"";
-		self.balanceChangeLabel.textAlignment = NSTextAlignmentCenter;
-		self.balanceChangeLabel.textColor = [UIColor blackColor];
-		self.balanceChangeLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.balanceChangeLabel];
+//		self.balanceChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, kRow1, 100, 22)];
+//		self.balanceChangeLabel.font = [UIFont systemFontOfSize:15];
+//		self.balanceChangeLabel.adjustsFontSizeToFitWidth = YES;
+//		self.balanceChangeLabel.minimumScaleFactor = .8;
+//		self.balanceChangeLabel.text = @"";
+//		self.balanceChangeLabel.textAlignment = NSTextAlignmentCenter;
+//		self.balanceChangeLabel.textColor = [UIColor blackColor];
+//		self.balanceChangeLabel.backgroundColor = [UIColor clearColor];
+//		[self.bgView addSubview:self.balanceChangeLabel];
 		
-		self.valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow2, 163, 22)];
-		self.valueLabel.font = [UIFont systemFontOfSize:15];
-		self.valueLabel.adjustsFontSizeToFitWidth = YES;
-		self.valueLabel.minimumScaleFactor = .8;
-		self.valueLabel.text = @"";
-		self.valueLabel.textAlignment = NSTextAlignmentLeft;
-		self.valueLabel.textColor = [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
-		self.valueLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.valueLabel];
+//		self.valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow2, 163, 22)];
+//		self.valueLabel.font = [UIFont systemFontOfSize:15];
+//		self.valueLabel.adjustsFontSizeToFitWidth = YES;
+//		self.valueLabel.minimumScaleFactor = .8;
+//		self.valueLabel.text = @"";
+//		self.valueLabel.textAlignment = NSTextAlignmentLeft;
+//		self.valueLabel.textColor = [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
+//		self.valueLabel.backgroundColor = [UIColor clearColor];
+//		[self.bgView addSubview:self.valueLabel];
 		
-		self.valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, kRow2, 100, 22)];
-		self.valueChangeLabel.font = [UIFont systemFontOfSize:15];
-		self.valueChangeLabel.adjustsFontSizeToFitWidth = YES;
-		self.valueChangeLabel.minimumScaleFactor = .8;
-		self.valueChangeLabel.text = @"";
-		self.valueChangeLabel.textAlignment = NSTextAlignmentCenter;
-		self.valueChangeLabel.textColor = [UIColor blackColor];
-		self.valueChangeLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.valueChangeLabel];
+//		self.valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, kRow2, 100, 22)];
+//		self.valueChangeLabel.font = [UIFont systemFontOfSize:15];
+//		self.valueChangeLabel.adjustsFontSizeToFitWidth = YES;
+//		self.valueChangeLabel.minimumScaleFactor = .8;
+//		self.valueChangeLabel.text = @"";
+//		self.valueChangeLabel.textAlignment = NSTextAlignmentCenter;
+//		self.valueChangeLabel.textColor = [UIColor blackColor];
+//		self.valueChangeLabel.backgroundColor = [UIColor clearColor];
+//		[self.bgView addSubview:self.valueChangeLabel];
 		
-		self.equityLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow3, 163, 22)];
-		self.equityLabel.font = [UIFont boldSystemFontOfSize:17];
-		self.equityLabel.adjustsFontSizeToFitWidth = YES;
-		self.equityLabel.minimumScaleFactor = .8;
-		self.equityLabel.text = @"amountLabel";
-		self.equityLabel.textAlignment = NSTextAlignmentLeft;
-		self.equityLabel.textColor = [UIColor purpleColor];
-		self.equityLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.equityLabel];
+//		self.equityLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol1, kRow3, 163, 22)];
+//		self.equityLabel.font = [UIFont boldSystemFontOfSize:17];
+//		self.equityLabel.adjustsFontSizeToFitWidth = YES;
+//		self.equityLabel.minimumScaleFactor = .8;
+//		self.equityLabel.text = @"amountLabel";
+//		self.equityLabel.textAlignment = NSTextAlignmentLeft;
+//		self.equityLabel.textColor = [UIColor purpleColor];
+//		self.equityLabel.backgroundColor = [UIColor clearColor];
+//		[self.bgView addSubview:self.equityLabel];
 		
 		self.equityChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, 22, 100, 22)];
 		self.equityChangeLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -192,7 +192,10 @@
 - (void)layoutSubviews {
 	
 	[super layoutSubviews];
-	self.bgView.frame = CGRectMake(2, 2, self.frame.size.width-4, 48);
+	float width=self.frame.size.width;
+	self.bgView.frame = CGRectMake(2, 2, width-4, 46);
+	self.rightLabel.frame = CGRectMake(width-120, kTopEdge-2, 120, 22);
+	self.equityChangeLabel.frame = CGRectMake(width-110, 22, 100, 22);
 	
 	
 }

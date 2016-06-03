@@ -57,7 +57,6 @@
 	self.colorsArray2 = [[NSMutableArray alloc] init];
 	
 	
-	[self setTitle:[ObjectiveCScripts fontAwesomeTextForType:self.tag]];
 	self.monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
 	NSLog(@"+++tag: %d, monthlyIncome: %d", self.tag, self.monthlyIncome);
 
@@ -76,12 +75,19 @@
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-	if(self.tag==2 || self.tag==1) {
+//	if(self.tag==2 || self.tag==1) {
 		self.topSegment.selectedSegmentIndex=1;
 		[self.topSegment changeSegment];
-	}
+//	}
 	self.graphImageView.hidden=YES;
 	[self setupData];
+	
+	if(self.tag>=3)
+		self.typeSegment.selectedSegmentIndex=self.tag-3;
+	else
+		self.typeSegment.selectedSegmentIndex=self.tag+1;
+	[self.typeSegment changeSegment];
+
 }
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
@@ -162,11 +168,12 @@
 
 -(void)setupData {
 	
+	[self setTitle:[ObjectiveCScripts fontAwesomeTextForType:self.tag]];
 
 	
 	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Monthly Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
 	
-	self.monthLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+	self.monthBottomLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 	
 	self.nextButton.enabled = !(self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
 	if(self.displayYear>self.nowYear)
@@ -473,10 +480,10 @@
 	if(percentOfIncome<34)
 		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be close to 25%%.", percentOfIncome];
 	
-	if(percentMonth>=0) {
-		if(percentYear==0)
-			line2 = @"Your real estate value is unchanged this month.";
-		else if(percentYear>0)
+	if(percentMonth==0)
+		line2 = @"Your real estate value is unchanged this month.";
+	else if(percentMonth>0) {
+		if(percentYear>0)
 			line2 = [NSString stringWithFormat:@"Your real estate value is up another %.1f%% this month, bringing you up to %.1f%% on the year.", percentMonth, percentYear];
 		else
 			line2 = [NSString stringWithFormat:@"Your real estate value recovered %.1f%% this month, but you are still sitting at %.1f%% on the year.", percentMonth, percentYear];
@@ -571,6 +578,7 @@
 
 -(void)addConclusionsForWealth:(double)annual_income estValuePerYear:(double)estValuePerYear netWorthToday:(double)netWorthToday monthlyChange:(double)monthlyChange {
 	int idealNetWorth = [ObjectiveCScripts calculateIdealNetWorth:annual_income];
+	
 	NSString *idealNetWorthString = [GraphLib smallLabelForMoney:idealNetWorth totalMoneyRange:idealNetWorth];
 	
 	int timeToReach = 99;
@@ -1377,6 +1385,15 @@
 	self.graphImageView.hidden=!self.graphImageView.hidden;
 	
 	[self.mainSegmentControl changeSegment];
+}
+
+-(IBAction)typeSegmentChanged:(id)sender {
+	[self.typeSegment changeSegment];
+	self.tag=(int)self.typeSegment.selectedSegmentIndex-1;
+	if(self.tag<1)
+		self.tag+=4;
+	
+	[self setupData];
 }
 
 

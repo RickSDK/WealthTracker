@@ -51,13 +51,27 @@
 #pragma mark - In App Purchase
 
 -(IBAction)restorePurchaseButtonClicked:(id)sender {
-	[self requestProUpgradeProductData];
+	[self.webServiceView showCancelButton];
+	[self.webServiceView startWithTitle:@"Working..."];
+	[self restoreStore];
+//	[self requestProUpgradeProductData];
 //	NSSet *productIdentifiers = [NSSet setWithObject:kInAppPurchaseProUpgradeProductId];
 //	SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
 //	request.delegate = self;
 //	[request start];
 //	self.productsRequest = request; // <<<--- This will retain the request object
 }
+
+- (void)restoreStore
+{
+	// restarts any purchases if they were interrupted last time the app was open
+	[[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+	[[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+	
+	// get the product description (defined in early sections)
+	[self requestProUpgradeProductData];
+}
+
 
 
 -(IBAction)upgradeButtonClicked:(id)sender {

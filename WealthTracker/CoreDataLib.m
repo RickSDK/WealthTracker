@@ -464,7 +464,7 @@
 	if(multiplyer==0)
 		return; // dont need to update
 	
-	for(int i=1; i<=24; i++) {
+	for(int i=1; i<=40; i++) {
 		month--;
 		if(month<=0) {
 			month=12;

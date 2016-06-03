@@ -13,6 +13,7 @@
 #import "AutoBuyVC.h"
 #import "EducationVC.h"
 #import "FinancesVC.h"
+#import "InAppPurchaseVC.h"
 
 #define kMenu1	@"Education"
 #define kMenu2	@"Finances"
@@ -45,7 +46,17 @@
 	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
 
+	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length==0 && [ObjectiveCScripts getUserDefaultValue:@"upgradeFlgCheck"].length==0) {
+		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"upgradeFlgCheck"];
+		[ObjectiveCScripts showAlertPopupWithDelegate:@"Thankyou for your business!" message:@"Please check out the upgrade features" delegate:self tag:1];
+	}
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	InAppPurchaseVC *detailViewController = [[InAppPurchaseVC alloc] initWithNibName:@"InAppPurchaseVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

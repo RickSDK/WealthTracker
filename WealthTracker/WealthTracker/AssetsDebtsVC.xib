@@ -9,7 +9,9 @@
             <connections>
                 <outlet property="balanceTextField" destination="tGz-We-iCj" id="KgC-o1-jDT"/>
                 <outlet property="bottomView" destination="RZ5-53-8bb" id="oom-3L-1rQ"/>
+                <outlet property="chooseTypeView" destination="YlZ-GK-245" id="mCP-KF-uev"/>
                 <outlet property="dueDayTextField" destination="0Dd-lM-eiw" id="Hfo-Da-3bi"/>
+                <outlet property="duesLabel" destination="jlJ-Yn-isz" id="C8g-KH-0O1"/>
                 <outlet property="duesTextField" destination="cOP-e0-ILh" id="YLd-TM-thw"/>
                 <outlet property="iconButton" destination="pLK-WE-b38" id="ZJ3-uR-iGb"/>
                 <outlet property="interestRateLabel" destination="Fyi-z0-amC" id="41S-BO-AWg"/>
@@ -17,15 +19,18 @@
                 <outlet property="keyboardButton" destination="MeA-nc-ivQ" id="Wd6-aO-ydX"/>
                 <outlet property="mainTableView" destination="wZF-k6-iWh" id="hdd-fB-8Vh"/>
                 <outlet property="messageLabel" destination="Lr2-NK-9yC" id="rbK-X6-mao"/>
+                <outlet property="moPayLabel" destination="JDZ-nE-tcD" id="PW8-wu-KWz"/>
                 <outlet property="monthLabel" destination="EHF-Gb-n5p" id="XiT-v8-ycw"/>
                 <outlet property="nameTextField" destination="maH-oB-34T" id="MF0-Ru-QFl"/>
                 <outlet property="paymentTextField" destination="va8-d5-4QE" id="hfs-DB-fmW"/>
                 <outlet property="popupView" destination="03p-5f-OZL" id="VWT-ZD-tDf"/>
                 <outlet property="subTypeButton" destination="cgR-A8-E3R" id="1Qx-qZ-bBH"/>
+                <outlet property="submitButton" destination="pcq-z0-PEJ" id="MzS-p2-vFP"/>
                 <outlet property="titleLabel" destination="iEj-iA-EyF" id="V4V-ae-pQg"/>
                 <outlet property="topSegment" destination="Afk-4p-h5D" id="ctt-jc-1FM"/>
                 <outlet property="totalAmountLabel" destination="Jb8-9L-Jxw" id="BB6-SK-eVE"/>
                 <outlet property="typeLabel" destination="eif-Tu-igK" id="gp6-5U-GX9"/>
+                <outlet property="typeSegment" destination="gjl-fK-d0c" id="3EW-f8-GLy"/>
                 <outlet property="valueTextField" destination="8NT-t6-xZS" id="Rae-2q-3Fg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewDetailsButton" destination="5VP-MS-WVS" id="kMU-jQ-VME"/>
@@ -48,8 +53,20 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="Afk-4p-h5D" customClass="CustomSegment">
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="gjl-fK-d0c" customClass="CustomSegment">
                     <rect key="frame" x="0.0" y="25" width="320" height="29"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="All"/>
+                        <segment title="Assets"/>
+                        <segment title="Debts"/>
+                    </segments>
+                    <connections>
+                        <action selector="typeSegmentChanged:" destination="-1" eventType="valueChanged" id="b3z-sI-gx5"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="Afk-4p-h5D" customClass="CustomSegment">
+                    <rect key="frame" x="0.0" y="53" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
                         <segment title="Total"/>
@@ -74,14 +91,14 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tTf-LP-aie">
-                            <rect key="frame" x="212.00000026702878" y="2" width="100" height="21"/>
+                            <rect key="frame" x="212" y="2" width="100" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="Jb8-9L-Jxw">
-                            <rect key="frame" x="206.00000026702878" y="21" width="106" height="21"/>
+                            <rect key="frame" x="206" y="21" width="106" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -91,7 +108,7 @@
                     <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="wZF-k6-iWh">
-                    <rect key="frame" x="0.0" y="56" width="320" height="398"/>
+                    <rect key="frame" x="0.0" y="82" width="320" height="372"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <connections>
@@ -99,8 +116,8 @@
                         <outlet property="delegate" destination="-1" id="Zlj-ak-21K"/>
                     </connections>
                 </tableView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lr2-NK-9yC">
-                    <rect key="frame" x="30" y="60" width="261" height="170"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lr2-NK-9yC">
+                    <rect key="frame" x="30" y="80" width="261" height="170"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <string key="text">Create entries for all your assets:
 1) Real Estate
@@ -118,7 +135,7 @@ Press the '+' button above to add items</string>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" minimumFontSize="17" id="maH-oB-34T">
-                            <rect key="frame" x="18" y="31" width="277" height="30"/>
+                            <rect key="frame" x="67" y="71" width="228" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
@@ -154,7 +171,7 @@ Press the '+' button above to add items</string>
                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pLK-WE-b38" customClass="CustomButton">
-                            <rect key="frame" x="18" y="72" width="46" height="30"/>
+                            <rect key="frame" x="18" y="30" width="46" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" title="F">
@@ -165,7 +182,7 @@ Press the '+' button above to add items</string>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cgR-A8-E3R" customClass="CustomButton">
-                            <rect key="frame" x="129" y="69" width="166" height="30"/>
+                            <rect key="frame" x="129" y="30" width="166" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" title="Button">
@@ -187,7 +204,7 @@ Press the '+' button above to add items</string>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Real Estate" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="eif-Tu-igK">
-                            <rect key="frame" x="67" y="69" width="54" height="36"/>
+                            <rect key="frame" x="67" y="30" width="54" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -280,6 +297,36 @@ Press the '+' button above to add items</string>
                                 <action selector="viewDetailsButtonClicked:" destination="-1" eventType="touchDown" id="O4U-7A-cPn"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2jN-Yn-aC5">
+                            <rect key="frame" x="10" y="75" width="54" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" id="YlZ-GK-245">
+                            <rect key="frame" x="18" y="57" width="258" height="165"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose type and sub-type" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wxr-sK-Ei1">
+                                    <rect key="frame" x="16" y="56" width="226" height="101"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blueArrowUp.png" id="jmy-cZ-3mH">
+                                    <rect key="frame" x="0.0" y="7" width="59" height="60"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </imageView>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blueArrowUp.png" id="7wr-Zo-3M7">
+                                    <rect key="frame" x="176" y="7" width="59" height="60"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                 </view>
@@ -291,6 +338,7 @@ Press the '+' button above to add items</string>
         </view>
     </objects>
     <resources>
+        <image name="blueArrowUp.png" width="189" height="267"/>
         <image name="greenTexture.jpg" width="800" height="1280"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

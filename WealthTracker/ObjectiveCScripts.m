@@ -576,7 +576,7 @@
 }
 
 +(int)calculateIdealNetWorth:(int)annual_income {
-	int idealNetWorth = annual_income*7; // ideally you would like to retire and make the same amount
+	int idealNetWorth = annual_income*8.5; // ideally you would like to retire and make the same amount
 	if(idealNetWorth<400000)
 		idealNetWorth=400000; // at least 400,000
 	if(idealNetWorth>10000000)

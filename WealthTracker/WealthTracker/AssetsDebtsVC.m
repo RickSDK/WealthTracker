@@ -20,8 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	[self setTitle:(self.assetsFlg)?@"Assets":@"Debts"];
-	
 	self.bottomView.backgroundColor = [ObjectiveCScripts darkColor];
 	if(self.showPopup)
 		[self addNewItem];
@@ -38,7 +36,7 @@
 	[self setupData];
 	
 	
-	if(!self.assetsFlg && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
+	if(self.filterType==2 && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"Enter all loans and debts"];
 		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"DebtsCheckFlg"];
 	}
@@ -47,7 +45,12 @@
 -(IBAction)topSegmentChanged:(id)sender {
 	[self.topSegment changeSegment];
 	[self setupData];
-	[self.mainTableView reloadData];
+}
+
+-(IBAction)typeSegmentChanged:(id)sender {
+	[self.typeSegment changeSegment];
+	self.filterType = (int)self.typeSegment.selectedSegmentIndex;
+	[self setupData];
 }
 
 
@@ -60,7 +63,9 @@
 	self.interestTextField.hidden=(self.type==4);
 	self.interestRateLabel.hidden=(self.type==4);
 	self.paymentTextField.hidden=(self.type>2);
+	self.moPayLabel.hidden=(self.type>2);
 	self.duesTextField.hidden=(self.type>1);
+	self.duesLabel.hidden=(self.type>1);
 	
 	NSLog(@"type: %d", self.type);
 }
@@ -105,34 +110,61 @@
 }
 
 -(void)setupData {
+	self.typeSegment.selectedSegmentIndex = self.filterType;
+	[self.typeSegment changeSegment];
+	
+	switch (self.filterType) {
+  case 0:
+			[self setTitle:@"Portfolio"];
+			break;
+  case 1:
+			[self setTitle:@"Assets"];
+			break;
+  case 2:
+			[self setTitle:@"Debts"];
+			break;
+			
+  default:
+			break;
+	}
+	
 	[self.graphObjects removeAllObjects];
 	[self.itemsArray removeAllObjects];
 	self.totalAmount=0;
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"type" mOC:self.managedObjectContext ascendingFlg:NO];
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		
 		BOOL isAsset = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Asset" isEqualToString:obj.type]);
 		BOOL isDebt = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Debt" isEqualToString:obj.type]);
-		if(self.assetsFlg && isAsset)
+		if(self.filterType==0)
 			[self.itemsArray addObject:obj];
-		else if(!self.assetsFlg && isDebt)
+		else if(self.filterType==1 && isAsset)
+			[self.itemsArray addObject:obj];
+		else if(self.filterType==2 && isDebt)
 			[self.itemsArray addObject:obj];
 		
-		double amount = (self.assetsFlg)?obj.value:obj.balance;
-		if(self.topSegment.selectedSegmentIndex==1)
-			amount = (self.assetsFlg)?obj.valueChange:obj.balanceChange;
-			
+		double amount = (self.filterType==1)?obj.value:obj.balance;
+		if(self.filterType==0)
+			amount=obj.equity;
+		if(self.topSegment.selectedSegmentIndex==1) {
+			amount = (self.filterType==1)?obj.valueChange:obj.balanceChange;
+			if(self.filterType==0)
+				amount=obj.equityChange;
+		}
+		
 		self.totalAmount+=amount;
 		
-			GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:!self.assetsFlg currentMonthFlg:NO];
-		if(amount>0)
+		GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO];
+
+		if(amount != 0)
 			[self.graphObjects addObject:gObj];
 		
 	}
-	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:!self.assetsFlg];
+	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:self.filterType==2];
 	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
 	self.messageLabel.hidden=self.itemsArray.count>0;
-	if(!self.assetsFlg)
+	if(self.filterType==2)
 		self.messageLabel.text = @"Press the '+' button above to enter debts";
 	[self.mainTableView reloadData];
 }
@@ -147,14 +179,18 @@
 	self.dueDayTextField.text = @"1";
 	self.viewDetailsButton.enabled=NO;
 	self.titleLabel.text = @"New Item";
-	[self.nameTextField becomeFirstResponder];
+	self.nameTextField.enabled=NO;
+	self.submitButton.enabled=NO;
+	self.chooseTypeView.hidden=NO;
+	[self.iconButton setTitle:@"" forState:UIControlStateNormal];
+	[self.subTypeButton setTitle:@"" forState:UIControlStateNormal];
 }
 
 -(IBAction)breakdownButtonClicked:(id)sender {
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.tag=(self.assetsFlg)?11:12;
-	detailViewController.fieldType=!self.assetsFlg;
+	detailViewController.tag=(self.filterType==1)?11:12;
+	detailViewController.fieldType=self.filterType==2;
 	detailViewController.type=0;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -200,7 +236,7 @@
 	if(self.topSegment.selectedSegmentIndex==0) {
 		if(obj.equity>0)
 			cell.bgView.backgroundColor = [UIColor colorWithRed:.8 green:1 blue:.8 alpha:1];
-		if(obj.equity<0 || !self.assetsFlg)
+		if(obj.equity<0 || self.filterType==2)
 			cell.bgView.backgroundColor = [UIColor colorWithRed:1 green:.8 blue:.8 alpha:1];
 	} else {
 		if(obj.equityChange>0)
@@ -211,7 +247,10 @@
 	
 	double amount=0;
 	BOOL revFlg=NO;
-	if(self.assetsFlg) {
+	if(self.filterType==0) {
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Equity":@"Change";
+		amount = (self.topSegment.selectedSegmentIndex==0)?obj.equity:obj.equityChange;
+	} else if(self.filterType==1) {
 		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Value":@"Change";
 		amount = (self.topSegment.selectedSegmentIndex==0)?obj.value:obj.valueChange;
 	} else {
@@ -264,8 +303,19 @@
 		[ObjectiveCScripts showAlertPopup:@"Sorry!" message:@"The free version of this app has expired. please go to the options menu to unlock all the features of this awesome app!"];
 	else {
 		self.itemObject = [self.itemsArray objectAtIndex:indexPath.row];
+		
+		if(self.typeSegment.selectedSegmentIndex==0) {
+			UpdateDetails *detailViewController = [[UpdateDetails alloc] initWithNibName:@"UpdateDetails" bundle:nil];
+			detailViewController.managedObjectContext = self.managedObjectContext;
+			detailViewController.itemObject = self.itemObject;
+			[self.navigationController pushViewController:detailViewController animated:YES];
+			return;
+		}
 		self.viewDetailsButton.enabled=YES;
 		self.popupView.hidden=NO;
+		self.nameTextField.enabled=YES;
+		self.submitButton.enabled=YES;
+		self.chooseTypeView.hidden=YES;
 		self.nameTextField.text=self.itemObject.name;
 		self.valueTextField.text=[NSString stringWithFormat:@"%d", (int)self.itemObject.value];
 		self.balanceTextField.text=[NSString stringWithFormat:@"%d", (int)self.itemObject.balance];
@@ -326,13 +376,20 @@
 
 -(IBAction)typeButtonClicked:(id)sender {
 	self.type++;
+	self.chooseTypeView.hidden=YES;
+	self.nameTextField.enabled=YES;
+	self.submitButton.enabled=YES;
 	if(self.type>4)
 		self.type=1;
 	self.subType=0;
 	[self displayButtons];
 }
 -(IBAction)subtypeButtonClicked:(id)sender {
+	if(!self.chooseTypeView.hidden)
+		return;
+	
 	self.subType++;
+	self.chooseTypeView.hidden=YES;
 	[self displayButtons];
 }
 

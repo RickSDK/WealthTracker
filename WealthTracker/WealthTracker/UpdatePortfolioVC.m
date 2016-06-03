@@ -639,11 +639,13 @@
 
 -(void)scrollToHeight:(float)height {
 	return;
+	/*
 	UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, height, 0.0);
 	self.mainTableView.contentInset = contentInsets;
 	self.mainTableView.scrollIndicatorInsets = contentInsets;
 	
 	[self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+	 */
 }
 
 -(void)beginEditing {
