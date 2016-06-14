@@ -189,9 +189,14 @@
 -(IBAction)breakdownButtonClicked:(id)sender {
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.tag=(self.filterType==1)?11:12;
-	detailViewController.fieldType=self.filterType==2;
 	detailViewController.type=0;
+	if(self.typeSegment.selectedSegmentIndex==0) {
+		detailViewController.tag=4;
+		detailViewController.fieldType=2; // equity
+	} else {
+		detailViewController.tag=(self.filterType==1)?11:12;
+		detailViewController.fieldType=self.filterType==2;
+	}
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
@@ -230,8 +235,20 @@
 		[ItemCell updateCell:cell obj:obj];
 	
 	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19];
-
 	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", [ObjectiveCScripts faIconOfTypeString:obj.type], cell.nameLabel.text];
+	
+	cell.arrowLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20];
+	if(obj.equityChange>0) {
+		cell.arrowLabel.text = [NSString fontAwesomeIconStringForEnum:FAArrowUp];
+		cell.arrowLabel.textColor = [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
+	} else {
+		cell.arrowLabel.text = [NSString fontAwesomeIconStringForEnum:FAArrowDown];
+		cell.arrowLabel.textColor = [UIColor redColor];
+	}
+	cell.arrowLabel.hidden = obj.equityChange==0;
+	if(self.typeSegment.selectedSegmentIndex==2)
+		cell.arrowLabel.hidden=YES;
+	
 	
 	if(self.topSegment.selectedSegmentIndex==0) {
 		if(obj.equity>0)
@@ -270,7 +287,7 @@
 	
 	cell.redLineView.hidden=YES;
 	cell.bgView.layer.borderColor = [UIColor blackColor].CGColor;
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.backgroundColor = [ObjectiveCScripts colorForType:(int)indexPath.section+1];
 	
 	return cell;

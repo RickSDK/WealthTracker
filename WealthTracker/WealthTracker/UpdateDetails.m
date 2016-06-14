@@ -27,19 +27,7 @@
 
 @implementation UpdateDetails
 
--(void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
-	
-	NSManagedObject *mo = [CoreDataLib managedObjFromId:self.itemObject.rowId managedObjectContext:self.managedObjectContext];
-	self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 
-	[self setupData];
-	
-
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -66,8 +54,42 @@
 	[recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
 	[self.mainTableView addGestureRecognizer:recognizer];
 	
+	self.monthView.backgroundColor = [ObjectiveCScripts mediumkColor];
+	
+	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
+		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
+	
+	NSManagedObject *mo = [CoreDataLib managedObjFromId:self.itemObject.rowId managedObjectContext:self.managedObjectContext];
+	self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+	
+	[self setupData];
+	
+	
+}
+
+-(IBAction)prevButtonPressed:(id)sender {
+	self.displayMonth--;
+	if(self.displayMonth<1) {
+		self.displayMonth=12;
+		self.displayYear--;
+	}
+	[self setupData];
+}
+-(IBAction)nextButtonPressed:(id)sender {
+	self.displayMonth++;
+	if(self.displayMonth>12) {
+		self.displayMonth=1;
+		self.displayYear++;
+	}
+	[self setupData];
 }
 
 -(IBAction)menuButtonPressed:(id)sender {
@@ -162,12 +184,51 @@
 }
 
 -(void)displayTopBar {
-	self.monthLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMMM"];
-	
 	self.statusImageView.image=[ObjectiveCScripts imageForStatus:self.itemObject.status];
+	int month=self.displayMonth;
+	int year = self.displayYear;
 	
-	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:self.nowMonth year:self.nowYear field:nil context:self.managedObjectContext numMonths:1 type:0];
-	[ObjectiveCScripts displayNetChangeLabel:self.amountLabel amount:equityChange lightFlg:YES revFlg:NO];
+	double equityChange = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:month year:year field:nil context:self.managedObjectContext numMonths:1 type:0];
+	[self updateTopBoxView:self.changeView label:self.changeLabel arrow:self.changeArrowLabel amount:equityChange];
+	
+	month--;
+	if(month<1) {
+		month=12;
+		year--;
+	}
+	double equityChange2 = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:month year:year field:nil context:self.managedObjectContext numMonths:1 type:0];
+	[self updateTopBoxView:self.trendView label:self.trendLabel arrow:self.trendArrowLabel amount:equityChange-equityChange2];
+
+	month--;
+	if(month<1) {
+		month=12;
+		year--;
+	}
+	double equityChange3 = [ObjectiveCScripts changedForItem:[self.itemObject.rowId intValue] month:month year:year field:nil context:self.managedObjectContext numMonths:1 type:0];
+
+	[self updateTopBoxView:self.paceView label:self.paceLabel arrow:self.paceArrowLabel amount:equityChange-equityChange2-(equityChange2-equityChange3)];
+
+	NSLog(@"+++%f %f", equityChange2, equityChange3);
+
+}
+
+-(void)updateTopBoxView:(UIView *)view label:(UILabel *)label arrow:(UILabel *)arrow amount:(float)amount {
+	[ObjectiveCScripts displayNetChangeLabel:label amount:amount lightFlg:NO revFlg:NO];
+	if(amount==0) {
+		view.backgroundColor=[UIColor colorWithWhite:.8 alpha:1];
+		arrow.hidden=YES;
+		return;
+	}
+	arrow.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	if(amount>0) {
+		view.backgroundColor=[UIColor greenColor];
+		arrow.text = [NSString fontAwesomeIconStringForEnum:FAArrowUp];
+		arrow.textColor = [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
+	} else {
+		view.backgroundColor=[UIColor yellowColor];
+		arrow.text = [NSString fontAwesomeIconStringForEnum:FAArrowDown];
+		arrow.textColor = [UIColor redColor];
+	}
 }
 
 -(void)checkHighLow {
@@ -200,6 +261,10 @@
 	[self.valuesArray removeAllObjects];
 	[self.colorsArray removeAllObjects];
 	
+	self.nextButton.enabled=(self.displayYear<self.nowYear || self.displayMonth != self.nowMonth);
+	self.monthDisplayLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
+
+
 	[self displayTopBar];
 
 	NSString *year_month = [NSString stringWithFormat:@"%d%02d", self.displayYear, self.displayMonth];
@@ -243,7 +308,10 @@
 		[self.colorsArray addObject:[UIColor blackColor]];
 	}
 	
-	if([self.itemObject.monthly_payment intValue]>0) {
+	if(balance==0)
+		self.itemObject.monthly_payment = 0;
+	
+	if([self.itemObject.monthly_payment intValue]+[self.itemObject.homeowner_dues intValue]>0) {
 		[self.namesArray addObject:@"Monthly Payment"];
 		[self.valuesArray addObject:[self format:self.itemObject.monthly_payment type:1]];
 		[self.colorsArray addObject:[UIColor blackColor]];
@@ -467,49 +535,23 @@
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
 	if(indexPath.section==0) {
-		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
-		GraphCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
 		if(cell==nil)
-			cell = [[GraphCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		cell.titleLabel.text = self.itemObject.name;
-		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
-		[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
-		[cell.nextYearButton addTarget:self action:@selector(nextMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
+		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear]];
 		
-
-		BOOL nextFlg = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
-		if(nextFlg)
-			[cell.nextYearButton setTitle:@"Next" forState:UIControlStateNormal];
-		else
-			[cell.nextYearButton setTitle:@"-" forState:UIControlStateNormal];
-		
-		cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear];
-
-		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
-
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
 	} else if(indexPath.section==1) {
-		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
-		GraphCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
 		if(cell==nil)
-			cell = [[GraphCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-		cell.titleLabel.text = self.itemObject.name;
-		cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [self monthNameForNumber:self.displayMonth], self.displayYear];
-		[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
-		[cell.nextYearButton addTarget:self action:@selector(nextMonthButtonPressed) forControlEvents:UIControlEventTouchDown];
-		
-		
-		BOOL nextFlg = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
-		if(nextFlg)
-			[cell.nextYearButton setTitle:@"Next" forState:UIControlStateNormal];
-		else
-			[cell.nextYearButton setTitle:@"-" forState:UIControlStateNormal];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
 		int type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 		BOOL reverseColorFlg=NO;
@@ -518,9 +560,8 @@
 		
 		NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0 displayTotalFlg:NO];
 		
-		cell.graphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 
-		cell.topView.backgroundColor = [ObjectiveCScripts colorForType:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type]];
+		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib graphBarsWithItems:graphArray]];
 		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -672,17 +713,6 @@
 	return 1;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==0) {
-		self.displayBarsFlg=!self.displayBarsFlg;
-		[self setupData];
-	}
-	if((self.itemObject.status>0 && indexPath.section==3)) {
-		
-		[self drillDown];
-	}
-}
-
 -(IBAction)payoffButtonPressed:(id)sender {
 	[self drillDown];
 }
@@ -753,11 +783,32 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section<2)
-		return [ObjectiveCScripts chartHeightForSize:254];
+		return [ObjectiveCScripts chartHeightForSize:200];
 	else
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
 																			  tableView:self.mainTableView
 																   labelWidthProportion:0.6]+20;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [[event allTouches] anyObject];
+	self.startTouchPosition = [touch locationInView:self.view];
+	
+	if(CGRectContainsPoint(self.changeView.frame, self.startTouchPosition)) {
+		self.popupView.hidden=NO;
+		self.popupTitleLabel.text = @"Change";
+		self.popupDescLabel.text = @"Equity this month versus equity last month.";
+	}
+	if(CGRectContainsPoint(self.trendView.frame, self.startTouchPosition)) {
+		self.popupView.hidden=NO;
+		self.popupTitleLabel.text = @"Trend";
+		self.popupDescLabel.text = @"Change this month versus change last month.";
+	}
+	if(CGRectContainsPoint(self.paceView.frame, self.startTouchPosition)) {
+		self.popupView.hidden=NO;
+		self.popupTitleLabel.text = @"Pace";
+		self.popupDescLabel.text = @"Trend this month versus trend last month.";
+	}
 }
 
 @end

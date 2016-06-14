@@ -27,6 +27,7 @@
 @property (nonatomic, retain) UILabel *statement_dayLabel;
 @property (nonatomic, retain) UILabel *statement_dayLabel2;
 @property (nonatomic, retain) UILabel *rightLabel;
+@property (nonatomic, retain) UILabel *arrowLabel;
 
 +(void)updateCell:(ItemCell *)cell obj:(ItemObject *)obj;
 

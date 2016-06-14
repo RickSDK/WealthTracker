@@ -354,6 +354,7 @@
 }
 
 +(void)updateItemAmount:(ItemObject *)obj type:(int)type month:(int)month year:(int)year currentFlg:(BOOL)currentFlg amount:(double)amount moc:(NSManagedObjectContext *)moc {
+	// type 1 = bal, 0 = value
 	int rowId = [obj.rowId intValue];
 	if(rowId==0) {
 		[ObjectiveCScripts showAlertPopup:@"ERROR" message:@"no rowId for Object!"];
@@ -445,7 +446,7 @@
 	int itemType = [ObjectiveCScripts typeNumberFromTypeString:obj.type];
 	float interest_rate = [obj.interest_rate floatValue];
 	double interest = (interest_rate*amount)/100/12;
-	if(interest>0)
+	if(type==1)
 		[updateRecord setValue:[NSNumber numberWithDouble:interest] forKey:@"interest"];
 	[updateRecord setValue:[NSNumber numberWithDouble:amount] forKey:field];
 	[updateRecord setValue:[NSString stringWithFormat:@"%g", amount] forKey:fieldString];
