@@ -36,6 +36,11 @@
 @property (nonatomic, strong) IBOutlet UILabel *paceLabel;
 @property (nonatomic, strong) IBOutlet UILabel *paceArrowLabel;
 
+@property (nonatomic, strong) IBOutlet UIImageView *range12ImageView;
+@property (nonatomic, strong) IBOutlet UILabel *rangeLowLabel;
+@property (nonatomic, strong) IBOutlet UILabel *rangeHighLabel;
+@property (nonatomic, strong) IBOutlet UILabel *rangeCurrentLabel;
+
 @property (nonatomic, strong) IBOutlet UIView *trendView;
 @property (nonatomic, strong) IBOutlet UILabel *trendLabel;
 @property (nonatomic, strong) IBOutlet UILabel *trendArrowLabel;
@@ -58,6 +63,7 @@
 @property (nonatomic) int editTextFieldNum;
 @property (nonatomic) double highValue;
 @property (nonatomic) double lowValue;
+@property (nonatomic) double currentValue;
 
 @property (nonatomic) int graphYear;
 @property (nonatomic) BOOL displayBarsFlg;

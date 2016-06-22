@@ -33,7 +33,7 @@
 +(int)updateWinLoss:(int)gameCount winAmount:(int)winAmount winFlag:(BOOL)winFlag;
 +(NSManagedObject *)managedObjFromId:(NSString *)rowId managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 +(int)getNumberFromProfile:(NSString *)field mOC:(NSManagedObjectContext *)mOC;
-+(void)updateItemAmount:(ItemObject *)obj type:(int)type month:(int)month year:(int)year currentFlg:(BOOL)currentFlg amount:(double)amount moc:(NSManagedObjectContext *)moc;
++(void)updateItemAmount:(ItemObject *)obj type:(int)type month:(int)month year:(int)year currentFlg:(BOOL)currentFlg amount:(double)amount moc:(NSManagedObjectContext *)moc noHistoryFlg:(BOOL)noHistoryFlg;
 +(int)getAge:(NSManagedObjectContext *)context;
 +(NSString *)getTextFromProfile:(NSString *)field mOC:(NSManagedObjectContext *)mOC;
 +(void)saveTextToProfile:(NSString *)field value:(NSString *)value context:(NSManagedObjectContext *)context;

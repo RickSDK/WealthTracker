@@ -307,8 +307,8 @@
 	  double classADebt30 = allDebt30-homeDebt30;
 	  int allDebtChangePast12 = debtToday-debtLastYear;
 	  int classAReduction = (homeDebtChangePast12-allDebtChangePast12)/12;
-	  if(classADebt30>classAReduction)
-		  classAReduction=classADebt30; // take the higher of the two
+//	  if(classADebt30>classAReduction)
+//		  classAReduction=classADebt30; // take the higher of the two
 
 
 	  [self addBlankLine];
@@ -912,6 +912,8 @@
 				line1 = [NSString stringWithFormat:@"You %@ to pay down %@ of total debt this month which is good, but is slightly below your average. More work is needed.", wereAble, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
 			else if(reductPercent>60)
 				line1 = [NSString stringWithFormat:@"You %@ to pay down %@ of total debt this month which is good, but that is below your average. More work is needed.", wereAble, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
+			else if(allDebt30<0)
+				line1 = [NSString stringWithFormat:@"This has not been a good month for you as you have added %@ of debt. Look for ways to reduce spending.", [ObjectiveCScripts convertNumberToMoneyString:allDebt30*-1]];
 			else
 				line1 = [NSString stringWithFormat:@"You %@ to pay down %@ of total debt this month which is way below your average. More work is needed.", wereAble, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
 

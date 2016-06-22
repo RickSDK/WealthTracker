@@ -89,6 +89,7 @@
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:kFontAwesomeFamilyName size:20.f] forKey:UITextAttributeFont]];
 	
 	self.chartSegmentControl.selectedSegmentIndex=1;
+	[self.chartSegmentControl changeSegment];
 /*
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
 											 [UIFont fontWithName:kFontAwesomeFamilyName size:20.f], UITextAttributeFont,

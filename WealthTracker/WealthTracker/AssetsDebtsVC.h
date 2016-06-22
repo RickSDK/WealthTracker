@@ -36,6 +36,8 @@
 @property (nonatomic, strong) ItemObject *itemObject;
 
 @property (nonatomic) BOOL showPopup;
+@property (nonatomic) BOOL noHistoryFlg;
+@property (nonatomic) BOOL newItemFlg;
 @property (nonatomic) double totalAmount;
 @property (nonatomic) int filterType;
 @property (nonatomic) int type;

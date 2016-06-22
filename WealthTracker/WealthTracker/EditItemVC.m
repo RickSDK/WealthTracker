@@ -235,8 +235,8 @@
 	}
 	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
-	[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.valueStr doubleValue] moc:self.managedObjectContext];
-	[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.valueStr doubleValue] moc:self.managedObjectContext noHistoryFlg:NO];
+	[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext noHistoryFlg:NO];
 	
 	if([@"Asset" isEqualToString:self.itemObject.type] && [@"Emergency Fund" isEqualToString:self.itemObject.name]) {
 		int amount = [self.itemObject.valueStr intValue];
@@ -290,8 +290,8 @@
 			int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 			int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 			self.itemObject = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-			[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:self.itemObject.value  moc:self.managedObjectContext];
-			[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
+			[CoreDataLib updateItemAmount:self.itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:self.itemObject.value  moc:self.managedObjectContext noHistoryFlg:NO];
+			[CoreDataLib updateItemAmount:self.itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[self.itemObject.loan_balance doubleValue] moc:self.managedObjectContext noHistoryFlg:NO];
 		}
 
 	}

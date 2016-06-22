@@ -208,8 +208,6 @@
 
 	[self updateTopBoxView:self.paceView label:self.paceLabel arrow:self.paceArrowLabel amount:equityChange-equityChange2-(equityChange2-equityChange3)];
 
-	NSLog(@"+++%f %f", equityChange2, equityChange3);
-
 }
 
 -(void)updateTopBoxView:(UIView *)view label:(UILabel *)label arrow:(UILabel *)arrow amount:(float)amount {
@@ -242,6 +240,8 @@
 		if(items.count>0) {
 			NSManagedObject *mo = [items objectAtIndex:0];
 			double value = [[mo valueForKey:@"asset_value"] doubleValue];
+			if(value==0)
+				value = [[mo valueForKey:@"balance_owed"] doubleValue];
 			if(value>self.highValue)
 				self.highValue=value;
 			if(value<self.lowValue)
@@ -276,7 +276,10 @@
 	if(items.count>0) {
 		NSManagedObject *mo = [items objectAtIndex:0];
 		value = [[mo valueForKey:@"asset_value"] doubleValue];
+		self.currentValue = value;
 		balance = [[mo valueForKey:@"balance_owed"] doubleValue];
+		if(self.currentValue==0)
+			self.currentValue = balance;
 		interest = [[mo valueForKey:@"interest"] doubleValue];
 	}
 	
@@ -448,6 +451,27 @@
 				[self.colorsArray addObject:[UIColor blackColor]];
 			}
 		}
+	}
+	self.rangeLowLabel.text = [ObjectiveCScripts convertNumberToMoneyString:self.lowValue];
+	self.rangeHighLabel.text = [ObjectiveCScripts convertNumberToMoneyString:self.highValue];
+	self.rangeCurrentLabel.text = [ObjectiveCScripts convertNumberToMoneyString:self.currentValue];
+
+	float range = self.highValue-self.lowValue;
+	float current = self.currentValue-self.lowValue;
+
+	if(range>0) {
+		NSLog(@"%f %f %f", self.lowValue, self.currentValue, self.highValue);
+		self.range12ImageView.center = CGPointMake(self.screenWidth*current/range, 10);
+		NSLog(@"%f %f", self.rangeCurrentLabel.center.x, self.range12ImageView.center.x);
+		if(self.currentValue>=((self.highValue+self.lowValue)/2)) {
+			self.rangeCurrentLabel.center = CGPointMake(self.range12ImageView.center.x-50, self.rangeCurrentLabel.center.y);
+		} else
+			self.rangeCurrentLabel.center = CGPointMake(self.range12ImageView.center.x+50, self.rangeCurrentLabel.center.y);
+	} else {
+		self.rangeCurrentLabel.hidden=YES;
+		self.rangeLowLabel.hidden=YES;
+		self.rangeHighLabel.hidden=YES;
+		self.range12ImageView.hidden=YES;
 	}
 	[self.mainTableView reloadData];
 	
@@ -635,7 +659,7 @@
 
 -(void)updateValue:(NSString *)value {
 	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
-	[CoreDataLib updateItemAmount:self.itemObject type:0 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:0 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext noHistoryFlg:NO];
 	self.itemObject = [self refreshObjFromObj:self.itemObject];
 	
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:nil];
@@ -644,7 +668,7 @@
 
 -(void)updateBalance:(NSString *)value {
 	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
-	[CoreDataLib updateItemAmount:self.itemObject type:1 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:1 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext noHistoryFlg:NO];
 	self.itemObject = [self refreshObjFromObj:self.itemObject];
 	
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:nil];

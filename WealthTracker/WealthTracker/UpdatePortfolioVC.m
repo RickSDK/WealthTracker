@@ -545,7 +545,7 @@
 
 -(void)updateValue:(NSString *)value {
 	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
-	[CoreDataLib updateItemAmount:self.itemObject type:0 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:0 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext noHistoryFlg:NO];
 	self.itemObject = [self refreshObjFromObj:self.itemObject];
 	
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:nil];
@@ -554,7 +554,7 @@
 
 -(void)updateBalance:(NSString *)value {
 	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
-	[CoreDataLib updateItemAmount:self.itemObject type:1 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:self.itemObject type:1 month:self.displayMonth year:self.displayYear currentFlg:[self isCurrent] amount:amount moc:self.managedObjectContext noHistoryFlg:NO];
 	self.itemObject = [self refreshObjFromObj:self.itemObject];
 	
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:nil];

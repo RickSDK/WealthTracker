@@ -353,7 +353,7 @@
 	}
 }
 
-+(void)updateItemAmount:(ItemObject *)obj type:(int)type month:(int)month year:(int)year currentFlg:(BOOL)currentFlg amount:(double)amount moc:(NSManagedObjectContext *)moc {
++(void)updateItemAmount:(ItemObject *)obj type:(int)type month:(int)month year:(int)year currentFlg:(BOOL)currentFlg amount:(double)amount moc:(NSManagedObjectContext *)moc noHistoryFlg:(BOOL)noHistoryFlg {
 	// type 1 = bal, 0 = value
 	int rowId = [obj.rowId intValue];
 	if(rowId==0) {
@@ -453,7 +453,8 @@
 
 	[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag];
 	
-	[self updateHistory:[obj.rowId intValue] multiplyer:multHistory field:field flag:flag month:month year:year amount:amount moc:moc type:itemType interest_rate:interest_rate statement_day:[obj.statement_day intValue]];
+	if(!noHistoryFlg)
+		[self updateHistory:[obj.rowId intValue] multiplyer:multHistory field:field flag:flag month:month year:year amount:amount moc:moc type:itemType interest_rate:interest_rate statement_day:[obj.statement_day intValue]];
 
 	[self updateFuture:[obj.rowId intValue] multiplyer:multFuture field:field flag:flag month:month year:year amount:amount moc:moc type:itemType interest_rate:interest_rate];
 	

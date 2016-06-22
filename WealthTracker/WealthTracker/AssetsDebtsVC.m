@@ -33,13 +33,18 @@
 	self.subType=0;
 	[self displayButtons];
 
-	[self setupData];
 	
 	
 	if(self.filterType==2 && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"Enter all loans and debts"];
 		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"DebtsCheckFlg"];
 	}
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	[self setupData];
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
@@ -170,6 +175,7 @@
 }
 
 -(void)addNewItem {
+	self.itemObject=nil;
 	self.popupView.hidden=NO;
 	self.nameTextField.text=@"";
 	self.valueTextField.text=@"";
@@ -184,6 +190,7 @@
 	self.chooseTypeView.hidden=NO;
 	[self.iconButton setTitle:@"" forState:UIControlStateNormal];
 	[self.subTypeButton setTitle:@"" forState:UIControlStateNormal];
+	self.newItemFlg=YES;
 }
 
 -(IBAction)breakdownButtonClicked:(id)sender {
@@ -341,6 +348,7 @@
 		self.interestTextField.text=self.itemObject.interest_rate;
 		self.dueDayTextField.text = self.itemObject.statement_day;
 		self.titleLabel.text = @"Edit Item";
+		self.newItemFlg=NO;
 		
 		self.type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 		[self displayButtons];
@@ -387,8 +395,32 @@
 	self.popupView.hidden=YES;
 	[self resignKeyboards];
 	
+	if(self.newItemFlg) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New or Existing?"
+														message:@"Is this item new this month, or have you had it for a while?"
+													   delegate:self
+											  cancelButtonTitle:@"New"
+											  otherButtonTitles: @"Existing", nil];
+		alert.tag = 101;
+		[alert show];
+	} else
+		[self createOrUpdateItem];
+	
+}
+
+-(void)createOrUpdateItem {
 	[self createNewItem];
 	[self setupData];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if(alertView.tag==101) {
+		self.noHistoryFlg = (buttonIndex==0);
+		self.typeSegment.selectedSegmentIndex=0;
+		self.filterType=0;
+		[self.typeSegment changeSegment];
+		[self createOrUpdateItem];
+	}
 }
 
 -(IBAction)typeButtonClicked:(id)sender {
@@ -413,7 +445,7 @@
 
 -(void)createNewItem {
 	NSManagedObject *mo = nil;
-	if(self.itemObject.name.length>0) {
+	if(!self.newItemFlg && self.itemObject.name.length>0) {
 		mo = [ItemObject moFromObject:self.itemObject context:self.managedObjectContext];
 	} else {
 		mo = [NSEntityDescription insertNewObjectForEntityForName:@"ITEM" inManagedObjectContext:self.managedObjectContext];
@@ -427,8 +459,8 @@
 	
 	int nowYear = [ObjectiveCScripts nowYear];
 	int nowMonth = [ObjectiveCScripts nowMonth];
-	[CoreDataLib updateItemAmount:itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.valueStr doubleValue] moc:self.managedObjectContext];
-	[CoreDataLib updateItemAmount:itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.loan_balance doubleValue] moc:self.managedObjectContext];
+	[CoreDataLib updateItemAmount:itemObject type:0 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.valueStr doubleValue] moc:self.managedObjectContext noHistoryFlg:self.noHistoryFlg];
+	[CoreDataLib updateItemAmount:itemObject type:1 month:nowMonth year:nowYear currentFlg:YES amount:[itemObject.loan_balance doubleValue] moc:self.managedObjectContext noHistoryFlg:self.noHistoryFlg];
 	
 	[self setupData];
 	
