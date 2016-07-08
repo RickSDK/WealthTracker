@@ -75,10 +75,9 @@
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-//	if(self.tag==2 || self.tag==1) {
-		self.topSegment.selectedSegmentIndex=1;
-		[self.topSegment changeSegment];
-//	}
+	self.topSegment.selectedSegmentIndex=1;
+	[self.topSegment changeSegment];
+
 	self.graphImageView.hidden=YES;
 	[self setupData];
 	
@@ -87,6 +86,8 @@
 	else
 		self.typeSegment.selectedSegmentIndex=self.tag+1;
 	[self.typeSegment changeSegment];
+	
+	[self.mainSegmentControl makeListSegment];
 
 }
 
@@ -633,6 +634,9 @@
 
 	NSString *line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, this will take you about %d years, allowing you to retire at age %d.", idealNetWorthString, timeToReach, retirementAge];
 	
+	if(retirementAge<65)
+		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, you will hit this goal in about %d years, at age %d. Just keep in mind, for most people it is wise to hold off retirement until (at least) age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString, timeToReach, retirementAge];
+	
 	if(timeToReach>50)
 		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];
 	
@@ -1129,20 +1133,26 @@
 	
 	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%ldRow%ld", (long)indexPath.section, (long)indexPath.row];
 	
-
+	if(self.mainSegmentControl.selectedSegmentIndex==1) {
+		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray2.count labelProportion:0];
+		cell.mainTitle = self.title2;
+		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
+		cell.titleTextArray = self.namesArray2;
+		cell.fieldTextArray = self.valuesArray2;
+		cell.fieldColorArray = self.colorsArray2;
+		cell.accessoryType= UITableViewCellAccessoryNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		return cell;
+	}
 	if(indexPath.section==0) {
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if(cell==nil)
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
+		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.backgroundColor = [UIColor colorWithWhite:.8 alpha:1];
-		if(self.titleLabel==nil) {
+//		if(self.titleLabel==nil) {
 			self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -1, 320, 21)];
 			[cell addSubview:self.titleLabel];
-		}
+//		}
 		self.titleLabel.font = [UIFont boldSystemFontOfSize:18];
 		self.titleLabel.adjustsFontSizeToFitWidth = YES;
 		self.titleLabel.minimumScaleFactor = .8;
@@ -1167,23 +1177,13 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if (indexPath.section==2) {
+	} else  {
 		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray1.count labelProportion:kProportionAnalysis];
 		cell.mainTitle = self.title1;
 		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
 		cell.titleTextArray = self.namesArray1;
 		cell.fieldTextArray = self.valuesArray1;
 		cell.fieldColorArray = self.colorsArray1;
-		cell.accessoryType= UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		return cell;
-	} else {
-		MultiLineDetailCellWordWrap *cell = [[MultiLineDetailCellWordWrap alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier withRows:self.valuesArray2.count labelProportion:0];
-		cell.mainTitle = self.title2;
-		cell.alternateTitle = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear];
-		cell.titleTextArray = self.namesArray2;
-		cell.fieldTextArray = self.valuesArray2;
-		cell.fieldColorArray = self.colorsArray2;
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
@@ -1217,7 +1217,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+	return (self.mainSegmentControl.selectedSegmentIndex==0)?3:1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -1238,7 +1238,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section==0)
+	if(self.mainSegmentControl.selectedSegmentIndex==0 && indexPath.section==0)
 		return 20;
 	if(indexPath.section==1)
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray0
@@ -1383,10 +1383,11 @@
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
-	self.mainTableView.hidden=!self.mainTableView.hidden;
-	self.graphImageView.hidden=!self.graphImageView.hidden;
+	self.mainTableView.hidden=self.mainSegmentControl.selectedSegmentIndex==2;
+	self.graphImageView.hidden=self.mainSegmentControl.selectedSegmentIndex!=2;
 	
 	[self.mainSegmentControl changeSegment];
+	[self.mainTableView reloadData];
 }
 
 -(IBAction)typeSegmentChanged:(id)sender {

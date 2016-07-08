@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Charts"];
-	
+
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
@@ -176,12 +176,14 @@
 		}
 	}
 	
-	if(segment==0)
-		cell.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType displayYear:displayYear item_id:0 displayMonth:displayMonth startMonth:displayMonth startYear:displayYear];
+	cell.graphImageView.image = [GraphLib graphChartForMonth:displayMonth year:displayYear context:self.managedObjectContext numYears:(int)self.timeSegment.selectedSegmentIndex+1 type:(int)indexPath.section barsFlg:self.typeSegment.selectedSegmentIndex==1];
+	
 	if(segment==1)
 		cell.graphImageView.image =[GraphLib graphBarsWithItems:chartValuesArray];
 	if(segment==2)
 		cell.graphImageView.image =[GraphLib pieChartWithItems:chartValuesArray startDegree:0];
+	
+	
 	
 	if(displayYear==self.nowYear && displayMonth==self.nowMonth)
 		cell.nextYearButton.enabled=NO;
@@ -266,6 +268,25 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return [ObjectiveCScripts chartHeightForSize:290];
+}
+
+-(IBAction)timeSegmentChanged:(id)sender {
+	[self.timeSegment changeSegment];
+	if(self.timeSegment.selectedSegmentIndex>0 && self.typeSegment.selectedSegmentIndex==1) {
+		self.typeSegment.selectedSegmentIndex=0;
+		[self.typeSegment changeSegment];
+	}
+	[self.mainTableView reloadData];
+	
+}
+
+-(IBAction)typeSegmentChanged:(id)sender {
+	[self.typeSegment changeSegment];
+	if(self.typeSegment.selectedSegmentIndex>0 && self.timeSegment.selectedSegmentIndex>0) {
+		self.timeSegment.selectedSegmentIndex=0;
+		[self.timeSegment changeSegment];
+	}
+	[self.mainTableView reloadData];
 }
 
 @end

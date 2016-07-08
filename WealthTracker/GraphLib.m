@@ -541,6 +541,7 @@
 }
 
 +(NSString *)smartStringForName:(NSString *)name max:(int)max {
+	/*
 	if(name.length<=max)
 		return name;
 	
@@ -557,6 +558,8 @@
 		name = [newWords componentsJoinedByString:@" "];
 		
 	}
+	 */
+	name = [name stringByReplacingOccurrencesOfString:@" " withString:@"_"];
 	if(name.length<=max)
 		return name;
 	else
@@ -653,7 +656,7 @@
 
 
 
-+(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type displayYear:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth startMonth:(int)startMonth startYear:(int)startYear
++(UIImage *)plotItemChart:(NSManagedObjectContext *)mOC type:(int)type displayYear:(int)displayYear item_id:(int)item_id displayMonth:(int)displayMonth startMonth:(int)startMonth startYear:(int)startYear numYears:(int)numYears
 {
 	int totalWidth=[self totalWidth];
 	int totalHeight=totalWidth/2;
@@ -667,13 +670,13 @@
 	float min=999999;
 	float max=0;
 	
-	int predYear=startYear-1;
+	int predYear=startYear-numYears;
 	int month=startMonth;
 	
 	NSMutableArray *assetArray = [[NSMutableArray alloc] init];
 	NSMutableArray *balanceArray = [[NSMutableArray alloc] init];
 	BOOL networthPositive=YES;
-	for(int i=1; i<=12; i++) {
+	for(int i=1; i<=numYears*12; i++) {
 		month++;
 		if(month>12) {
 			month=1;
@@ -699,7 +702,7 @@
 		if(month==displayMonth)
 			networthPositive = (asset_value>=balance_owed);
 		
-		if(type==99) {
+		if(type==99 || type==3) {
 			asset_value=interest;
 			balance_owed=interest;
 		}
@@ -750,7 +753,7 @@
 	[aPath2 moveToPoint:CGPointMake(leftEdgeOfChart, bottomEdgeOfChart)];
 	int plotY=0;
 	int plotY2=0;
-	for(int i=0; i<12; i++) {
+	for(int i=0; i<numYears*12; i++) {
 		double asset_value = [[assetArray objectAtIndex:i] doubleValue];
 		double balance_owed = [[balanceArray objectAtIndex:i] doubleValue];
 		
@@ -759,7 +762,7 @@
 		plotY2 = bottomEdgeOfChart-(balance_owed-min)*yMultiplier;
 		[aPath addLineToPoint:CGPointMake(plotX, plotY)];
 		[aPath2 addLineToPoint:CGPointMake(plotX, plotY2)];
-		xCord+=totalWidth/12;
+		xCord+=totalWidth/(numYears*12);
 	}
 	
 	[aPath addLineToPoint:CGPointMake(totalWidth, plotY)];
@@ -775,7 +778,7 @@
 	UIColor *secondColor = [UIColor redColor];
 	if(type==3)
 		mainColor = [UIColor redColor];
-	if(type==99)
+	if(type==99 || type==3)
 		secondColor = [UIColor blackColor];
 	
 	if(networthPositive) {
@@ -791,12 +794,12 @@
 	xCord = leftEdgeOfChart-10;
 	NSArray *months = [NSArray arrayWithObjects:@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec", nil];
 	month = startMonth;
-	for(int i=1; i<=12; i++) {
+	for(int i=1; i<=(numYears*12); i++) {
 		month++;
 		if(month>12)
 			month=1;
 		[[months objectAtIndex:month-1] drawAtPoint:CGPointMake(xCord, bottomEdgeOfChart) withFont:[UIFont fontWithName:@"Helvetica" size:trunc(totalWidth/42.67)]];
-		xCord+=totalWidth/12;
+		xCord+=totalWidth/(numYears*12);
 	}
 	
 	// draw left hand labels and grid---------------------
@@ -867,9 +870,9 @@
 	BOOL oldRecordConfirmed2=NO;
 	BOOL isTodayFlg=NO;
 	
-	predYear=startYear-1;
+	predYear=startYear-numYears;
 	month=startMonth;
-	for(int i=1; i<=12; i++) {
+	for(int i=1; i<=(numYears*12); i++) {
 		month++;
 		if(month>12) {
 			month=1;
@@ -905,7 +908,7 @@
 			int plotX = xCord;
 			int plotY = bottomEdgeOfChart-(asset_value-min)*yMultiplier;
 			int plotY2 = bottomEdgeOfChart-(balance_owed-min)*yMultiplier;
-			if(type==99) {
+			if(type==99 || type==3) {
 				// interest
 				plotY2 = bottomEdgeOfChart-(interest-min)*yMultiplier;
 				balance_owed=interest;
@@ -983,7 +986,7 @@
 			oldRecordConfirmed2 = recordConfirmed2;
 		}
 		
-		xCord+=totalWidth/12;
+		xCord+=totalWidth/(numYears*12);
 	} // for month
 	
 	if(todayY>0)
@@ -1212,10 +1215,10 @@
 	if(item_id>0) // single item
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", year, month, item_id];
 
-	if(type==0) // assets and debts
+	if(type==0 || type==4) // assets and debts
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
 	
-	if(type==99) // interest
+	if(type==99 || type==3) // interest
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
 	else
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, type];
@@ -1379,6 +1382,116 @@
 		month-=12;
 	return month;
 }
+
++(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context {
+	AmountObj *amountObj = [[AmountObj alloc] init];
+	double amount=0;
+	BOOL amount_confirm_flg=NO;
+	NSPredicate *predicate = [self predicateForMonth:month year:year item_id:0 type:type];
+	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
+	for (NSManagedObject *mo in itemsPre) {
+		double value = [[mo valueForKey:@"asset_value"] doubleValue];
+		double balance = [[mo valueForKey:@"balance_owed"] doubleValue];
+		double interest = [[mo valueForKey:@"interest"] doubleValue];
+		amountObj.value += value;
+		amountObj.balance += balance;
+		amountObj.interest += interest;
+		amountObj.equity += (value-balance);
+		
+		if([[mo valueForKey:@"val_confirm_flg"] boolValue] || [[mo valueForKey:@"bal_confirm_flg"] boolValue])
+			amount_confirm_flg=YES;
+		
+		switch (type) {
+			case 0:
+				amount+=value;
+				break;
+			case 1:
+				amount+=(value-balance);
+				break;
+			case 2:
+				amount+=(value-balance);
+				break;
+			case 3:
+				amount+=interest;
+				break;
+			case 4:
+				amount+=balance;
+				break;
+				
+			default:
+    break;
+		}
+	}
+	amountObj.amount = amount;
+	amountObj.amount_confirm_flg = amount_confirm_flg;
+	return amountObj;
+}
+
++(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type {
+	// type
+	// 0 = assets, 1=real estate, 2=vehicles, 3=interest, 4=debt
+	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
+	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	displayYear-=numYears;
+	AmountObj *prevAmountObj = [self amountForType:type month:displayMonth year:displayYear context:context];
+	
+	for(int i = 1; i <= 12*numYears; i++) {
+		displayMonth++;
+		if(displayMonth>12) {
+			displayMonth=1;
+			displayYear++;
+		}
+		
+		AmountObj *amountObj = [self amountForType:type month:displayMonth year:displayYear context:context];
+		amountObj.equityChange = amountObj.equity - prevAmountObj.equity;
+		amountObj.balanceChange = amountObj.balance - prevAmountObj.balance;
+		amountObj.valueChange = amountObj.value - prevAmountObj.value;
+		amountObj.interestChange = amountObj.interest - prevAmountObj.interest;
+		amountObj.amountChange = amountObj.amount - prevAmountObj.amount;
+		
+		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
+		[graphArray addObject:[GraphLib graphObjectWithName:monthName amount:amountObj.amountChange rowId:1 reverseColorFlg:(type==3 || type==4) currentMonthFlg:displayMonth==nowMonth && displayYear==nowYear]];
+
+		prevAmountObj = amountObj;
+
+	} //<-- for month
+	return graphArray;
+}
+
++(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg {
+	
+	if(barsFlg) {
+		NSArray *barItems = [GraphLib yearGraphItemsForMonth:displayMonth year:displayYear context:context numYears:numYears type:type];
+		return [GraphLib graphBarsWithItems:barItems];
+	} else {
+		return [GraphLib plotItemChart:context type:type displayYear:displayYear item_id:0 displayMonth:displayMonth startMonth:displayMonth startYear:displayYear numYears:numYears];
+	}
+}
+
++(NSArray *)pieItemsForMonth:(int)month year:(int)year context:(NSManagedObjectContext *)context {
+	NSMutableArray *pieItems = [[NSMutableArray alloc] init];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
+	NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
+	
+	for(NSManagedObject *mo in updateItems) {
+		int item_id = [[mo valueForKey:@"item_id"] intValue];
+		double debtChange = [ObjectiveCScripts changedBalanceLast30ForItem:item_id context:context];
+		if(debtChange<0) {
+			NSPredicate *predicate = [NSPredicate predicateWithFormat:@"rowId = %d", item_id];
+			NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
+			if(items.count>0) {
+				NSManagedObject *item = [items objectAtIndex:0];
+				[pieItems addObject:[GraphLib graphObjectWithName:[item valueForKey:@"name"] amount:debtChange rowId:item_id reverseColorFlg:NO currentMonthFlg:NO]];
+			}
+			
+		}
+	}
+	return pieItems;
+}
+
+
+
 
 
 

@@ -106,12 +106,13 @@
                         <outlet property="delegate" destination="-1" id="mqq-Ec-5rx"/>
                     </connections>
                 </tableView>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="2ey-xV-1vP" customClass="ListChartSegment">
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="2ey-xV-1vP" customClass="CustomSegment">
                     <rect key="frame" x="0.0" y="79" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
                         <segment title="First"/>
                         <segment title="Second"/>
+                        <segment title=""/>
                     </segments>
                     <connections>
                         <action selector="topSegmentChanged:" destination="-1" eventType="valueChanged" id="arp-hb-vw3"/>

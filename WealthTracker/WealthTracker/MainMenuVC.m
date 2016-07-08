@@ -42,7 +42,6 @@
 		[self setTitle:@"Test Mode!"];
 	
 	
-	self.popupArray=[[NSMutableArray alloc] init];
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.barGraphObjects = [[NSMutableArray alloc] init];
 	
@@ -64,23 +63,16 @@
 	[self.b2bButton setTitle:[NSString stringWithFormat:@"%@ Broke to Baron", [NSString fontAwesomeIconStringForEnum:FAStar]] forState:UIControlStateNormal];
 	[self.b2bButton setBackgroundColor:[ObjectiveCScripts lightColor]];
 	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-	
-	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
-	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
 	self.expiredFlg = [self checkForExpiredFlg];
 	
 	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
-		//		UIImage *image = [UIImage imageNamed:@"blueGrad.jpg"]; //greenGradient.png
-		//		[self.navigationController.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
 		self.navigationController.navigationBar.barTintColor = [ObjectiveCScripts darkColor];
 		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 		self.navigationController.navigationBar.translucent = NO;
 		self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:.8 blue:0 alpha:1];
 	}
 	
-	[self displayMainTitle];
 	self.netWorthView.backgroundColor=[ObjectiveCScripts mediumkColor];
 	self.botView.backgroundColor=[ObjectiveCScripts darkColor];
 	
@@ -90,14 +82,6 @@
 	
 	self.chartSegmentControl.selectedSegmentIndex=1;
 	[self.chartSegmentControl changeSegment];
-/*
-	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-											 [UIFont fontWithName:kFontAwesomeFamilyName size:20.f], UITextAttributeFont,
-											 [UIColor whiteColor], UITextAttributeTextColor,
-											 [UIColor blackColor], UITextAttributeTextShadowColor,
-											 [NSValue valueWithUIOffset:UIOffsetMake(0.0f, 1.0f)], UITextAttributeTextShadowOffset,
-											 nil]];
-*/	
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -120,70 +104,37 @@
 	
 }
 
-
 -(void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
 		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 
-	
 	if([ObjectiveCScripts getUserDefaultValue:@"appOpened"].length>0) {
 		self.vaultImageView.hidden=YES;
 		self.appLockedFlg=NO;
 	}
 	[self setupData];
-	
-	
+}
+
+-(void)countItems {
+	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", self.nowYear, self.nowMonth];
+	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	self.numberOfItems=(int)itemsPre.count;
 }
 
 
 -(void)setupData {
-	self.displaySwitch.on = [@"Y" isEqualToString:[ObjectiveCScripts getUserDefaultValue:@"displaySwitchFlg"]];
-	
-	int status = [ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.percentUpdatedLabel];
-	self.percentUpdatedLabel.hidden = (status==0);
 	
 	
 	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
-		self.percentUpdatedLabel.center = CGPointMake(self.percentUpdatedLabel.center.x, self.botView.frame.origin.y-25);
 		self.netWorthView.center = CGPointMake(self.self.botView.center.x, self.self.botView.center.y-60);
 		self.chartSegmentControl.hidden=YES;
 	}
 	
-	self.updateNumberLabel.text=@"";
 	
-	if(status<0) {
-		self.updateStatusImageView.image = [UIImage imageNamed:@"yellow.png"];
-		self.updateNumberLabel.text=[NSString stringWithFormat:@"%d", status*-1];
-	} else if (status==0)
-		self.updateStatusImageView.image = [UIImage imageNamed:@"green.png"];
-	else
-		self.updateStatusImageView.image = [UIImage imageNamed:@"red.png"];
-	
-	if(status==0)
-		self.updateStatusImageView.hidden=YES;
-	
-	self.needsUpdatingLabel.text = [NSString stringWithFormat:@"%d", status];
-	
-	
-	self.needsUpdatingLabel.hidden=(status<=0);
-	self.redCircleImageView.hidden=(status<=0);
-	
-	[self.popupArray removeAllObjects];
 	[self.barGraphObjects removeAllObjects];
-	
-	[self.popupArray addObject:@"empty"];
-	
-	
-	double prevNetWorth=0;
-	double prevValue=0;
-	double prevBalance=0;
-	
-	int displayYear = self.nowYear-1;
-	int displayMonth = 12;
-	displayMonth=self.nowMonth;
-	self.numberOfItems=0;
+	[self.barGraphObjects addObjectsFromArray:[GraphLib pieItemsForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext]];
 	
 	self.chartLabel.text = @"Net Worth Changes Per Month";
 	if (self.chartSegmentControl.selectedSegmentIndex==1)
@@ -191,75 +142,8 @@
 	if (self.chartSegmentControl.selectedSegmentIndex==2)
 		self.chartLabel.text = @"Changes This Month";
 
-	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
-	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate2 sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	self.numberOfItems=(int)itemsPre.count;
-	for (NSManagedObject *mo in itemsPre) {
-		prevValue += [[mo valueForKey:@"asset_value"] doubleValue];
-		prevBalance += [[mo valueForKey:@"balance_owed"] doubleValue];
-	}
-	prevNetWorth = (prevValue-prevBalance);
-	
-	int numMonthsConfirmed = 0;
-	
-	[self.graphObjects removeAllObjects];
-	[self.popupArray addObject:@"Test"];
-
-	for(int i = 1; i <= 12; i++) {
-		displayMonth++;
-		if(displayMonth>12) {
-			displayMonth=1;
-			displayYear++;
-		}
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, displayMonth];
-		NSArray *updateItems = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-		NSString *valFlag = @"N";
-		NSString *balFlag = @"N";
-		int last30 = 0;
-		double value = 0;
-		double balance = 0;
-		NSString *futureFlag = (displayMonth>self.nowMonth && displayYear>=self.nowYear)?@"Y":@"N";
-		
-		for(NSManagedObject *mo in updateItems) {
-			value += [[mo valueForKey:@"asset_value"] doubleValue];
-			balance += [[mo valueForKey:@"balance_owed"] doubleValue];
-			
-			if([[mo valueForKey:@"val_confirm_flg"] boolValue])
-				valFlag=@"Y";
-			if([[mo valueForKey:@"bal_confirm_flg"] boolValue])
-				balFlag=@"Y";
-			
-			if (displayMonth==self.nowMonth && displayYear==self.nowYear) {
-				
-				int item_id = [[mo valueForKey:@"item_id"] intValue];
-				double debtChange = [ObjectiveCScripts changedBalanceLast30ForItem:item_id context:self.managedObjectContext];
-				if(debtChange<0) {
-					NSPredicate *predicate = [NSPredicate predicateWithFormat:@"rowId = %d", item_id];
-					NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-					if(items.count>0) {
-						NSManagedObject *item = [items objectAtIndex:0];
-						[self.barGraphObjects addObject:[GraphLib graphObjectWithName:[item valueForKey:@"name"] amount:debtChange rowId:item_id reverseColorFlg:NO currentMonthFlg:NO]];
-					}
-
-				}
-			}
-		}
-		
-		if([@"Y" isEqualToString:valFlag] || [@"Y" isEqualToString:balFlag])
-			numMonthsConfirmed++;
-		
-		last30 = (value-balance)-prevNetWorth;
-		prevNetWorth = (value-balance);
-		prevValue = value;
-		prevBalance = balance;
-		
-		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
-		[self.graphObjects addObject:[GraphLib graphObjectWithName:monthName amount:last30 rowId:1 reverseColorFlg:NO currentMonthFlg:displayMonth==self.nowMonth && displayYear==self.nowYear]];
-		
-		[self.popupArray addObject:[NSString stringWithFormat:@"%@ %d|%d|%d|%d|%d|%@|%@|%@", monthName, displayYear, (int)value, (int)balance, (int)(value-balance), last30, valFlag, balFlag, futureFlag]];
-		
-	} //<-- for month
-	
+	self.popUpView.hidden=YES;
+	[self countItems];
 	
 	BOOL isDataReady=YES;
 	if(self.numberOfItems==0) {
@@ -300,22 +184,12 @@
 	self.graphImageView.layer.borderColor = [UIColor blackColor].CGColor;
 	self.graphImageView.layer.borderWidth = 2.0;
 	
-	self.popUpView.layer.cornerRadius = 8.0;
-	self.popUpView.layer.masksToBounds = YES;
-	self.popUpView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.popUpView.layer.borderWidth = 2.0;
-	self.popUpView.backgroundColor=[UIColor colorWithWhite:.8 alpha:1];
-	self.popUpView.hidden=YES;
-	
-	
 	self.currentYearLabel.text = [NSString stringWithFormat:@"%d", self.nowYear];
-	
-	if(self.chartSegmentControl.selectedSegmentIndex==0)
-		self.graphImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
-	if(self.chartSegmentControl.selectedSegmentIndex==1)
-		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 displayYear:self.nowYear item_id:0 displayMonth:self.nowMonth startMonth:self.nowMonth startYear:self.nowYear];
-	if(self.chartSegmentControl.selectedSegmentIndex==2)
+
+	if(self.chartSegmentControl.selectedSegmentIndex==2) {
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
+	} else
+		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:0 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
 
 }
 
@@ -353,18 +227,8 @@
 	[self setupData];
 }
 
--(void)displayMainTitle {
-	if(self.chartSegmentControl.selectedSegmentIndex==0)
-		self.chartLabel.text = [NSString stringWithFormat:@"%d Net Worth Change Per Month", self.nowYear];
-	if(self.chartSegmentControl.selectedSegmentIndex==1)
-		self.chartLabel.text = [NSString stringWithFormat:@"%@ Assets and Debts", [[NSDate date] convertDateToStringWithFormat:@"yyyy"]];
-	if(self.chartSegmentControl.selectedSegmentIndex==2)
-		self.chartLabel.text = [NSString stringWithFormat:@"%@ Debt Reduction", [[NSDate date] convertDateToStringWithFormat:@"MMMM yyyy"]];
-}
-
 -(IBAction)segmentClicked:(id)sender {
 	[self.chartSegmentControl changeSegment];
-	[self displayMainTitle];
 	[self setupData];
 }
 
@@ -454,25 +318,9 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	NSLog(@"+++shouldAutorotateToInterfaceOrientation");
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-}
-
-- (BOOL) shouldAutorotate
-{
-	NSLog(@"+++shouldAutorotate");
-	return NO;
-}
-
-
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
-	
-//	if(self.initStep>=0) // intro phase
-//		return;
 	
 	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition) && [ObjectiveCScripts getUserDefaultValue:@"financesFlg"].length>0) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
@@ -494,73 +342,6 @@
 		return;
 	}
 	
-	[self displayPopup:self.startTouchPosition];
-
-}
-
--(void)displayPopup:(CGPoint)point {
-	if(self.initStep>=0) // intro phase
-		return;
-	
-	if(self.chartSegmentControl.selectedSegmentIndex==2)
-		return; // pie chart
-
-	if(CGRectContainsPoint(self.graphImageView.frame, point)) {
-		float x=point.x;
-		if(x>[[UIScreen mainScreen] bounds].size.width-80)
-			x=[[UIScreen mainScreen] bounds].size.width-80;
-		if(x<80)
-			x=80;
-		
-		int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
-		
-		NSString *popupValues = [self.popupArray objectAtIndex:month-1];
-		NSArray *components = [popupValues componentsSeparatedByString:@"|"];
-		if(components.count>7) {
-			self.popupDateLabel.text = [components objectAtIndex:0];
-			double assets = [[components objectAtIndex:1] doubleValue];
-			self.popupAssetLabel.text = [NSString stringWithFormat:@"A: %@", [ObjectiveCScripts convertNumberToMoneyString:assets]];
-			double debts = [[components objectAtIndex:2] doubleValue];
-			self.popupDebtsLabel.text = [NSString stringWithFormat:@"D: %@", [ObjectiveCScripts convertNumberToMoneyString:debts]];
-			double netWorth = [[components objectAtIndex:3] doubleValue];
-			self.popupNWLabel.text = [NSString stringWithFormat:@"NW: %@", [ObjectiveCScripts convertNumberToMoneyString:netWorth]];
-			self.popupNWLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:netWorth lightFlg:NO];
-			double last30 = [[components objectAtIndex:4] doubleValue];
-			[ObjectiveCScripts displayNetChangeLabel:self.popupLast30Label amount:last30 lightFlg:NO revFlg:NO];
-
-			self.popupValImageView.image = ([@"Y" isEqualToString:[components objectAtIndex:5]])?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
-			self.popupBalImageView.image = ([@"Y" isEqualToString:[components objectAtIndex:6]])?[UIImage imageNamed:@"green.png"]:[UIImage imageNamed:@"red.png"];
-			if([@"Y" isEqualToString:[components objectAtIndex:7]]) {
-				self.popupValImageView.image = [UIImage imageNamed:@"yellow.png"];
-				self.popupBalImageView.image = [UIImage imageNamed:@"yellow.png"];
-			}
-			self.popUpView.hidden=NO;
-		} else
-			self.popUpView.hidden=YES;
-
-		
-		if(month==self.nowMonth)
-			self.popUpView.backgroundColor=[UIColor yellowColor];
-		else
-			self.popUpView.backgroundColor=[UIColor colorWithWhite:.9 alpha:1];
-
-		int i=0;
-		for (GraphObject *obj in self.graphObjects) {
-			i++;
-			obj.currentMonthFlg=NO;
-			if(i==month-self.nowMonth || i==month+12-self.nowMonth)
-				obj.currentMonthFlg=YES;
-		}
-		if(self.chartSegmentControl.selectedSegmentIndex==0)
-			self.graphImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
-		if(self.chartSegmentControl.selectedSegmentIndex==1)
-			self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:0 displayYear:self.nowYear item_id:0 displayMonth:month startMonth:self.nowMonth startYear:self.nowYear];
-
-		self.popUpView.center=CGPointMake(x, point.y-150);
-	} else
-		self.popUpView.hidden=YES;
-
-	self.popUpView.hidden=YES;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -571,10 +352,7 @@
 
 		self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.barGraphObjects];
 		self.startTouchPosition=newTouchPosition;
-
-	} else
-		[self displayPopup:newTouchPosition];
-
+	}
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

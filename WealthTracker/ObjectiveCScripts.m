@@ -18,8 +18,8 @@
 
 
 +(NSString *)appName {
-//	return @"Wealth Tracker";
-	return @"Broke to Baron";
+	return @"Wealth Tracker";
+//	return @"Broke to Baron";
 }
 
 +(NSString *)getProjectDisplayVersion

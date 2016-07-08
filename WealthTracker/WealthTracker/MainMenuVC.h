@@ -68,8 +68,6 @@
 @property (nonatomic, strong) NSMutableArray *popupArray;
 @property (nonatomic, strong) NSMutableArray *graphObjects;
 @property (nonatomic, strong) NSMutableArray *barGraphObjects;
-@property (nonatomic) int nowYear;
-@property (nonatomic) int nowMonth;
 @property (nonatomic) int initStep;
 @property (nonatomic) int numberOfItems;
 @property (nonatomic) BOOL expiredFlg;

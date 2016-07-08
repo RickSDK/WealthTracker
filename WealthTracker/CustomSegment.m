@@ -61,4 +61,23 @@
 	[self setTitle:checkMarkTitle forSegmentAtIndex:self.selectedSegmentIndex];
 }
 
+-(void)makeListSegment {
+
+	UIFont *font = [UIFont fontWithName:kFontAwesomeFamilyName size:15.f];
+	NSMutableDictionary *attribsNormal;
+	attribsNormal = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil];
+	
+	NSMutableDictionary *attribsSelected;
+	attribsSelected = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, nil];
+	
+	[self setTitleTextAttributes:attribsNormal forState:UIControlStateNormal];
+	[self setTitleTextAttributes:attribsSelected forState:UIControlStateSelected];
+	
+	int i=0;
+	[self setTitle:[NSString stringWithFormat:@"%@ Details", [NSString fontAwesomeIconStringForEnum:FAList]] forSegmentAtIndex:i++];
+	[self setTitle:[NSString stringWithFormat:@"%@ Analysis", [NSString fontAwesomeIconStringForEnum:FAUser]] forSegmentAtIndex:i++];
+	[self setTitle:[NSString stringWithFormat:@"%@ Charts", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forSegmentAtIndex:i++];
+	[self changeSegment];
+}
+
 @end

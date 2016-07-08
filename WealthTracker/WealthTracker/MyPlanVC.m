@@ -84,76 +84,107 @@
 	return max;
 }
 
+-(void)emergencyFundStatus {
+	double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
+	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress: You currently have %@ in your emergency fund.", self.step, [ObjectiveCScripts convertNumberToMoneyString:amount]];
+}
+
+-(void)retirementStatus {
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
+	double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
+	float targetAmount = .03;
+	if(self.myStep>=5)
+		targetAmount = .07;
+	if(self.myStep>=7)
+		targetAmount = .15;
+	double target = (annualIncome*targetAmount)/12;
+	target = (int)(target/10)*10;
+	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", self.step, [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
+}
+
+-(void)consumerDebtStatus {
+	self.debtView.hidden=NO;
+	
+	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	double classA = [self classADebtForYear:year month:month];
+	double classAMax=classA;
+	for(int i=1; i<=5*12; i++) {
+		month--;
+		if(month<1) {
+			month=12;
+			year--;
+		}
+		classAMax = [self findMaxForYear:year month:month max:classAMax];
+	}
+	
+	if(classAMax>0) {
+		//		  float width = self.debtView.frame.size.width;
+		float width = self.screenWidth;
+		float percent = classA*100/classAMax;
+		self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
+		self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
+		if(percent<1)
+			self.remainingDebtView.hidden=YES;
+	}
+	
+	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress:  %@ of Consumer debt remaining.", self.step, [ObjectiveCScripts convertNumberToMoneyString:classA]];
+}
+
+-(void)totalDebtStatus {
+	double amount=0;
+	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	for(NSManagedObject *mo in items) {
+		amount += [[mo valueForKey:@"balance_owed"] doubleValue];
+	}
+	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress:  %@ debt remaining.", self.step, [ObjectiveCScripts convertNumberToMoneyString:amount]];
+
+}
+
 -(void)displayProgressLabel {
 	self.debtView.hidden=YES;
 	self.myStepLabel.text = [NSString stringWithFormat:@"%d", self.step];
 
-	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
-	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
-	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
-	int annualIncome = monthlyIncome*12*1.2;
 
 	switch (self.myStep) {
   case 1: {
-			double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 1 Progress: You currently have %@ in your emergency fund.", [ObjectiveCScripts convertNumberToMoneyString:amount]];
+	  [self emergencyFundStatus];
 			break;
   }
   case 2: {
-	  self.debtView.hidden=NO;
-	  
-	  double classA = [self classADebtForYear:year month:month];
-	  double classAMax=classA;
-	  for(int i=1; i<=5*12; i++) {
-		  month--;
-		  if(month<1) {
-			  month=12;
-			  year--;
-		  }
-		  classAMax = [self findMaxForYear:year month:month max:classAMax];
-	  }
-	  
-	  if(classAMax>0) {
-//		  float width = self.debtView.frame.size.width;
-		  float width = self.screenWidth;
-		  float percent = classA*100/classAMax;
-		  NSLog(@"%f %f %f", width, percent, width*percent/100);
-		  self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
-		  self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
-		  if(percent<1)
-			  self.remainingDebtView.hidden=YES;
-	  }
-	  
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 2 Progress:  %@ of Consumer debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:classA]];
+	  [self retirementStatus];
 			break;
   }
   case 3: {
-			double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 3 Progress: You currently have %@ in your emergency fund.", [ObjectiveCScripts convertNumberToMoneyString:amount]];
+	  [self consumerDebtStatus];
 			break;
   }
   case 4: {
-			double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
-	  double target = (annualIncome*.8*.05)/12;
-	  target = (int)(target/10)*10;
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 4 Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
+	  [self emergencyFundStatus];
 			break;
   }
   case 5: {
-	  double amount=0;
-	  NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
-	  NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	  for(NSManagedObject *mo in items) {
-		  amount += [[mo valueForKey:@"balance_owed"] doubleValue];
-	  }
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 5 Progress:  %@ debt remaining.", [ObjectiveCScripts convertNumberToMoneyString:amount]];
+	  [self retirementStatus];
 			break;
   }
   case 6: {
-			double retirement_payments = [CoreDataLib getNumberFromProfile:@"retirement_payments" mOC:self.managedObjectContext];
-	  double target = (annualIncome*.8*.1)/12;
-	  target = (int)(target/10)*10;
-			self.progressLabel.text = [NSString stringWithFormat:@"Step 6 Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
+	  [self totalDebtStatus];
+			break;
+  }
+  case 7: {
+	  [self retirementStatus];
+			break;
+  }
+  case 8: {
+	  [self emergencyFundStatus];
+			break;
+  }
+  case 9: {
+	  [self totalDebtStatus];
 			break;
   }
 			
@@ -191,42 +222,42 @@
 	
 	NSArray *titles=[NSArray arrayWithObjects:
 					 @"Emergency Fund",
+					 @"Start Funding Retirement",
 					 @"Pay Debt",
 					 @"Emergency Fund",
-					 @"Start Funding Retirement",
+					 @"Boost Retirement Payments",
 					 @"Pay off House",
-					 @"Double Retirement Payments",
+					 @"Fully Fund Retirement",
 					 @"Buy Rental Property",
 					 @"Pay off Rental",
-					 @"Fully Fund Retirement",
 					 @"Buy and Pay Second Rental",
 					 nil];
 	self.titleLabel.text = [titles objectAtIndex:self.step-1];
 
 	NSArray *descs=[NSArray arrayWithObjects:
 					 @"In order to get your finances in shape and go from Broke to Baron, the very first thing you need to do is scrape together a $500 emergency fund.",
-					 @"The best way to achieve wealth is to eliminate your debts. Stop paying interest! The goal for step 2 is to pay off all debt EXCEPT for your house.",
+					@"If you don't have a retirement account or 401k, start setting 3% of your income into a tax deferred retirement account (IRA).",
+					 @"The best way to achieve wealth is to eliminate your debts. Stop paying interest! The goal for step 3 is to pay off all debt EXCEPT for your house.",
 					 @"Now it's time to boost your emergency fund to $3,000 so you can better handle emergencies in your life.",
-					 @"If you don't have a retirement account or 401k, start setting 5% of your income into a tax deferred retirement account (IRA).",
+					@"Now boost your retirement savings to 7% of your income",
 					 @"Pay off that mortgage! start making double and triple payments until it's gone. Be debt free!",
-					 @"Now boost your retirement to 10% of your income, and devote another 10% toward children's college funds, church tithe or charity. Be generous!",
+					@"Fully fund retirement at 15% of income. And devote another 10%-15% toward children's college funds, church tithe or charity. Be generous!",
 					 @"Save for 20% down payment on a rental property. Buy on a 15 year loan, not a 30 year. You want to be debt free!",
 					 @"Pay off Rental property and get debt free once again.",
-					@"Fully fund retirement at 15% of income. Another 15% towards church, education or charity.",
 					 @"Buy and Pay Second Rental. You are now a Baron!",
 					 nil];
 	self.descLabel.text = [descs objectAtIndex:self.step-1];
 
 	NSArray *tips=[NSArray arrayWithObjects:
 					 @"Tips:\n\nIf you don't currently have an emergency fund, this needs to be the FIRST thing you do. You can not break out of the cycle of debt if your bank account is always on empty.\n\nSounds like a tough thing to do? It's not as bad as you think. Just follow these steps:\n\n1) Reduced all credit card payments to minimum until your emergency fund is in place. Also put any retirement and investing on hold.\n\n2) Reduce your spending! Cut down on lattes, clothes and shopping. Keep the money in the bank.\n\n3) Sell some old stuff. Have garage sales, use eBay. Clean out the garage and storage units and sell whatever you can.\n\n4) Work a few extra hours or pick up a side job. Every penny you can scrape together helps!",
-				   @"Tips:\n\nWith an emergency fund in place, it's now time to tackle your debt! Your goal is to pay off everything but the house. Every last penny.\n\nSounds like an impossible mission? It's not as bad as you think. The key is to do all 5 of these tips. Not one or two, but all 5.\n\nBefore you start, arrange your debts smallest to largest and start tackling them one at a time, starting with the smallest. Don't try to pay off more than one at a time. Throw everything at your smallest debt and close it out. Here are the 5 tips for helping you out. Be sure to do all 5:\n\n1) Pay Minimum on All Debt.\n     Drop all credit card payments to minimum and throw the extra money at your smallest debt. Also put any retirement and investing on hold. As strange as it seems to put retirement on hold, the truth is it's illogical to be investing at 5% while you are paying credit card interest at 15%. Don't do it!\n\n2) Reduce Bills\n     Cancel any recurring bills you can live without. This means gym memberships if you aren't using them. Empty storage units, reduce your TV cable to a minimum package, etc.\n\n3) Reduce Spending\n     Cut down on coffee, clothes, shopping and eating out. The only time you should be in a restaurant is if you are working!\n\n4) Sell Stuff\n     Hold garage sales, place things on eBay. Sell gold and jewelry (you can always buy it back later). Cash in those savings bonds from grandma. If your car payment is out of control high, you may even need to sell it and drive a beater for a year or two. Time to get radical about getting out of debt.\n\n5) Work More\n     You need to get that income up. Work side jobs, put in overtime at work, get a second job, whatever it takes. Its just temporary.",
+				   @"Tips:\n\nWith a little emergency fund it place, you can now start thinking about retirement. Take advantage of any employer contributions on your 401k account. This is your best rate of return. Set your contributions at 3% of your take-home pay.\n\nYou will bump it up even further once you get your debt cleaned up, but until all consumer debt is fully paid off, don't invest more than 3% into retirement.\n\nIf you are already contributing more than 3%, lower it to 3% and use the extra cash to pay down your debts.",
+				   @"Tips:\n\nWith an emergency fund, and retirement in place, it's now time to tackle your debt! Your goal is to pay off everything but the house. Every last penny.\n\nSounds like an impossible mission? It's not as bad as you think. The key is to do all 5 of these tips. Not one or two, but all 5.\n\nBefore you start, arrange your debts smallest to largest and start tackling them one at a time, starting with the smallest. Don't try to pay off more than one at a time. Throw everything at your smallest debt and close it out. Here are the 5 tips for helping you out. Be sure to do all 5:\n\n1) Pay Minimum on All Debt.\n     Drop all credit card payments to minimum and throw the extra money at your smallest debt. Also put any retirement and investing on hold. As strange as it seems to put retirement on hold, the truth is it's illogical to be investing at 5% while you are paying credit card interest at 15%. Don't do it!\n\n2) Reduce Bills\n     Cancel any recurring bills you can live without. This means gym memberships if you aren't using them. Empty storage units, reduce your TV cable to a minimum package, etc.\n\n3) Reduce Spending\n     Cut down on coffee, clothes, shopping and eating out. The only time you should be in a restaurant is if you are working!\n\n4) Sell Stuff\n     Hold garage sales, place things on eBay. Sell gold and jewelry (you can always buy it back later). Cash in those savings bonds from grandma. If your car payment is out of control high, you may even need to sell it and drive a beater for a year or two. Time to get radical about getting out of debt.\n\n5) Work More\n     You need to get that income up. Work side jobs, put in overtime at work, get a second job, whatever it takes. Its just temporary.",
 					 @"Tips:\n\nCongratulations on paying off your debt! For most people, that is the hardest step.\n\nThe next thing you want to do is build your emergency fund up to $3,000. This will help you better deal with some of life's speed bumps.\n\nWithout having to worry about credit card payments, this step should be pretty easy to accomplish.",
-					 @"Tips:\n\nWith a nice emergency fund it place, you can now start planning for retirement. Max out any employer contributions on your 401k account. This is your best rate of return. Altogether you should plan on spending about 5% of your take-home pay on retirement.\n\nYou will bump it up even further once the home is paid for (Step 6).",
-					 @"Tips:\n\nYour next step is to throw everything you can at the house and become truly debt free. Rather than buying expensive cars and going on expensive vacations, it's better to keep driving the same car, go camping, and get that house paid off. Every available dollar should go into paying it off early.\n\nIf you don't own a house, it's time to start saving up for a 20% down payment on a 15 year loan.\n\nReview the tips for step-2 if you need help in coming up with the extra money.",
-					 @"Tips:\n\nWith all debts fully paid, you will notice your expendable income is going to explode. This is good!\n\n You should now bump up your retirement contributions to a full 10% of take-home pay. Another 10% should go towards either church tithe, kids college funds or charity. Don't be afraid of being generous with your money. Hoarding it is not the secret to happiness. Remember to be helping others along the way.",
+				   @"Tips:\n\nWith your debts cleaned up and emergency fund in place, you should now bump up your retirement contributions to 7% of take-home pay. \n\nConsider putting another 10% towards either church tithe, kids college funds or charity. Don't be afraid of being generous with your money. Hoarding it is not the secret to happiness. Remember to be helping others along the way.",
+					 @"Tips:\n\nYour next step is to throw everything you can at the house and become truly debt free. Rather than buying expensive cars and going on expensive vacations, it's better to keep driving the same car, go camping, and get that house paid off. Every available dollar should go into paying it off early.\n\nIf you don't own a house, it's time to start saving up for a 20% down payment on a 15 year loan.\n\nReview the tips for step-3 if you need help in coming up with the extra money.",
+				   @"Tips:\n\nNow fully fund your retirement account by putting 15% of your income towards it. Plus another 10%-15% towards church, charity or education.",
 					 @"Tips:\n\nIf you do it right, owning rental property can be one of the fastest ways to generate wealth. The secret is to get good deals, get good renters, and don't over-extend yourself.\n\nBuying property should ONLY be done one way: Put 20% down and finance the rest at 15 years or less. No exceptions.\n\nSo start saving up for your 20% down payment.",
 					 @"Tips:\n\nPut all available money towards paying off the rental property early. With the added income of renters, this should be easy to do.",
-				   @"Tips:\n\nNow fully fund your retirement account by putting 15% of your income towards it. Plus another 15% towards church, charity or education. With a new income stream, you can afford to be generous with your money.",
 					 @"Tips:\n\nThe final step in this program is to buy a second rental property and pay it off as soon as possible, For most people, this plan is enough to guarantee a comfortable living and a wealthy retirement.\n\nCongratulations!",
 					 nil];
 	self.scrollView.text = [NSString stringWithFormat:@"Step %d: %@\n\n%@", self.step, [titles objectAtIndex:self.step-1], [tips objectAtIndex:self.step-1]];

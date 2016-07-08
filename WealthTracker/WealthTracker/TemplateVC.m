@@ -33,6 +33,9 @@
 	self.titleStr = [[NSString alloc] init];
 	self.altStr = [[NSString alloc] init];
 	
+	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
+	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
+
 	
 	self.monthLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17.f];
 	self.monthLabel.textColor = [UIColor whiteColor];

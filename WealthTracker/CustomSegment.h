@@ -13,5 +13,6 @@
 @interface CustomSegment : UISegmentedControl
 
 -(void)changeSegment;
+-(void)makeListSegment;
 
 @end

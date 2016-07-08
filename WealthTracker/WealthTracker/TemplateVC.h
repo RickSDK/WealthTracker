@@ -42,6 +42,8 @@
 @property (nonatomic) CGPoint startTouchPosition;
 @property (nonatomic) float startDegree;
 @property (nonatomic) BOOL expiredFlg;
+@property (nonatomic) int nowYear;
+@property (nonatomic) int nowMonth;
 
 -(float)screenWidth;
 -(float)screenHeight;

@@ -7,16 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomSegment.h"
 
 @interface ChartsVC : UIViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
+@property (nonatomic, strong) IBOutlet CustomSegment *timeSegment;
+@property (nonatomic, strong) IBOutlet CustomSegment *typeSegment;
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
 @property (nonatomic, strong) NSArray *graphTitles;
 @property (nonatomic, strong) NSMutableArray *graphDates;
 @property (nonatomic, strong) NSMutableArray *graphSegmentIndexes;
+
+-(IBAction)timeSegmentChanged:(id)sender;
+-(IBAction)typeSegmentChanged:(id)sender;
 
 @end

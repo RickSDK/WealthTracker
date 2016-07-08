@@ -165,6 +165,7 @@
 		6BB68BD71CDE446200D71701 /* PurchaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD61CDE446200D71701 /* PurchaseCell.m */; };
 		6BB68BDB1CDE592100D71701 /* IncomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD91CDE592100D71701 /* IncomeVC.m */; };
 		6BB68BDC1CDE592100D71701 /* IncomeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BDA1CDE592100D71701 /* IncomeVC.xib */; };
+		6BBE67BA1D2EE7E600B057A7 /* AmountObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE67B91D2EE7E600B057A7 /* AmountObj.m */; };
 		6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE51BF3C47F001D372F /* vault.jpg */; };
 		6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */; };
 		6BBEDEEB1BF3C4AC001D372F /* LockAppVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE91BF3C4AC001D372F /* LockAppVC.xib */; };
@@ -448,6 +449,8 @@
 		6BB68BD81CDE592100D71701 /* IncomeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncomeVC.h; sourceTree = "<group>"; };
 		6BB68BD91CDE592100D71701 /* IncomeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomeVC.m; sourceTree = "<group>"; };
 		6BB68BDA1CDE592100D71701 /* IncomeVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncomeVC.xib; sourceTree = "<group>"; };
+		6BBE67B81D2EE7E600B057A7 /* AmountObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmountObj.h; sourceTree = "<group>"; };
+		6BBE67B91D2EE7E600B057A7 /* AmountObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmountObj.m; sourceTree = "<group>"; };
 		6BBEDEE51BF3C47F001D372F /* vault.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vault.jpg; sourceTree = "<group>"; };
 		6BBEDEE71BF3C4AC001D372F /* LockAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockAppVC.h; sourceTree = "<group>"; };
 		6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockAppVC.m; sourceTree = "<group>"; };
@@ -868,6 +871,8 @@
 				6B8EB9871B51D58200F8A20B /* ItemCellObj.m */,
 				6B8EB9891B51D75A00F8A20B /* ItemObject.h */,
 				6B8EB98A1B51D75A00F8A20B /* ItemObject.m */,
+				6BBE67B81D2EE7E600B057A7 /* AmountObj.h */,
+				6BBE67B91D2EE7E600B057A7 /* AmountObj.m */,
 				6BE6B2F51B6A90B700C434BA /* ValueObj.h */,
 				6BE6B2F61B6A90B700C434BA /* ValueObj.m */,
 				6B8EB9911B5218BD00F8A20B /* ProfileObj.h */,
@@ -1086,6 +1091,7 @@
 				6B416F1C1B50A5B2009C9834 /* EnterValueVC.m in Sources */,
 				6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */,
 				6B8EB9931B5218BD00F8A20B /* ProfileObj.m in Sources */,
+				6BBE67BA1D2EE7E600B057A7 /* AmountObj.m in Sources */,
 				6B2353AF1C91184F008947AF /* TemplateVC.m in Sources */,
 				6BB455FB1CAC52350082F38C /* FinancesVC.m in Sources */,
 				6B416EFE1B508774009C9834 /* StartupVC.m in Sources */,
@@ -1294,13 +1300,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5c965671-3f5a-4c60-a098-aac7a459131e";
+				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1310,13 +1316,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5c965671-3f5a-4c60-a098-aac7a459131e";
+				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

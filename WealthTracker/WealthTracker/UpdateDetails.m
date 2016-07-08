@@ -460,9 +460,7 @@
 	float current = self.currentValue-self.lowValue;
 
 	if(range>0) {
-		NSLog(@"%f %f %f", self.lowValue, self.currentValue, self.highValue);
 		self.range12ImageView.center = CGPointMake(self.screenWidth*current/range, 10);
-		NSLog(@"%f %f", self.rangeCurrentLabel.center.x, self.range12ImageView.center.x);
 		if(self.currentValue>=((self.highValue+self.lowValue)/2)) {
 			self.rangeCurrentLabel.center = CGPointMake(self.range12ImageView.center.x-50, self.rangeCurrentLabel.center.y);
 		} else
@@ -565,7 +563,7 @@
 		if(cell==nil)
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear]];
+		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear numYears:1]];
 		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;

@@ -66,20 +66,20 @@
 
 		self.lineButton = [[CustomButton alloc] initWithFrame:CGRectMake(10, 62, 98, 30)];
 		self.lineButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
-		[self.lineButton setTitle:[NSString stringWithFormat:@"%@ Lines", lineChart] forState:UIControlStateNormal];
+		[self.lineButton setTitle:[NSString stringWithFormat:@"%@ Year", lineChart] forState:UIControlStateNormal];
 //		[self.lineButton setBackgroundImage:[UIImage imageNamed:@"lineChart.png"] forState:UIControlStateNormal];
 		self.lineButton.enabled=NO;
 		[self.contentView addSubview:self.lineButton];
 		
 		self.barButton = [[CustomButton alloc] initWithFrame:CGRectMake(112, 62, 98, 30)];
 		self.barButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
-		[self.barButton setTitle:[NSString stringWithFormat:@"%@ Bars", barChartO] forState:UIControlStateNormal];
+		[self.barButton setTitle:[NSString stringWithFormat:@"%@ Month", barChartO] forState:UIControlStateNormal];
 //		[self.barButton setBackgroundImage:[UIImage imageNamed:@"barChart.png"] forState:UIControlStateNormal];
 		[self.contentView addSubview:self.barButton];
 		
 		self.pieButton = [[CustomButton alloc] initWithFrame:CGRectMake(214, 62, 98, 30)];
 		self.pieButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:17];
-		[self.pieButton setTitle:[NSString stringWithFormat:@"%@ Pie", pieChart] forState:UIControlStateNormal];
+		[self.pieButton setTitle:[NSString stringWithFormat:@"%@ Month", pieChart] forState:UIControlStateNormal];
 //		[self.pieButton setBackgroundImage:[UIImage imageNamed:@"pieChart.png"] forState:UIControlStateNormal];
 		[self.contentView addSubview:self.pieButton];
 		
@@ -117,9 +117,6 @@
 	
 	float width=cellRect.size.width;
 	float height = cellRect.size.height;
-	NSLog(@"%f %f", height, [ObjectiveCScripts chartHeightForSize:290-30]);
-	
-//	int height = [ObjectiveCScripts chartHeightForSize:290-30];
 	
 	titleView.frame = CGRectMake(0, 0, width, 20);
 	titleLabel.frame = CGRectMake(0, 0, width, 20);

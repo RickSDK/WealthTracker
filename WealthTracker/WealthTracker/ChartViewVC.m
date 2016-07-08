@@ -112,7 +112,7 @@
 
 
 	if(self.changeSegmentControl.selectedSegmentIndex==1)
-		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType displayYear:self.displayYear item_id:0 displayMonth:self.displayMonth startMonth:self.nowMonth startYear:self.startYear];
+		self.graphImageView.image = [GraphLib plotItemChart:self.managedObjectContext type:graphType displayYear:self.displayYear item_id:0 displayMonth:self.displayMonth startMonth:self.nowMonth startYear:self.startYear numYears:1];
 	if(self.changeSegmentControl.selectedSegmentIndex==0)
 		self.graphImageView.image =[GraphLib graphBarsWithItems:self.chartValuesArray];
 	if(self.changeSegmentControl.selectedSegmentIndex==2)
