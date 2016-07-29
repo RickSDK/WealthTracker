@@ -101,6 +101,13 @@
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
 	
+	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
+		self.netWorthView.center = CGPointMake(self.self.botView.center.x, self.self.botView.center.y-60);
+		self.chartSegmentControl.hidden=YES;
+	}
+	
+
+	
 	
 }
 
@@ -125,14 +132,6 @@
 
 
 -(void)setupData {
-	
-	
-	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
-		self.netWorthView.center = CGPointMake(self.self.botView.center.x, self.self.botView.center.y-60);
-		self.chartSegmentControl.hidden=YES;
-	}
-	
-	
 	[self.barGraphObjects removeAllObjects];
 	[self.barGraphObjects addObjectsFromArray:[GraphLib pieItemsForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext]];
 	
@@ -189,7 +188,7 @@
 	if(self.chartSegmentControl.selectedSegmentIndex==2) {
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
 	} else
-		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:0 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
+		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:5 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
 
 }
 
@@ -318,9 +317,20 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+-(void)toggleChartSegment {
+	self.chartSegmentControl.selectedSegmentIndex = !self.chartSegmentControl.selectedSegmentIndex;
+	[self.chartSegmentControl changeSegment];
+	[self setupData];
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
+	
+	if(self.chartSegmentControl.selectedSegmentIndex<2 && CGRectContainsPoint(self.graphImageView.frame, self.startTouchPosition)) {
+		[self toggleChartSegment];
+		return;
+	}
 	
 	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition) && [ObjectiveCScripts getUserDefaultValue:@"financesFlg"].length>0) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];

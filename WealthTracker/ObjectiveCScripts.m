@@ -770,16 +770,6 @@
 
 +(UIColor *)colorForType:(int)type {
 	return [ObjectiveCScripts mediumkColor];
-	if(type==1)
-		return [UIColor colorWithRed:.5 green:.4 blue:.3 alpha:1];
-	if(type==2)
-		return [ObjectiveCScripts mediumkColor];
-	if(type==3)
-		return [UIColor colorWithRed:.6 green:.4 blue:.4 alpha:1];
-	if(type==4)
-		return [UIColor colorWithRed:.4 green:.55 blue:.4 alpha:1];
-	
-	return [UIColor blackColor];
 }
 
 

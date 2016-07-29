@@ -1215,13 +1215,10 @@
 	if(item_id>0) // single item
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", year, month, item_id];
 
-	if(type==0 || type==4) // assets and debts
-		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
-	
-	if(type==99 || type==3) // interest
-		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
-	else
+	if(type==1 || type==2) // assets and debts
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, type];
+	else
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
 }
 
 
@@ -1417,6 +1414,9 @@
 			case 4:
 				amount+=balance;
 				break;
+			case 5:
+				amount+=(value-balance);
+				break;
 				
 			default:
     break;
@@ -1429,7 +1429,7 @@
 
 +(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type {
 	// type
-	// 0 = assets, 1=real estate, 2=vehicles, 3=interest, 4=debt
+	// 0 = assets, 1=real estate, 2=vehicles, 3=interest, 4=debt, 5=equity
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
