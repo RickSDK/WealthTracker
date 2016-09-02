@@ -71,8 +71,6 @@
 	self.moPayLabel.hidden=(self.type>2);
 	self.duesTextField.hidden=(self.type>1);
 	self.duesLabel.hidden=(self.type>1);
-	
-	NSLog(@"type: %d", self.type);
 }
 
 -(NSString *)subTypeStringForSubType:(int)subType type:(int)type {
@@ -270,22 +268,27 @@
 	}
 	
 	double amount=0;
+	double changeAmount=0;
 	BOOL revFlg=NO;
 	if(self.filterType==0) {
-		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Equity":@"Change";
-		amount = (self.topSegment.selectedSegmentIndex==0)?obj.equity:obj.equityChange;
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Equity":@"Equity";
+		amount = obj.equity;
+		changeAmount = obj.equityChange;
 	} else if(self.filterType==1) {
-		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Value":@"Change";
-		amount = (self.topSegment.selectedSegmentIndex==0)?obj.value:obj.valueChange;
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Value":@"Value";
+		amount = obj.value;
+		changeAmount = obj.valueChange;
 	} else {
-		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Balance":@"Change";
-		amount = (self.topSegment.selectedSegmentIndex==0)?obj.balance:obj.balanceChange;
+		cell.rightLabel.text = (self.topSegment.selectedSegmentIndex==0)?@"Balance":@"Balance";
+		amount = obj.balance;
+		changeAmount = obj.balanceChange;
 		revFlg=YES;
 		if(obj.balance==0)
 			cell.bgView.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
 	}
-	[ObjectiveCScripts displayMoneyLabel:cell.equityChangeLabel amount:amount lightFlg:NO revFlg:revFlg];
-	self.totalAmount+=amount;
+	[ObjectiveCScripts displayMoneyLabel:cell.equityLabel amount:amount lightFlg:NO revFlg:revFlg];
+	[ObjectiveCScripts displayNetChangeLabel:cell.equityChangeLabel amount:changeAmount lightFlg:NO revFlg:revFlg];
+	self.totalAmount+=(self.topSegment.selectedSegmentIndex==0)?amount:changeAmount;
 	
 	cell.textLabel.textColor = [UIColor blackColor];
 	

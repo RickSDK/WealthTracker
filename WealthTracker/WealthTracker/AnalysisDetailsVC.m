@@ -95,10 +95,7 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
--(IBAction)segmentChanged:(id)sender {
-	[self.topSegment changeSegment];
-	[self setupData];
-}
+
 
 -(void)tipsButtonPressed {
 	TipsVC *detailViewController = [[TipsVC alloc] initWithNibName:@"TipsVC" bundle:nil];
@@ -222,9 +219,9 @@
 	  [self addBlackLabelForMoneyWithName:@"Total Monthly Payment" amount:totalValueObj.monthlyPayment];
 	  [self addBlackLabelForMoneyWithName:@"Monthly Income" amount:self.monthlyIncome];
 	  
-	  int percentOfIncome = [self addPercentLabelWithName:@"% of Net Income" amount:totalValueObj.monthlyPayment otherAmount:self.monthlyIncome low:25 high:40 revFlg:NO];
+	  int percentOfIncome = [self addPercentLabelWithName:@"% of Net Income" amount:totalValueObj.monthlyPayment otherAmount:self.monthlyIncome low:33 high:40 revFlg:NO];
  
-	  int idealMortgage = self.monthlyIncome/4;
+	  int idealMortgage = self.monthlyIncome*.33;
 	  idealMortgage = (idealMortgage/100)*100; // rounding!
 	  [self addBlackLabelForMoneyWithName:@"Your Ideal Mortgage" amount:idealMortgage];
 
@@ -284,7 +281,7 @@
 	  if(annualIncome>0) {
 		  badDebtToIncome = totalValueObj.badDebt*100/annualIncome;
 	  }
-	  
+	  [self addMOneyLabel:@"Gross Income" amount:annualIncome revFlg:NO];
 	  [self addPercentLabelWithName:@"Gross Debt to Income" amount:totalValueObj.balance otherAmount:annualIncome low:150 high:350 revFlg:NO];
 	  [self addPercentLabelWithName:@"Housing (DTI) Ratio" amount:homeDTI otherAmount:annualIncome low:16 high:27 revFlg:NO];
 	  [self addPercentLabelWithName:@"Total Debt (DTI) Ratio" amount:dti otherAmount:annualIncome low:19 high:40 revFlg:NO];
@@ -308,15 +305,12 @@
 	  double classADebt30 = allDebt30-homeDebt30;
 	  int allDebtChangePast12 = debtToday-debtLastYear;
 	  int classAReduction = (homeDebtChangePast12-allDebtChangePast12)/12;
-//	  if(classADebt30>classAReduction)
-//		  classAReduction=classADebt30; // take the higher of the two
-
 
 	  [self addBlankLine];
 	  [self addBlackLabelForMoneyWithName:@"Total Consumer Debt" amount:totalValueObj.badDebt];
 	  [self addNetChangeLabel:@"Change this month" amount:classADebt30 revFlg:YES];
 	  
-	  if(classAReduction>0) {
+	  if(classAReduction>0 && totalValueObj.badDebt > 0) {
 		  [self addPerMonthLabelWithName:@"Current Reduction Rate" amount:classAReduction];
 		  int monthsToPayoff = ceil(totalValueObj.badDebt/classAReduction);
 		  [self addMonthsToPayoff:@"Time till Payoff" months:monthsToPayoff];
@@ -473,13 +467,13 @@
 	NSString *line2 = @"";
 	NSString *line3 = @"";
 	
-	line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high. Ideally it should be about 25%%. You may find it difficult to dig out of debt with your current payments. It's important to reduce any other debts you have to make room for this monthly payment. Follow the plan on the main menu screen to further build your wealth.", percentOfIncome];
+	line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high. Ideally it should be about 33%%. You may find it difficult to dig out of debt with your current payments. It's important to reduce any other debts you have to make room for this monthly payment. Follow the plan on the main menu screen to further build your wealth.", percentOfIncome];
 	
 	if(balance < idealLoan)
-		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high, but it looks like this may be due to agressively paying off your mortgage.\n\nIdeally you want your payments to be about 25%% of your monthly income, based on a 15 year loan.", percentOfIncome];
+		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is pretty high, but it looks like this may be due to agressively paying off your mortgage.\n\nIdeally you want your payments to be about 33%% of your monthly income, based on a 15 year loan.", percentOfIncome];
 	
-	if(percentOfIncome<34)
-		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be close to 25%%.", percentOfIncome];
+	if(percentOfIncome<36)
+		line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards mortgage/rent which is a pretty good number. Ideally you want to be close to 33%%.", percentOfIncome];
 	
 	if(percentMonth==0)
 		line2 = @"Your real estate value is unchanged this month.";
@@ -498,7 +492,7 @@
 	line3 = [NSString stringWithFormat:@"Your real estate purchases are currently under water at %d%% equity. Your best bet is to remain calm and wait for the market to recover. Start working the plan on the main menu to get out of the hole.", equity];
 
 	if(value==0) {
-		if(percentOfIncome<34)
+		if(percentOfIncome<33)
 			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is pretty good. Ideally you want to be at around 25%%.\n\nView the plan on the main menu page for details on how to start working towards owning your own home.", percentOfIncome];
 		else
 			line1 = [NSString stringWithFormat:@"You are currently paying %d%% of your monthly income towards rent which is too high. Ideally you want to be at around 25%%. Strongly consider moving to a smaller rental and start saving up for a home.\n\nAnd view the main menu page for details on starting a good plan of action.", percentOfIncome];
@@ -877,7 +871,19 @@
 }
 
 -(int)percentComplete {
-	int percentComplete = [[ObjectiveCScripts getUserDefaultValue:@"percentComplete"] intValue];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	int totalRecords = 0;
+	int completeRecords = 0;
+	int percentComplete = 0;
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		totalRecords++;
+		if(obj.val_confirm_flg && obj.bal_confirm_flg)
+			completeRecords++;
+	}
+	if(totalRecords>0)
+		percentComplete = completeRecords*100/totalRecords;
+	
 	if(self.displayMonth != self.nowMonth || self.displayYear != self.displayYear)
 		percentComplete=100;
 	return percentComplete;
@@ -886,6 +892,7 @@
 -(NSString *)percentComplateString {
 	int percentComplete = [self percentComplete];
 	NSString *line0=@"";
+	NSLog(@"+++percentComplete: %d", percentComplete);
 	if(percentComplete==0)
 		line0 = @"Note: You have not started updating your portfolio for this month, so the following analysis may not be relevant.\n\n";
 	else if(percentComplete<75)
@@ -907,7 +914,7 @@
 	NSString *wereAble = (percentComplete==100)?@"were able":@"are on pace";
 	NSString *line1=@"";
 	NSString *line4=@"Keep working the plan on the main menu to further build your wealth.";
-	if(reduction>0) { // paying off debt
+	if(reduction>0 && allDebt30!=0) { // paying off debt
 		if(allDebt30 > reduction) // good month
 			line1 = [NSString stringWithFormat:@"You %@ a very good month %@ %d paying off %@ of total debt. Keep the needle moving in the right direction.", had, [[ObjectiveCScripts monthListShort] objectAtIndex:self.displayMonth-1], self.displayYear, [ObjectiveCScripts convertNumberToMoneyString:allDebt30]];
 		else {// bad month
@@ -1385,6 +1392,7 @@
 -(IBAction)topSegmentChanged:(id)sender {
 	self.mainTableView.hidden=self.mainSegmentControl.selectedSegmentIndex==2;
 	self.graphImageView.hidden=self.mainSegmentControl.selectedSegmentIndex!=2;
+	self.topSegment.enabled=self.mainSegmentControl.selectedSegmentIndex != 1;
 	
 	[self.mainSegmentControl changeSegment];
 	[self.mainTableView reloadData];
@@ -1396,6 +1404,12 @@
 	if(self.tag<1)
 		self.tag+=4;
 	
+	[self setupData];
+}
+
+-(IBAction)segmentChanged:(id)sender {
+	
+	[self.topSegment changeSegment];
 	[self setupData];
 }
 

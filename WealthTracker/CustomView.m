@@ -35,7 +35,7 @@
 	self.layer.cornerRadius = CORNER_RADIUS;
 	self.layer.masksToBounds = YES;				// clips background images to rounded corners
 	self.layer.borderColor = [UIColor blackColor].CGColor;
-	self.layer.borderWidth = 2.;
+	self.layer.borderWidth = 1.;
 }
 
 @end

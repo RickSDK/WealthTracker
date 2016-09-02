@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic) int rowId;
 @property (nonatomic) double amount;
+@property (nonatomic) double prevAmount;
 @property (nonatomic) BOOL reverseColorFlg;
 @property (nonatomic) BOOL confirmFlg;
 @property (nonatomic) BOOL existsFlg;

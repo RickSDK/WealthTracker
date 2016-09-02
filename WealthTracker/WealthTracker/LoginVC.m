@@ -17,7 +17,7 @@
 @implementation LoginVC
 
 -(void)createNewAccountPressed:(id)sender {
-	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length==0)
+	if(![ObjectiveCScripts isUpgraded])
 		[ObjectiveCScripts showAlertPopup:@"Sorry" message:@"You must have the upgraded version of this app to access this feature. Click the 'Upgrade' button at the bottom of the previous page."];
 	else {
 		NewAccountVC *detailViewController = [[NewAccountVC alloc] initWithNibName:@"NewAccountVC" bundle:nil];

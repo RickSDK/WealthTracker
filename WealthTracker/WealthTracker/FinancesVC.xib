@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1911" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -19,9 +19,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <string key="text">3 keys to financial Success
+                    <mutableString key="text">3 keys to financial Success
 
-Here are the 3 rules to follow in life that lead to financial success. It's smart to always follow these:
+Here are the 3 golden rules to follow in life that lead to financial success. It's smart to always follow these:
 
 1) Avoid Credit Card Debt
 2) Pay cash for cars
@@ -31,7 +31,7 @@ Here are the 3 rules to follow in life that lead to financial success. It's smar
 
 2) As a general rule, you should ONLY pay cash for your cars. Avoid financing. Even with a zero-interest loan, you are adding risk to your life and not leaving yourself in the best possible situation to handle life's speed-bumps. If you can't afford to pay cash, consider getting a beater and saving up each month until you can afford to buy with cash. It's the smartest way to go.
 
-3) ONLY buy real estate on 15 years or less. Never on a 30 year term. 15-year gets you the best interest rate and gets it paid off quickly. Banks and Lenders will try to steer you into a 30-year loan because their commission bonus checks go way up, but don't fall for it. Think of it this way: If you can't afford the payment of a 15 year mortgage, you can't afford that house.</string>
+3) ONLY buy real estate on 15 years or less. Never on a 30 year term. 15-year gets you the best interest rate and gets it paid off quickly. Banks and Lenders will try to steer you into a 30-year loan because their commission bonus checks go way up, but don't fall for it. Think of it this way: If you can't afford the payment of a 15 year mortgage, you can't afford that house.</mutableString>
                     <color key="textColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

@@ -70,7 +70,7 @@
 					   nil];
 	self.menuItems=[[NSArray alloc] initWithArray:titles];
 	
-	self.upgradeButton.hidden = ([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0);
+	self.upgradeButton.hidden = ([ObjectiveCScripts isUpgraded]);
 
 	NSString *login = ([ObjectiveCScripts getUserDefaultValue:@"emailAddress"].length>0)?@"Logout":@"Login";
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:login style:UIBarButtonItemStyleBordered target:self action:@selector(loginButtonPressed)];

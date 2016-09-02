@@ -196,6 +196,8 @@
 		6BE6B2F71B6A90B700C434BA /* ValueObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE6B2F61B6A90B700C434BA /* ValueObj.m */; };
 		6BE8EAF61B618B66005510F6 /* UpdateSalaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE8EAF41B618B66005510F6 /* UpdateSalaryVC.m */; };
 		6BE8EAF71B618B66005510F6 /* UpdateSalaryVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BE8EAF51B618B66005510F6 /* UpdateSalaryVC.xib */; };
+		6BEE56241D77393C00724F1B /* StatsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BEE56221D77393C00724F1B /* StatsVC.m */; };
+		6BEE56251D77393C00724F1B /* StatsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BEE56231D77393C00724F1B /* StatsVC.xib */; };
 		6BFE31BB1B73E143002F2343 /* checkMark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE31BA1B73E143002F2343 /* checkMark.jpg */; };
 		6BFECD4F1B7A7D4700F40961 /* greenTexture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BFECD4E1B7A7D4700F40961 /* greenTexture.jpg */; };
 		6BFECD511B7A884300F40961 /* blueGrad.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BFECD501B7A884300F40961 /* blueGrad.jpg */; };
@@ -498,6 +500,9 @@
 		6BE8EAF31B618B66005510F6 /* UpdateSalaryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateSalaryVC.h; sourceTree = "<group>"; };
 		6BE8EAF41B618B66005510F6 /* UpdateSalaryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateSalaryVC.m; sourceTree = "<group>"; };
 		6BE8EAF51B618B66005510F6 /* UpdateSalaryVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpdateSalaryVC.xib; sourceTree = "<group>"; };
+		6BEE56211D77393C00724F1B /* StatsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsVC.h; sourceTree = "<group>"; };
+		6BEE56221D77393C00724F1B /* StatsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsVC.m; sourceTree = "<group>"; };
+		6BEE56231D77393C00724F1B /* StatsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StatsVC.xib; sourceTree = "<group>"; };
 		6BFE31BA1B73E143002F2343 /* checkMark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = checkMark.jpg; sourceTree = "<group>"; };
 		6BFECD4E1B7A7D4700F40961 /* greenTexture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = greenTexture.jpg; sourceTree = "<group>"; };
 		6BFECD501B7A884300F40961 /* blueGrad.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blueGrad.jpg; sourceTree = "<group>"; };
@@ -568,6 +573,9 @@
 				6BB55B721CE4E6E700346276 /* AssetsDebtsVC.h */,
 				6BB55B731CE4E6E700346276 /* AssetsDebtsVC.m */,
 				6BB55B741CE4E6E700346276 /* AssetsDebtsVC.xib */,
+				6BEE56211D77393C00724F1B /* StatsVC.h */,
+				6BEE56221D77393C00724F1B /* StatsVC.m */,
+				6BEE56231D77393C00724F1B /* StatsVC.xib */,
 				6BB68B9E1CDBD80C00D71701 /* BudgetVC.h */,
 				6BB68B9F1CDBD80C00D71701 /* BudgetVC.m */,
 				6BB68BA01CDBD80C00D71701 /* BudgetVC.xib */,
@@ -974,6 +982,7 @@
 				6BB68BAA1CDBDBFB00D71701 /* StatsPageVC.xib in Resources */,
 				6B2353B41C911928008947AF /* HomeBuyVC.xib in Resources */,
 				6BC4722D1B61576B00F68341 /* WebViewVC.xib in Resources */,
+				6BEE56251D77393C00724F1B /* StatsVC.xib in Resources */,
 				6BD0D8E21B83D9D80062E152 /* MonthlySpendingVC.xib in Resources */,
 				6B63899C1B7BA2A100260656 /* Icon-80.png in Resources */,
 				6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */,
@@ -1172,6 +1181,7 @@
 				6BE8EAF61B618B66005510F6 /* UpdateSalaryVC.m in Sources */,
 				6B2E23FD1B55733000CC2851 /* MyPlanVC.m in Sources */,
 				6B2E24021B55BB2200CC2851 /* AnalysisDetailsVC.m in Sources */,
+				6BEE56241D77393C00724F1B /* StatsVC.m in Sources */,
 				6B8EB99C1B52272A00F8A20B /* NSDate+ATTDate.m in Sources */,
 				6B38E3DB1B6C565000EF8D40 /* CreditScoreTracker.m in Sources */,
 				6B416EC61B506D52009C9834 /* main.m in Sources */,

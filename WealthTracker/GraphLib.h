@@ -36,6 +36,7 @@
 +(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context;
 +(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg;
 +(NSArray *)pieItemsForMonth:(int)month year:(int)year context:(NSManagedObjectContext *)context;
++(NSArray *)itemsForMonth:(int)month year:(int)year type:(int)type context:(NSManagedObjectContext *)context;
 
 
 @end

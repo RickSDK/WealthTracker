@@ -451,7 +451,8 @@
 	[updateRecord setValue:[NSNumber numberWithDouble:amount] forKey:field];
 	[updateRecord setValue:[NSString stringWithFormat:@"%g", amount] forKey:fieldString];
 
-	[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag];
+	if([obj.statement_day intValue]<=[[[NSDate date] convertDateToStringWithFormat:@"dd"] intValue])
+		[updateRecord setValue:[NSNumber numberWithBool:YES] forKey:flag];
 	
 	if(!noHistoryFlg)
 		[self updateHistory:[obj.rowId intValue] multiplyer:multHistory field:field flag:flag month:month year:year amount:amount moc:moc type:itemType interest_rate:interest_rate statement_day:[obj.statement_day intValue]];

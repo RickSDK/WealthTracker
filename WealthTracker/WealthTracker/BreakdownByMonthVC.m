@@ -42,7 +42,7 @@
 	
 	self.topGraphImageView = [[UIImageView alloc] init];
 	self.dataArray2 = [[NSMutableArray alloc] init];
-	
+	self.changeSegmentControl.selectedSegmentIndex=1;
 	
 	if(self.itemObject) {
 		self.titleLabel.text = self.itemObject.name;
@@ -58,29 +58,30 @@
 		self.displayYear=self.nowYear;
 	self.displayMonth = self.nowMonth;
 	
-	if(self.tag==3 || self.type==3 || self.fieldType==1) {
+	if(self.type==1 ||self.type==2 ||self.type==4)
+		self.topSegmentControl.selectedSegmentIndex=2;
+	if(self.type==3)
+		self.topSegmentControl.selectedSegmentIndex=1;
+	if(self.type==5) {
 		self.topSegmentControl.selectedSegmentIndex=1;
 		self.topSegmentControl.enabled=NO;
-		self.fieldType=1;
 	}
-	if(self.tag==4 || self.type==4 || self.tag==99 || self.fieldType==3)
-		self.topSegmentControl.enabled=NO;
 	
-	if(self.fieldType==0 && self.type==0)
-		self.topSegmentControl.enabled=NO;
-	
-	if(self.fieldType==2)
-		self.topSegmentControl.selectedSegmentIndex=2;
-	
-	
+
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
-	if(self.type==0 && self.fieldType==2) {
+	if(self.type==4) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
+	} else {
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
 	}
 
 	[self.topSegmentControl changeSegment];
 	[self setupData];
+}
+
+-(void)mainMenuClicked {
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 -(void)payoffDay {
@@ -102,17 +103,6 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
--(NSPredicate *)predicateForYearMonth:(NSString *)year_month item_id:(int)item_id tag:(int)tag {
-	if(item_id>0)
-		return [NSPredicate predicateWithFormat:@"year_month = %@ AND item_id = %d", year_month, item_id];
-	
-	if(tag==1 || tag==2)
-		return [NSPredicate predicateWithFormat:@"year_month = %@ AND type = %d", year_month, tag];
-
-	return [NSPredicate predicateWithFormat:@"year_month = %@", year_month];
-}
-
-
 -(void)setupData {
 	self.yearLabel.text = [NSString stringWithFormat:@"%d", self.displayYear];
 	
@@ -131,22 +121,27 @@
 			year++;
 		}
 
-		NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
-		NSString *field = [fieldTypes objectAtIndex:self.fieldType];
+		NSString *field = @""; // <-- equity
+		if(self.topSegmentControl.selectedSegmentIndex==0)
+			field = @"asset_value";
+		if(self.topSegmentControl.selectedSegmentIndex==1)
+			field = @"balance_owed";
+		
+		if(self.type==5)
+			field = @"interest";
 		double amount = [ObjectiveCScripts changedForItem:self.row_id month:month year:year field:field context:self.managedObjectContext numMonths:1 type:self.type];
 
 		double total = [ObjectiveCScripts amountForItem:self.row_id month:month year:year field:field context:self.managedObjectContext type:self.type];
-		
 		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
 		
 	}
 	
-	if(self.changeSegmentControl.selectedSegmentIndex==1)
-		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Totals by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
+	if(self.changeSegmentControl.selectedSegmentIndex==0)
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Totals by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.type]];
 	else
-		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType]];
+		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.type]];
 	
-	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.tag==99) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==1];
+	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.type==5) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==0];
 	
 	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 	int width = [[UIScreen mainScreen] bounds].size.width;
@@ -192,8 +187,7 @@
 	if(components.count>1) {
 		total = [[components objectAtIndex:0] doubleValue];
 		amount = [[components objectAtIndex:1] doubleValue];
-		cell.amountLabel.text = [ObjectiveCScripts convertNumberToMoneyString:total];
-		cell.amountLabel.textColor = [ObjectiveCScripts colorBasedOnNumber:total lightFlg:NO];
+		[ObjectiveCScripts displayMoneyLabel:cell.amountLabel amount:total lightFlg:NO revFlg:(self.topSegmentControl.selectedSegmentIndex==1)];
 		[ObjectiveCScripts displayNetChangeLabel:cell.past30DaysLabel amount:amount lightFlg:NO revFlg:(self.topSegmentControl.selectedSegmentIndex==1)];
 	}
 	
@@ -202,13 +196,13 @@
 	else
 		cell.backgroundColor=[UIColor whiteColor];
 
-	if(total==0 && amount==0) {
-		cell.backgroundColor = [UIColor grayColor];
-		cell.monthLabel.text = @"No Data";
-		cell.amountLabel.text = @"-";
-		cell.past30DaysLabel.text = @"-";
-		self.prevYearButton.enabled=NO;
-	}
+//	if(total==0 && amount==0) {
+//		cell.backgroundColor = [UIColor grayColor];
+//		cell.monthLabel.text = @"No Data";
+//		cell.amountLabel.text = @"-";
+//		cell.past30DaysLabel.text = @"-";
+//		self.prevYearButton.enabled=NO;
+//	}
 
 
 	if(self.displayYear>self.nowYear || (self.displayYear==self.nowYear && self.nowMonth<indexPath.row+1)) {

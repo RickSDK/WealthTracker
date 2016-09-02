@@ -60,12 +60,13 @@
 	self.typeLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
 	self.fieldTypeLabel.text = [ObjectiveCScripts fieldTypeNameForFieldType:self.fieldType];
 
-	NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"balance_owed", @"", @"interest", nil];
-	NSString *field = [fieldTypes objectAtIndex:self.fieldType];
+	NSLog(@"%d %@ %d", self.type, [ObjectiveCScripts typeNameForType:self.type], self.fieldType);
+	NSArray *fieldTypes = [NSArray arrayWithObjects:@"asset_value", @"asset_value", @"asset_value", @"balance_owed", @"", @"interest", nil];
+	NSString *field = [fieldTypes objectAtIndex:self.type];
 	
 	NSPredicate *predicate=nil;
-	if(self.type>0)
-		predicate = [NSPredicate predicateWithFormat:@"type = %@", [ObjectiveCScripts typeNameForType:self.type]];
+//	if(self.type>0)
+//		predicate = [NSPredicate predicateWithFormat:@"type = %@", [ObjectiveCScripts typeNameForType:self.type]];
 	
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:@"name" mOC:self.managedObjectContext ascendingFlg:YES];
 	double total=0;
@@ -73,7 +74,7 @@
 		int rowId = [[mo valueForKey:@"rowId"] intValue];
 		double amount = 0;
 		if(self.topSegmentControl.selectedSegmentIndex==0)
-			amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:0];
+			amount = [ObjectiveCScripts changedForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext numMonths:1 type:self.type];
 		else
 			amount = [ObjectiveCScripts amountForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext type:self.type];
 		

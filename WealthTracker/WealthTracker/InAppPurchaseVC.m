@@ -36,7 +36,7 @@
 		[self unlockProVersion];
 	}
 	
-	self.upgradeButton.hidden=([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0);
+	self.upgradeButton.hidden=([ObjectiveCScripts isUpgraded]);
 	
 }
 

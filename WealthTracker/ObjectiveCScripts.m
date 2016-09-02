@@ -22,6 +22,11 @@
 //	return @"Broke to Baron";
 }
 
++(BOOL)isUpgraded {
+//	return ([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0);
+	return YES;
+}
+
 +(NSString *)getProjectDisplayVersion
 {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
@@ -346,7 +351,8 @@
 			@"Real Estate",
 			@"Vehicle",
 			@"Debt",
-			@"Asset",
+			@"Net Worth",
+			@"Interest",
 			@"N/A",
 			nil];
 }
@@ -354,14 +360,16 @@
 +(NSArray *)fieldTypeList {
 	return [NSArray arrayWithObjects:
 			@"Value",
-			@"Balance",
 			@"Equity",
+			@"Equity",
+			@"Balance",
+			@"Net Worth",
 			@"Interest",
 			nil];
 }
 
 +(NSString *)fieldTypeNameForFieldType:(int)fieldType {
-	if(fieldType>3)
+	if(fieldType>5)
 		return @"Error";
 	else
 		return [[self fieldTypeList] objectAtIndex:fieldType];
@@ -496,6 +504,7 @@
 		obj.val_confirm_flg = [[itemMo valueForKey:@"val_confirm_flg"] boolValue];
 	}
 
+	
 	obj.status = 0; //-- green
 	if([obj.statement_day intValue]>0) {
 		if([obj.statement_day intValue]>nowDay)
@@ -503,11 +512,12 @@
 		else if (![self isStatusGreen:obj])
 			obj.status=2;
 	}
-	if([obj.statement_day intValue]==0) {
-		obj.status=0; // emergency fund
-		obj.val_confirm_flg=YES;
-		obj.bal_confirm_flg=YES;
-	}
+//	if([obj.statement_day intValue]==0) {
+//		obj.status=0; // emergency fund
+//		obj.val_confirm_flg=YES;
+//		obj.bal_confirm_flg=YES;
+//	}
+//	NSLog(@"+++Here!: %@ %@ %@ [%d]", obj.name, obj.bal_confirm_flg?@"Y":@"N", obj.val_confirm_flg?@"Y":@"N", obj.status);
 
 	return obj;
 }
@@ -632,7 +642,7 @@
 }
 
 +(NSPredicate *)predicateForItem:(int)item_id month:(int)month year:(int)year type:(int)type {
-	if(type>0) {
+	if(type>0 && type < 4) {
 		if(item_id>0)
 			return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d AND type = %d", year, month, item_id, type];
 		else
@@ -946,6 +956,13 @@
 					  nil];
 	return [icons objectAtIndex:number%icons.count];
 }
+
++(NSString *)titleForType:(int)type {
+	NSArray *titles = [NSArray arrayWithObjects:@"Assets", @"Real Estate", @"Vehicles", @"Debt", @"Equity", @"Interest", nil];
+	return [titles objectAtIndex:type];
+}
+
+
 
 
 

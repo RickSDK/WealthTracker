@@ -14,7 +14,7 @@
 #import "AnalysisVC.h"
 #import "GraphLib.h"
 #import "NSDate+ATTDate.h"
-#import "ChartsVC.h"
+#import "StatsVC.h"
 #import "NSString+ATTString.h"
 #import "BreakdownByMonthVC.h"
 #import "OptionsVC.h"
@@ -45,10 +45,13 @@
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.barGraphObjects = [[NSMutableArray alloc] init];
 	
+	self.monthNameLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM"];
+	self.monthDayLabel.text = [[NSDate date] convertDateToStringWithFormat:@"d"];
+	
 	self.portfolioButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
 	[self.portfolioButton setTitle:[NSString stringWithFormat:@"%@ Portfolio", [NSString fontAwesomeIconStringForEnum:FAbank]] forState:UIControlStateNormal];
 	self.chartsButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.chartsButton setTitle:[NSString stringWithFormat:@"%@ Charts", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forState:UIControlStateNormal];
+	[self.chartsButton setTitle:[NSString stringWithFormat:@"%@ Stats", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forState:UIControlStateNormal];
 	self.myPlanButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
 	[self.myPlanButton setTitle:@"" forState:UIControlStateNormal];
 	
@@ -107,15 +110,15 @@
 	}
 	
 
-	
+	self.graphImageView.layer.cornerRadius = 8.0;
+	self.graphImageView.layer.masksToBounds = YES;
+
 	
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 
 	if([ObjectiveCScripts getUserDefaultValue:@"appOpened"].length>0) {
 		self.vaultImageView.hidden=YES;
@@ -178,17 +181,12 @@
 
 	[self displayBottomLabels];
 	
-	self.graphImageView.layer.cornerRadius = 8.0;
-	self.graphImageView.layer.masksToBounds = YES;
-	self.graphImageView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.graphImageView.layer.borderWidth = 2.0;
-	
 	self.currentYearLabel.text = [NSString stringWithFormat:@"%d", self.nowYear];
 
 	if(self.chartSegmentControl.selectedSegmentIndex==2) {
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
 	} else
-		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:5 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
+		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
 
 }
 
@@ -278,7 +276,7 @@
 
 
 -(BOOL)checkForExpiredFlg {
-	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0)
+	if([ObjectiveCScripts isUpgraded])
 		return NO;
 	
 	NSString *installTime = [ObjectiveCScripts getUserDefaultValue:@"installTime"];
@@ -335,9 +333,7 @@
 	if(CGRectContainsPoint(self.netWorthView.frame, self.startTouchPosition) && [ObjectiveCScripts getUserDefaultValue:@"financesFlg"].length>0) {
 		BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 		detailViewController.managedObjectContext = self.managedObjectContext;
-		detailViewController.tag=4;
-		detailViewController.type=0;
-		detailViewController.fieldType=2; // equity
+		detailViewController.type=4;
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		return;
 	}
@@ -396,7 +392,7 @@
 }
 
 -(IBAction)chartsButtonClicked:(id)sender {
-	ChartsVC *detailViewController = [[ChartsVC alloc] initWithNibName:@"ChartsVC" bundle:nil];
+	StatsVC *detailViewController = [[StatsVC alloc] initWithNibName:@"StatsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

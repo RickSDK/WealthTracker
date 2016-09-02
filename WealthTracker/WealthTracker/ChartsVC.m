@@ -21,13 +21,6 @@
 
 @implementation ChartsVC
 
--(void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
-		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Charts"];
@@ -35,11 +28,9 @@
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	
-	self.graphTitles = [NSArray arrayWithObjects:@"Assets", @"Real Estate", @"Vehicles", @"Interest", @"Debt", nil];
-	
 	self.graphDates = [[NSMutableArray alloc] init];
 	self.graphSegmentIndexes = [[NSMutableArray alloc] init];
-	for(int i=0; i<self.graphTitles.count; i++) {
+	for(int i=0; i<6; i++) {
 		[self.graphDates addObject:[NSString stringWithFormat:@"%d|%d", self.nowYear, self.nowMonth]];
 		[self.graphSegmentIndexes addObject:@"0"];
 	}
@@ -51,8 +42,15 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
+
 
 }
+
+-(void)mainMenuClicked {
+	[self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
 	[self.navigationController popViewControllerAnimated:YES];
@@ -71,35 +69,17 @@
 }
 
 -(void)drilldown:(int)section {
-	
-	int type=section;
-	int fieldType=0;
-	if(type==3) {
-		type=0;
-		fieldType=3;
-	}
-	if(type==4) {
-		type=0;
-		fieldType=1;
-	}
-
-	
 	NSArray *dates = [[self.graphDates objectAtIndex:section] componentsSeparatedByString:@"|"];
 	int displayYear = [[dates objectAtIndex:0] intValue];
 	ChartViewVC *detailViewController = [[ChartViewVC alloc] initWithNibName:@"ChartViewVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.type=type;
-	detailViewController.fieldType=fieldType;
+	detailViewController.type=section;
+	detailViewController.fieldType=section;
 	detailViewController.displayYear=displayYear;
-	if(section==3)
-		detailViewController.tag = 99; // interest
-	else if(section==4)
-		detailViewController.tag=3; // debt
-	else
-		detailViewController.tag = section;
-	
+	detailViewController.tag = section;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
+
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -117,7 +97,7 @@
 
 	int segment = [[self.graphSegmentIndexes objectAtIndex:indexPath.section] intValue];
 
-	cell.titleLabel.text = [self.graphTitles objectAtIndex:indexPath.section];
+	cell.titleLabel.text = [ObjectiveCScripts titleForType:(int)indexPath.section];
 	
 	[cell.prevYearButton addTarget:self action:@selector(prevMonthButtonPressed:) forControlEvents:UIControlEventTouchDown];
 	[cell.nextYearButton addTarget:self action:@selector(nextMonthButtonPressed:) forControlEvents:UIControlEventTouchDown];
@@ -137,47 +117,15 @@
 	cell.currentYearLabel.text = [NSString stringWithFormat:@"%@ %d", [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1], displayYear];
 	
 	int graphType = (int)indexPath.section;
-	if(graphType==3)
-		graphType=99; // interest
 	if(graphType==4)
 		graphType=0; // debt
 	
-	NSMutableArray *chartValuesArray = [[NSMutableArray alloc] init];
 	
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"rowId" mOC:self.managedObjectContext ascendingFlg:YES];
-	for(NSManagedObject *item in items) {
-		NSString *name = [item valueForKey:@"name"];
-		int rowId = [[item valueForKey:@"rowId"] intValue];
-		NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d", displayYear, displayMonth, rowId];
-		NSArray *values = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-		if(values.count==0)
-			cell.prevYearButton.enabled=NO;
-		else
-			cell.prevYearButton.enabled=YES;
-		
-		double amount=0;
-		if(values.count>0) {
-			NSManagedObject *mo = [values objectAtIndex:0];
-			
-			if(indexPath.section==0) //assets
-				amount = [[mo valueForKey:@"asset_value"] doubleValue];
-			if(indexPath.section==1 && [@"Real Estate" isEqualToString:[item valueForKey:@"type"]]) //real estate
-				amount = [[mo valueForKey:@"asset_value"] doubleValue];
-			if(indexPath.section==2 && [@"Vehicle" isEqualToString:[item valueForKey:@"type"]]) //real estate
-				amount = [[mo valueForKey:@"asset_value"] doubleValue];
-			
-			if(indexPath.section==3)
-				amount = [[mo valueForKey:@"interest"] doubleValue];
-			if(indexPath.section==4)
-				amount = [[mo valueForKey:@"balance_owed"] doubleValue];
-			
-			if(amount>0)
-				[chartValuesArray addObject:[GraphLib graphObjectWithName:name amount:amount rowId:rowId reverseColorFlg:(indexPath.section==4) currentMonthFlg:NO]];
-		}
-	}
-	
-	cell.graphImageView.image = [GraphLib graphChartForMonth:displayMonth year:displayYear context:self.managedObjectContext numYears:(int)self.timeSegment.selectedSegmentIndex+1 type:(int)indexPath.section barsFlg:self.typeSegment.selectedSegmentIndex==1];
-	
+	NSArray *chartValuesArray = [GraphLib itemsForMonth:displayMonth year:displayYear type:(int)indexPath.section context:self.managedObjectContext];
+	cell.prevYearButton.enabled=chartValuesArray.count>0;
+
+	if(segment==0)
+		cell.graphImageView.image = [GraphLib graphChartForMonth:displayMonth year:displayYear context:self.managedObjectContext numYears:(int)self.timeSegment.selectedSegmentIndex+1 type:(int)indexPath.section barsFlg:self.typeSegment.selectedSegmentIndex==1];
 	if(segment==1)
 		cell.graphImageView.image =[GraphLib graphBarsWithItems:chartValuesArray];
 	if(segment==2)
@@ -244,7 +192,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	return 6;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

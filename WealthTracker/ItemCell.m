@@ -71,7 +71,7 @@
 //		float kRow2 = kTopEdge+30+15;
 //		float kRow3 = kTopEdge+32+30;
 
-		self.arrowLabel = [[UILabel alloc] initWithFrame:CGRectMake(293, 10, 20, 30)];
+		self.arrowLabel = [[UILabel alloc] initWithFrame:CGRectMake(293, 17, 20, 30)];
 		self.arrowLabel.font = [UIFont boldSystemFontOfSize:20];
 		self.arrowLabel.adjustsFontSizeToFitWidth = YES;
 		self.arrowLabel.minimumScaleFactor = .7;
@@ -94,11 +94,21 @@
 		float kCol2 = kleftEdge+150;
 		
 		
+		self.equityLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, 2, 100, 22)];
+		self.equityLabel.font = [UIFont boldSystemFontOfSize:17];
+		self.equityLabel.adjustsFontSizeToFitWidth = YES;
+		self.equityLabel.minimumScaleFactor = .8;
+		self.equityLabel.text = @"$0";
+		self.equityLabel.textAlignment = NSTextAlignmentCenter;
+		self.equityLabel.textColor = [UIColor purpleColor];
+		self.equityLabel.backgroundColor = [UIColor clearColor];
+		[self.bgView addSubview:self.equityLabel];
+		
 		self.equityChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, 22, 100, 22)];
-		self.equityChangeLabel.font = [UIFont boldSystemFontOfSize:17];
+		self.equityChangeLabel.font = [UIFont systemFontOfSize:14];
 		self.equityChangeLabel.adjustsFontSizeToFitWidth = YES;
 		self.equityChangeLabel.minimumScaleFactor = .8;
-		self.equityChangeLabel.text = @"last30Label";
+		self.equityChangeLabel.text = @"$0";
 		self.equityChangeLabel.textAlignment = NSTextAlignmentCenter;
 		self.equityChangeLabel.textColor = [UIColor purpleColor];
 		self.equityChangeLabel.backgroundColor = [UIColor clearColor];
@@ -144,7 +154,7 @@
 	cell.balanceChangeLabel.hidden=YES;
 	cell.valueLabel.hidden=YES;
 	cell.valueChangeLabel.hidden=YES;
-	cell.equityLabel.hidden=YES;
+	cell.equityLabel.hidden=NO;
 	cell.equityChangeLabel.hidden=NO;
 
 	cell.typeImageView.image = [ObjectiveCScripts imageIconForType:obj.type];
@@ -156,8 +166,10 @@
 	[super layoutSubviews];
 	float width=self.frame.size.width;
 	self.bgView.frame = CGRectMake(2, 2, width-4, 46);
-	self.rightLabel.frame = CGRectMake(width-120, kTopEdge-2, 120, 22);
-	self.equityChangeLabel.frame = CGRectMake(width-110, 22, 100, 22);
+	self.rightLabel.frame = CGRectMake(width-110, 0, 100, 15);
+	self.equityLabel.frame = CGRectMake(width-110, 10, 100, 22);
+	self.equityChangeLabel.frame = CGRectMake(width-110, 25, 100, 22);
+	self.arrowLabel.frame = CGRectMake(width-27, 17, 20, 30);
 	
 	
 }

@@ -46,10 +46,10 @@
 	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
 
-	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length==0 && [ObjectiveCScripts getUserDefaultValue:@"upgradeFlgCheck"].length==0) {
-		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"upgradeFlgCheck"];
-		[ObjectiveCScripts showAlertPopupWithDelegate:@"Thankyou for your business!" message:@"Please check out the upgrade features" delegate:self tag:1];
-	}
+//	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length==0 && [ObjectiveCScripts getUserDefaultValue:@"upgradeFlgCheck"].length==0) {
+//		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"upgradeFlgCheck"];
+//		[ObjectiveCScripts showAlertPopupWithDelegate:@"Thankyou for your business!" message:@"Please check out the upgrade features" /delegate:self tag:1];
+//	}
 
 }
 

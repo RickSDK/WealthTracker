@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomSegment.h"
+#import "TemplateVC.h"
 
-@interface ChartsVC : UIViewController
+@interface ChartsVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
@@ -18,7 +19,6 @@
 
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
-@property (nonatomic, strong) NSArray *graphTitles;
 @property (nonatomic, strong) NSMutableArray *graphDates;
 @property (nonatomic, strong) NSMutableArray *graphSegmentIndexes;
 

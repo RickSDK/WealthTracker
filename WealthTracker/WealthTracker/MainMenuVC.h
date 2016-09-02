@@ -54,6 +54,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *chartsButton;
 @property (nonatomic, strong) IBOutlet UIButton *analysisButton;
 @property (nonatomic, strong) IBOutlet UIButton *okButton;
+@property (nonatomic, strong) IBOutlet UILabel *monthNameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *monthDayLabel;
 
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImage;
 @property (nonatomic, strong) IBOutlet UIImageView *vaultImageView;

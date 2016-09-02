@@ -84,9 +84,18 @@
 	return max;
 }
 
--(void)emergencyFundStatus {
-	double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
+-(void)emergencyFundStatusGoal:(double)goal {
+	self.debtView.hidden=NO;
+	int fundId = 0;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", @"Emergency Fund"];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
+	if (items.count>0) {
+		NSManagedObject *mo = [items objectAtIndex:0];
+		fundId = [[mo valueForKey:@"rowId"] intValue];
+	}
+	double amount = [ObjectiveCScripts amountForItem:fundId month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] field:@"asset_value" context:self.managedObjectContext type:0];
 	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress: You currently have %@ in your emergency fund.", self.step, [ObjectiveCScripts convertNumberToMoneyString:amount]];
+	[self showProgressBarForGoal:goal currentAmount:goal-amount];
 }
 
 -(void)retirementStatus {
@@ -103,8 +112,17 @@
 	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress: You are currently paying %@ towards retirement. and should be paying %@/month.", self.step, [ObjectiveCScripts convertNumberToMoneyString:retirement_payments], [ObjectiveCScripts convertNumberToMoneyString:target]];
 }
 
+-(void)showProgressBarForGoal:(double)total currentAmount:(double)currentAmount {
+	if(total>0) {
+		self.debtView.hidden=NO;
+		float width = self.screenWidth;
+		float percent = currentAmount*100/total;
+		self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
+		self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
+	}
+}
+
 -(void)consumerDebtStatus {
-	self.debtView.hidden=NO;
 	
 	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -120,13 +138,7 @@
 	}
 	
 	if(classAMax>0) {
-		//		  float width = self.debtView.frame.size.width;
-		float width = self.screenWidth;
-		float percent = classA*100/classAMax;
-		self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
-		self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
-		if(percent<1)
-			self.remainingDebtView.hidden=YES;
+		[self showProgressBarForGoal:classAMax currentAmount:classA];
 	}
 	
 	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress:  %@ of Consumer debt remaining.", self.step, [ObjectiveCScripts convertNumberToMoneyString:classA]];
@@ -152,7 +164,7 @@
 
 	switch (self.myStep) {
   case 1: {
-	  [self emergencyFundStatus];
+	  [self emergencyFundStatusGoal:500];
 			break;
   }
   case 2: {
@@ -164,11 +176,11 @@
 			break;
   }
   case 4: {
-	  [self emergencyFundStatus];
+	  [self retirementStatus];
 			break;
   }
   case 5: {
-	  [self retirementStatus];
+	  [self emergencyFundStatusGoal:3000];
 			break;
   }
   case 6: {
@@ -180,7 +192,7 @@
 			break;
   }
   case 8: {
-	  [self emergencyFundStatus];
+	  [self emergencyFundStatusGoal:50000];
 			break;
   }
   case 9: {
@@ -224,8 +236,8 @@
 					 @"Emergency Fund",
 					 @"Start Funding Retirement",
 					 @"Pay Debt",
-					 @"Emergency Fund",
 					 @"Boost Retirement Payments",
+					 @"Emergency Fund",
 					 @"Pay off House",
 					 @"Fully Fund Retirement",
 					 @"Buy Rental Property",
@@ -238,8 +250,8 @@
 					 @"In order to get your finances in shape and go from Broke to Baron, the very first thing you need to do is scrape together a $500 emergency fund.",
 					@"If you don't have a retirement account or 401k, start setting 3% of your income into a tax deferred retirement account (IRA).",
 					 @"The best way to achieve wealth is to eliminate your debts. Stop paying interest! The goal for step 3 is to pay off all debt EXCEPT for your house.",
-					 @"Now it's time to boost your emergency fund to $3,000 so you can better handle emergencies in your life.",
 					@"Now boost your retirement savings to 7% of your income",
+					 @"Now it's time to boost your emergency fund to $3,000 so you can better handle emergencies in your life.",
 					 @"Pay off that mortgage! start making double and triple payments until it's gone. Be debt free!",
 					@"Fully fund retirement at 15% of income. And devote another 10%-15% toward children's college funds, church tithe or charity. Be generous!",
 					 @"Save for 20% down payment on a rental property. Buy on a 15 year loan, not a 30 year. You want to be debt free!",
@@ -252,8 +264,8 @@
 					 @"Tips:\n\nIf you don't currently have an emergency fund, this needs to be the FIRST thing you do. You can not break out of the cycle of debt if your bank account is always on empty.\n\nSounds like a tough thing to do? It's not as bad as you think. Just follow these steps:\n\n1) Reduced all credit card payments to minimum until your emergency fund is in place. Also put any retirement and investing on hold.\n\n2) Reduce your spending! Cut down on lattes, clothes and shopping. Keep the money in the bank.\n\n3) Sell some old stuff. Have garage sales, use eBay. Clean out the garage and storage units and sell whatever you can.\n\n4) Work a few extra hours or pick up a side job. Every penny you can scrape together helps!",
 				   @"Tips:\n\nWith a little emergency fund it place, you can now start thinking about the future. If your job has a 401k program, start it up and set your contributions at 3% of your take-home pay.\n\nIf your job doesn't have a 401k plan, simply  start up an IRA and have it automatically take out 3% of your paycheck.\n\nYou will bump it up even further once you get your debt cleaned up, but until all consumer debt is fully paid off, don't invest more than 3% into retirement.\n\nIf you are already contributing more than 3%, lower it to 3% and use the extra cash to pay down your debts.",
 				   @"Tips:\n\nWith an emergency fund, and retirement in place, it's now time to tackle your debt! Your goal is to pay off everything but the house. Every last penny.\n\nSounds like an impossible mission? It's not as bad as you think. The key is to do all 5 of these tips. Not one or two, but all 5.\n\nBefore you start, arrange your debts smallest to largest and start tackling them one at a time, starting with the smallest. Don't try to pay off more than one at a time. Throw everything at your smallest debt and close it out. Here are the 5 tips for helping you out. Be sure to do all 5:\n\n1) Pay Minimum on All Debt.\n     Drop all credit card payments to minimum and throw the extra money at your smallest debt. Also drop any retirement and investing down to 3%. As strange as it seems to reduce retirement, the truth is it's not smart to be investing at 5% while you are paying credit card interest at 18%. Don't do it!\n\n2) Reduce Bills\n     Cancel any recurring bills you can live without. This means gym memberships if you aren't using them. Empty storage units, reduce your TV cable to a minimum package, etc.\n\n3) Reduce Spending\n     Cut down on coffee, clothes, shopping and eating out. The only time you should be in a restaurant is if you are working!\n\n4) Sell Stuff\n     Hold garage sales, place things on eBay. Sell gold and jewelry (you can always buy it back later). Cash in those savings bonds from grandma. If your car payment is out of control high, you may even need to sell it and drive a beater for a year or two. Time to get radical about getting out of debt.\n\n5) Work More\n     You need to get that income up. Work side jobs, put in overtime at work, get a second job, whatever it takes. Its just temporary.",
-					 @"Tips:\n\nCongratulations on paying off your debt! For most people, that is the hardest step.\n\nThe next thing you want to do is build your emergency fund up to $3,000. This will help you better deal with some of life's speed bumps.\n\nWithout having to worry about credit card payments, this step should be pretty easy to accomplish.",
-				   @"Tips:\n\nWith your debts cleaned up and emergency fund in place, you should now bump up your retirement contributions to 7% of take-home pay. \n\nConsider putting another 10% towards either church tithe, kids college funds or charity. Don't be afraid of being generous with your money. Hoarding it is not the secret to happiness. Remember to be helping others along the way.",
+				   @"Tips:\n\nCongratulations on paying off your debt! For most people, that is the hardest step.\n\nWith your debts cleaned up, you should now bump up your retirement contributions to 7% of take-home pay. \n\nConsider putting another 10% towards either church tithe, kids college funds or charity. Don't be afraid of being generous with your money. Hoarding it is not the secret to happiness. Remember to be helping others along the way.",
+					 @"Tips:\n\nThe next thing you want to do is build your emergency fund up to $3,000. This will help you better deal with some of life's speed bumps.\n\nWithout having to worry about credit card payments, this step should be pretty easy to accomplish.",
 					 @"Tips:\n\nYour next step is to throw everything you can at the house and become truly debt free. Rather than buying expensive cars and going on expensive vacations, it's better to keep driving the same car, go camping, and get that house paid off. Every available dollar should go into paying it off early.\n\nIf you don't own a house, it's time to start saving up for a 20% down payment on a 15 year loan.\n\nReview the tips for step-3 if you need help in coming up with the extra money.",
 				   @"Tips:\n\nNow fully fund your retirement account by putting 15% of your income towards it. Plus another 10%-15% towards church, charity or education.",
 					 @"Tips:\n\nIf you do it right, owning rental property can be one of the fastest ways to generate wealth. The secret is to get good deals, get good renters, and don't over-extend yourself.\n\nBuying property should ONLY be done one way: Put 20% down and finance the rest at 15 years or less. No exceptions.\n\nSo start saving up for your 20% down payment.",

@@ -19,6 +19,7 @@
 @interface ObjectiveCScripts : NSObject
 
 +(NSString *)appName;
++(BOOL)isUpgraded;
 +(NSString *)getProjectDisplayVersion;
 +(UIColor *)darkColor;
 +(UIColor *)mediumkColor;
@@ -85,5 +86,6 @@
 +(double)calculateIncome:(NSManagedObjectContext *)context;
 +(NSString *)faIconOfTypeString:(NSString *)type;
 +(NSString *)fontAwesomeIconForNumber:(int)number;
++(NSString *)titleForType:(int)type;
 
 @end

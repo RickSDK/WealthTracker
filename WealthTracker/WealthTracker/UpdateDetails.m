@@ -345,9 +345,9 @@
 	
 	double loan_balance=balance;
 	int equityToday = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset]];
-	int equityLastYear = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
+	int equityLastYear = [self equityForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-13]];
 	int equityLast12 = equityToday-equityLastYear;
-	double valueLastYear = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-12]];
+	double valueLastYear = [self valueForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-13]];
 	
 	if(type<3) {
 		[self addBlankLine];

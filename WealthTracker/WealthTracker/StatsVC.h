@@ -1,0 +1,15 @@
+//
+//  StatsVC.h
+//  WealthTracker
+//
+//  Created by Rick Medved on 8/31/16.
+//  Copyright (c) 2016 Rick Medved. All rights reserved.
+//
+
+#import "TemplateVC.h"
+
+@interface StatsVC : TemplateVC
+
+@property (nonatomic, strong) IBOutlet UILabel *totalValueLabel;
+
+@end
