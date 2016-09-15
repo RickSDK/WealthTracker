@@ -871,19 +871,7 @@
 }
 
 -(int)percentComplete {
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	int totalRecords = 0;
-	int completeRecords = 0;
-	int percentComplete = 0;
-	for(NSManagedObject *mo in items) {
-		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-		totalRecords++;
-		if(obj.val_confirm_flg && obj.bal_confirm_flg)
-			completeRecords++;
-	}
-	if(totalRecords>0)
-		percentComplete = completeRecords*100/totalRecords;
-	
+	int percentComplete = [ObjectiveCScripts percentCompleteWithContext:self.managedObjectContext];
 	if(self.displayMonth != self.nowMonth || self.displayYear != self.displayYear)
 		percentComplete=100;
 	return percentComplete;

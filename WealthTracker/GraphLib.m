@@ -1213,7 +1213,8 @@
 }
 
 
-+(NSString *)smallLabelForMoney:(double)money totalMoneyRange:(double)totalMoneyRange {
++(NSString *)smallLabelForMoney:(double)moneyDouble totalMoneyRange:(double)totalMoneyRange {
+	int money = round(moneyDouble);
 	int moneyRoundingFactor = 1;
 	if(totalMoneyRange>500)
 		moneyRoundingFactor=10;
@@ -1236,17 +1237,17 @@
 		money*=-1;
 	
 	NSString *label = [NSString stringWithFormat:@"%@%d", [self getMoneySymbol], (int)money];
-	if(money>1000)
+	if(money>=1000)
 		label = [NSString stringWithFormat:@"%@%.1fk", [self getMoneySymbol], (double)money/1000];
-	if(money>10000)
+	if(money>=10000)
 		label = [NSString stringWithFormat:@"%@%dk", [self getMoneySymbol], (int)money/1000];
-	if(money>100000)
+	if(money>=100000)
 		label = [NSString stringWithFormat:@"%dk", (int)money/1000];
-	if(money>1000000)
+	if(money>=1000000)
 		label = [NSString stringWithFormat:@"%@%.1fM", [self getMoneySymbol], (double)money/1000000];
-	if(money>10000000)
+	if(money>=10000000)
 		label = [NSString stringWithFormat:@"%@%dM", [self getMoneySymbol], (int)money/1000000];
-	if(money>100000000)
+	if(money>=100000000)
 		label = [NSString stringWithFormat:@"%@%.1fB", [self getMoneySymbol], (double)money/1000000000];
 	
 	if (negValue)

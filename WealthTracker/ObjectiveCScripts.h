@@ -87,5 +87,7 @@
 +(NSString *)faIconOfTypeString:(NSString *)type;
 +(NSString *)fontAwesomeIconForNumber:(int)number;
 +(NSString *)titleForType:(int)type;
++(double)emergencyFundWithContext:(NSManagedObjectContext *)context;
++(int)percentCompleteWithContext:(NSManagedObjectContext *)context;
 
 @end

@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StatsVC">
             <connections>
+                <outlet property="amountSegment" destination="WM4-VR-agv" id="jZd-pS-Cw8"/>
                 <outlet property="mainTableView" destination="O69-3E-9r8" id="yGx-b0-YbU"/>
                 <outlet property="topSegment" destination="imh-FU-LQi" id="Mx0-u7-6xN"/>
                 <outlet property="totalValueLabel" destination="Ts2-yk-NGc" id="ERM-dY-qmx"/>
@@ -19,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="imh-FU-LQi" customClass="CustomSegment">
-                    <rect key="frame" x="0.0" y="14" width="320" height="29"/>
+                    <rect key="frame" x="0.0" y="30" width="320" height="29"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
                         <segment title="This Month"/>
@@ -31,7 +32,7 @@
                     </connections>
                 </segmentedControl>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="O69-3E-9r8">
-                    <rect key="frame" x="0.0" y="43" width="320" height="431"/>
+                    <rect key="frame" x="0.0" y="60" width="320" height="414"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                     <connections>
@@ -47,6 +48,17 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="WM4-VR-agv" customClass="CustomSegment">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="29"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Total"/>
+                        <segment title="Change"/>
+                    </segments>
+                    <connections>
+                        <action selector="amountSegmentChanged:" destination="-1" eventType="valueChanged" id="QSP-74-bUC"/>
+                    </connections>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>

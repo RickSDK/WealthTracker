@@ -962,6 +962,39 @@
 	return [titles objectAtIndex:type];
 }
 
++(double)emergencyFundWithContext:(NSManagedObjectContext *)context {
+	int fundId = 0;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", @"Emergency Fund"];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
+	if (items.count>0) {
+		NSManagedObject *mo = [items objectAtIndex:0];
+		fundId = [[mo valueForKey:@"rowId"] intValue];
+	}
+	double amount = [ObjectiveCScripts amountForItem:fundId month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] field:@"asset_value" context:context type:0];
+	return amount;
+}
+
++(int)percentCompleteWithContext:(NSManagedObjectContext *)context {
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:nil mOC:context ascendingFlg:NO];
+	int totalRecords = 0;
+	int completeRecords = 0;
+	int percentComplete = 0;
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:context];
+		totalRecords++;
+		if(obj.val_confirm_flg && obj.bal_confirm_flg)
+			completeRecords++;
+	}
+	if(totalRecords>0)
+		percentComplete = completeRecords*100/totalRecords;
+	
+	return percentComplete;
+}
+
+
+
+
+
 
 
 

@@ -16,6 +16,8 @@
 @property (nonatomic, strong) IBOutlet UIView *myPlanView;
 @property (nonatomic, strong) IBOutlet UIView *ButtonsView;
 
+@property (nonatomic, strong) IBOutlet NSMutableArray *dataArray;
+
 @property (nonatomic, strong) IBOutlet UIImageView *debt1ImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *debt2ImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *wealthImageView;

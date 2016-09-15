@@ -46,7 +46,7 @@
 	self.step = self.myStep;
 	
 	if(self.myStep==1) {
-		double amount = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
+		double amount = [ObjectiveCScripts emergencyFundWithContext:self.managedObjectContext];
 		if(amount>=500)
 			[ObjectiveCScripts showAlertPopup:@"Notice" message:@"You already have step one completed! Press the 'Completed' switch and move on to step 2."];
 	}
@@ -86,14 +86,7 @@
 
 -(void)emergencyFundStatusGoal:(double)goal {
 	self.debtView.hidden=NO;
-	int fundId = 0;
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", @"Emergency Fund"];
-	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
-	if (items.count>0) {
-		NSManagedObject *mo = [items objectAtIndex:0];
-		fundId = [[mo valueForKey:@"rowId"] intValue];
-	}
-	double amount = [ObjectiveCScripts amountForItem:fundId month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] field:@"asset_value" context:self.managedObjectContext type:0];
+	double amount = [ObjectiveCScripts emergencyFundWithContext:self.managedObjectContext];
 	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress: You currently have %@ in your emergency fund.", self.step, [ObjectiveCScripts convertNumberToMoneyString:amount]];
 	[self showProgressBarForGoal:goal currentAmount:goal-amount];
 }

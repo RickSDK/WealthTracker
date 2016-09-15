@@ -391,9 +391,9 @@
 		BOOL val_confirm_flg = NO;
 		
 		self.updateValueButton=cell.updateValueButton;
-		self.updateValueButton.enabled=NO;
+		self.updateValueButton.enabled=self.nowDay>=[self.itemObject.statement_day intValue];
 		self.updateBalanceButton=cell.updateBalanceButton;
-		self.updateBalanceButton.enabled=NO;
+		self.updateBalanceButton.enabled=self.nowDay>=[self.itemObject.statement_day intValue];
 		
 		if(items.count>0) {
 			NSManagedObject *mo = [items objectAtIndex:0];

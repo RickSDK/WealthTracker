@@ -15,6 +15,8 @@
 #import "HomeBuyVC.h"
 #import "AutoBuyVC.h"
 #import "PlanningVC.h"
+#import "AnalysisCell.h"
+#import "AmountObj.h"
 
 @interface AnalysisVC ()
 
@@ -30,11 +32,21 @@
 	
 	int planStep = [CoreDataLib getNumberFromProfile:@"planStep" mOC:self.managedObjectContext];
 	self.currentStepLabel.text = [NSString stringWithFormat:@"%d", planStep];
+	
+	[self.mainTableView reloadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:@"Advisor"];
+	
+	self.dataArray = [[NSMutableArray alloc] init];
+	
+
+	[self.dataArray addObject:[self getHomeArray]];
+	[self.dataArray addObject:[self getAutoArray]];
+	[self.dataArray addObject:[self getDebtArray]];
+	[self.dataArray addObject:[self getWealthArray]];
 	
 	[ObjectiveCScripts fontAwesomeButton:self.debtButton type:3 size:24];
 	[ObjectiveCScripts fontAwesomeButton:self.wealthButton type:4 size:24];
@@ -53,6 +65,130 @@
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 
+}
+
+-(double)equityForRowId:(int)row_id month:(int)month year:(int)year context:(NSManagedObjectContext *)context {
+	double asset_valueToday = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"asset_value" context:self.managedObjectContext type:0];
+	double balance_owedToday = [ObjectiveCScripts amountForItem:row_id month:month year:year field:@"balance_owed" context:self.managedObjectContext type:0];
+	return asset_valueToday-balance_owedToday;
+}
+
+-(NSArray *)getHomeArray {
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	double equityTotal=0;
+	double equityLastMonth=0;
+	double equity2015=0;
+	double equity12=0;
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		if([@"Real Estate" isEqualToString:obj.type]) {
+			equityTotal+=[self equityForRowId:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] context:self.managedObjectContext];
+			
+			int month = [ObjectiveCScripts nowMonth]-1;
+			int year = [ObjectiveCScripts nowYear];
+			if(month<1) {
+				month = 12;
+				year--;
+			}
+			equityLastMonth+=[self equityForRowId:[obj.rowId intValue] month:month year:year context:self.managedObjectContext];
+			
+			equity2015+=[self equityForRowId:[obj.rowId intValue] month:12 year:[ObjectiveCScripts nowYear]-1 context:self.managedObjectContext];
+
+			equity12+=[self equityForRowId:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear]-1 context:self.managedObjectContext];
+
+		}
+	}
+	
+	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity Total" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity this month" value:@"" amount:equityTotal-equityLastMonth hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:[NSString stringWithFormat:@"Equity in %d", [ObjectiveCScripts nowYear]] value:@"" amount:equityTotal-equity2015 hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity last 12 mo" value:@"" amount:equityTotal-equity12 hi:1 lo:-1 reverseFlg:NO]];
+	return thisArray;
+}
+
+-(NSArray *)getAutoArray {
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	double equityTotal=0;
+	double valueTotal=0;
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		if([@"Vehicle" isEqualToString:obj.type]) {
+			equityTotal+=[self equityForRowId:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] context:self.managedObjectContext];
+			
+			double asset_valueToday = [ObjectiveCScripts amountForItem:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] field:@"asset_value" context:self.managedObjectContext type:0];
+			valueTotal+=asset_valueToday;
+		}
+	}
+	
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
+	int percentOfIncome = 0;
+	if(annualIncome>0) {
+		percentOfIncome = valueTotal*100/annualIncome;
+	}
+	NSLog(@"+++tag: %d, monthlyIncome: %d", annualIncome, monthlyIncome);
+	
+	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Value of Vehicles" value:[ObjectiveCScripts convertNumberToMoneyString:valueTotal] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"% of Income" value:[NSString stringWithFormat:@"%d%%", percentOfIncome] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES]];
+	
+
+	return thisArray;
+}
+
+-(NSArray *)getDebtArray {
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
+	double debtToday=0;
+	double debtLastMonth=0;
+	double houseDebtToday=0;
+	int prevMonth = self.nowMonth-1;
+	int prevYear = self.nowYear;
+	if(prevMonth<1) {
+		prevMonth=12;
+		prevYear--;
+	}
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		if([@"Real Estate" isEqualToString:obj.type]) {
+			houseDebtToday += [ObjectiveCScripts amountForItem:[obj.rowId intValue] month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext type:0];
+			
+		}
+		debtToday += [ObjectiveCScripts amountForItem:[obj.rowId intValue] month:self.nowMonth year:self.nowYear  field:@"balance_owed" context:self.managedObjectContext type:0];
+		debtLastMonth += [ObjectiveCScripts amountForItem:[obj.rowId intValue] month:prevMonth year:prevYear  field:@"balance_owed" context:self.managedObjectContext type:0];
+	}
+	
+	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Consumer Debt" value:@"" amount:debtToday-houseDebtToday hi:annualIncome/10 lo:annualIncome/100 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Total Debt" value:@"" amount:debtToday hi:annualIncome*2 lo:annualIncome/2 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Debt this month" value:@"" amount:debtToday-debtLastMonth hi:1 lo:-1 reverseFlg:YES]];
+	return thisArray;
+}
+
+-(NSArray *)getWealthArray {
+	int monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
+	int annualIncome = monthlyIncome*12*1.2;
+	double equityTotal=0;
+	double equityLastMonth=0;
+	int prevMonth = self.nowMonth-1;
+	int prevYear = self.nowYear;
+	if(prevMonth<1) {
+		prevMonth=12;
+		prevYear--;
+	}
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	for(NSManagedObject *mo in items) {
+		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
+		equityTotal+=[self equityForRowId:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] context:self.managedObjectContext];
+		equityLastMonth+=[self equityForRowId:[obj.rowId intValue] month:prevMonth year:prevYear context:self.managedObjectContext];
+	}
+	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth" value:@"" amount:equityTotal hi:annualIncome*2 lo:annualIncome/2 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth this month" value:@"" amount:equityTotal-equityLastMonth hi:1 lo:-1 reverseFlg:NO]];
+	return thisArray;
 }
 
 -(void)planButtonPressed {
@@ -170,6 +306,13 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	AnalysisDetailsVC *detailViewController = [[AnalysisDetailsVC alloc] initWithNibName:@"AnalysisDetailsVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	detailViewController.tag = (int)indexPath.row+1;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
 -(IBAction)homeButtonPressed {
 	HomeBuyVC *detailViewController = [[HomeBuyVC alloc] initWithNibName:@"HomeBuyVC" bundle:nil];
 	detailViewController.managedObjectContext=self.managedObjectContext;
@@ -196,6 +339,30 @@
 	self.popupView.hidden=YES;
 
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
+	
+	AnalysisCell *cell = [[AnalysisCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier data:[self.dataArray objectAtIndex:indexPath.row]];
+	
+	cell.nameLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20];
+
+	cell.nameLabel.text=[ObjectiveCScripts fontAwesomeTextForType:(int)indexPath.row+1];
+	cell.accessoryType= UITableViewCellAccessoryDisclosureIndicator;
+	cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+	return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 4;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return [AnalysisCell cellHeightForData:[self.dataArray objectAtIndex:indexPath.row]];
+}
+
+
 
 
 

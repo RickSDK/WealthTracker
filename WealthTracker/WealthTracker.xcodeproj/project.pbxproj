@@ -165,6 +165,8 @@
 		6BB68BD71CDE446200D71701 /* PurchaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD61CDE446200D71701 /* PurchaseCell.m */; };
 		6BB68BDB1CDE592100D71701 /* IncomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB68BD91CDE592100D71701 /* IncomeVC.m */; };
 		6BB68BDC1CDE592100D71701 /* IncomeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BB68BDA1CDE592100D71701 /* IncomeVC.xib */; };
+		6BB97E7E1D820DBB0092D945 /* AnalysisCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB97E7D1D820DBB0092D945 /* AnalysisCell.m */; };
+		6BB97E811D8237FE0092D945 /* AnalysisObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB97E801D8237FE0092D945 /* AnalysisObj.m */; };
 		6BBE67BA1D2EE7E600B057A7 /* AmountObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE67B91D2EE7E600B057A7 /* AmountObj.m */; };
 		6BBEDEE61BF3C47F001D372F /* vault.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE51BF3C47F001D372F /* vault.jpg */; };
 		6BBEDEEA1BF3C4AC001D372F /* LockAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDEE81BF3C4AC001D372F /* LockAppVC.m */; };
@@ -451,6 +453,10 @@
 		6BB68BD81CDE592100D71701 /* IncomeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncomeVC.h; sourceTree = "<group>"; };
 		6BB68BD91CDE592100D71701 /* IncomeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomeVC.m; sourceTree = "<group>"; };
 		6BB68BDA1CDE592100D71701 /* IncomeVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncomeVC.xib; sourceTree = "<group>"; };
+		6BB97E7C1D820DBB0092D945 /* AnalysisCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisCell.h; sourceTree = "<group>"; };
+		6BB97E7D1D820DBB0092D945 /* AnalysisCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalysisCell.m; sourceTree = "<group>"; };
+		6BB97E7F1D8237FE0092D945 /* AnalysisObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisObj.h; sourceTree = "<group>"; };
+		6BB97E801D8237FE0092D945 /* AnalysisObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalysisObj.m; sourceTree = "<group>"; };
 		6BBE67B81D2EE7E600B057A7 /* AmountObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmountObj.h; sourceTree = "<group>"; };
 		6BBE67B91D2EE7E600B057A7 /* AmountObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmountObj.m; sourceTree = "<group>"; };
 		6BBEDEE51BF3C47F001D372F /* vault.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vault.jpg; sourceTree = "<group>"; };
@@ -848,6 +854,8 @@
 			children = (
 				6B416F241B50CF81009C9834 /* MoneyCell.h */,
 				6B416F251B50CF81009C9834 /* MoneyCell.m */,
+				6BB97E7C1D820DBB0092D945 /* AnalysisCell.h */,
+				6BB97E7D1D820DBB0092D945 /* AnalysisCell.m */,
 				6B8EB9A01B530EFB00F8A20B /* ItemCell.h */,
 				6B8EB9A11B530EFB00F8A20B /* ItemCell.m */,
 				6B2E23ED1B5468C400CC2851 /* MultiLineDetailCellWordWrap.h */,
@@ -893,6 +901,8 @@
 				6BD0D8E41B83DB320062E152 /* MultiLineObj.m */,
 				6BB68BD21CDE431D00D71701 /* PurchaseObj.h */,
 				6BB68BD31CDE431D00D71701 /* PurchaseObj.m */,
+				6BB97E7F1D8237FE0092D945 /* AnalysisObj.h */,
+				6BB97E801D8237FE0092D945 /* AnalysisObj.m */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -1130,12 +1140,14 @@
 				6BB68BB21CDC098000D71701 /* ItemTemplateVC.m in Sources */,
 				6BB68BAE1CDC097300D71701 /* FixedExpensesVC.m in Sources */,
 				6B5B87F71B681C0D00BBE741 /* OptionsVC.m in Sources */,
+				6BB97E811D8237FE0092D945 /* AnalysisObj.m in Sources */,
 				6BBEDEF61C0E2F88001D372F /* NSString+FontAwesome.m in Sources */,
 				6B3C180C1B70381E0039733B /* CustomView.m in Sources */,
 				6BBEDEFC1C0E2F93001D372F /* UIImage+FontAwesome.m in Sources */,
 				6BC4722C1B61576B00F68341 /* WebViewVC.m in Sources */,
 				6B2E23F81B556FAB00CC2851 /* AnalysisVC.m in Sources */,
 				6BB354E11B743B470003987A /* GraphSegmentCell.m in Sources */,
+				6BB97E7E1D820DBB0092D945 /* AnalysisCell.m in Sources */,
 				6B416F2A1B519211009C9834 /* VehiclesVC.m in Sources */,
 				6BDCEF191B5FFCD500DDA3AC /* BreakdownByMonthVC.m in Sources */,
 				6B8EB9991B5226FC00F8A20B /* CoreDataLib.m in Sources */,

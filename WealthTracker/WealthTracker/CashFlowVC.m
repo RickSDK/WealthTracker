@@ -57,7 +57,7 @@
 		if(amountRemaining<minimum)
 			minimum=amountRemaining;
 	}
-	double emergency = [CoreDataLib getNumberFromProfile:@"emergency_fund" mOC:self.managedObjectContext];
+	double emergency = [ObjectiveCScripts emergencyFundWithContext:self.managedObjectContext];
 	minimum -= emergency;
 	if(minimum+emergency<0)
 		self.surplusLabel.text = [ObjectiveCScripts convertNumberToMoneyString:minimum];
