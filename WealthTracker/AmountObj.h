@@ -11,6 +11,8 @@
 @interface AmountObj : NSObject
 
 @property (nonatomic) BOOL amount_confirm_flg;
+@property (nonatomic) BOOL val_confirm_flg;
+@property (nonatomic) BOOL bal_confirm_flg;
 @property (nonatomic) BOOL futureDayFlg;
 @property (nonatomic) double amount;
 @property (nonatomic) double equity;
@@ -23,5 +25,11 @@
 @property (nonatomic) double balanceChange;
 @property (nonatomic) double valueChange;
 @property (nonatomic) double interestChange;
+
+@property (nonatomic) int month;
+@property (nonatomic) int year;
+
+@property (nonatomic, strong) NSString *year_month;
+
 
 @end

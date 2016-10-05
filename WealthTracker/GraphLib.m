@@ -1418,31 +1418,56 @@
 	return amount;
 }
 
++(double)amountForObject:(NSManagedObject *)mo asset_type:(int)asset_type amount_type:(int)amount_type {
+	NSString *itemType = [mo valueForKey:@"type"];
+	
+	if (asset_type==1 && ![@"Real Estate" isEqualToString:itemType])
+		return 0;
+	if (asset_type==2 && ![@"Vehicle" isEqualToString:itemType])
+		return 0;
+	
+	double asset_value = [[mo valueForKey:@"asset_value"] doubleValue];
+	double balance_owed = [[mo valueForKey:@"balance_owed"] doubleValue];
+	double interest = [[mo valueForKey:@"interest"] doubleValue];
+	
+	if(amount_type==0)
+		return asset_value;
+	if(amount_type==1)
+		return balance_owed;
+	if(amount_type==3)
+		return interest;
+	
+	return asset_value-balance_owed;
+}
 
-
-+(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context {
++(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context asset_type:(int)asset_type amount_type:(int)amount_type {
 	AmountObj *amountObj = [[AmountObj alloc] init];
 	double amount=0;
 	BOOL amount_confirm_flg=NO;
 	NSPredicate *predicate = [self predicateForMonth:month year:year item_id:0 type:type];
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
 	for (NSManagedObject *mo in itemsPre) {
-		
-		amount += [self amountForObject:mo type:type itemType:@""];
+		amount += [self amountForObject:mo asset_type:asset_type amount_type:amount_type];
+//		amount += [self amountForObject:mo type:type itemType:@""];
 	}
 	amountObj.amount = amount;
 	amountObj.amount_confirm_flg = amount_confirm_flg;
 	return amountObj;
 }
 
-+(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type {
-	// type
-	// 0 = assets, 1=real estate, 2=vehicles, 3=debt, 4=equity, 5=interest
++(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type amount_type:(int)amount_type {
+	// type: 0 = assets, 1=real estate, 2=vehicles, 3=debt, 4=equity, 5=interest, 6 cc debt, 7 investments
+	//asset_type: 0=all, 1=real estate, 2=vehicle
+	//amount_type: 0=value, 1=balance, 2=equity, 3= interest
+	int asset_type = type;
+	if(asset_type>2)
+		asset_type=0;
+
 	NSMutableArray *graphArray = [[NSMutableArray alloc] init];
 	int nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	displayYear-=numYears;
-	AmountObj *prevAmountObj = [self amountForType:type month:displayMonth year:displayYear context:context];
+	AmountObj *prevAmountObj = [self amountForType:type month:displayMonth year:displayYear context:context asset_type:asset_type amount_type:amount_type];
 	
 	for(int i = 1; i <= 12*numYears; i++) {
 		displayMonth++;
@@ -1451,7 +1476,7 @@
 			displayYear++;
 		}
 		
-		AmountObj *amountObj = [self amountForType:type month:displayMonth year:displayYear context:context];
+		AmountObj *amountObj = [self amountForType:type month:displayMonth year:displayYear context:context asset_type:asset_type amount_type:amount_type];
 		amountObj.equityChange = amountObj.equity - prevAmountObj.equity;
 		amountObj.balanceChange = amountObj.balance - prevAmountObj.balance;
 		amountObj.valueChange = amountObj.value - prevAmountObj.value;
@@ -1467,10 +1492,10 @@
 	return graphArray;
 }
 
-+(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg {
++(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg asset_type:(int)asset_type amount_type:(int)amount_type {
 	
 	if(barsFlg) {
-		NSArray *barItems = [GraphLib yearGraphItemsForMonth:displayMonth year:displayYear context:context numYears:numYears type:type];
+		NSArray *barItems = [GraphLib yearGraphItemsForMonth:displayMonth year:displayYear context:context numYears:numYears type:type amount_type:amount_type];
 		return [GraphLib graphBarsWithItems:barItems];
 	} else {
 		return [GraphLib plotItemChart:context type:type displayYear:displayYear item_id:0 displayMonth:displayMonth startMonth:displayMonth startYear:displayYear numYears:numYears];

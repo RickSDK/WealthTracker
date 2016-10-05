@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
+@property (nonatomic, strong) IBOutlet UILabel *itemCountLabel;
 @property (nonatomic, strong) IBOutlet UILabel *assetsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *debtsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *netWorthLabel;

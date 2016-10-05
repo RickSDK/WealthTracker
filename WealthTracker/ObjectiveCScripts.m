@@ -642,6 +642,11 @@
 }
 
 +(NSPredicate *)predicateForItem:(int)item_id month:(int)month year:(int)year type:(int)type {
+	if(type==6 && item_id==0)
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, 3];
+	if(type==7 && item_id==0)
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, 4];
+	
 	if(type>0 && type < 4) {
 		if(item_id>0)
 			return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND item_id = %d AND type = %d", year, month, item_id, type];
@@ -765,16 +770,31 @@
 	if(oldPercentComplete != percentComplete)
 		[ObjectiveCScripts setUserDefaultValue:[NSString stringWithFormat:@"%d", percentComplete] forKey:@"percentComplete"];
 	
-	if(label)
-		label.text=[NSString stringWithFormat:@"%d%% Updated", percentComplete];
 
 	[UIApplication sharedApplication].applicationIconBadgeNumber = numberNeedsUpdating;
-	if(numberNeedsUpdating>0)
+	if(numberNeedsUpdating>0) {
+		if(label) {
+			label.hidden = NO;
+			label.backgroundColor = [UIColor redColor];
+			label.textColor = [UIColor whiteColor];
+			label.text=[NSString stringWithFormat:@"%d", numberNeedsUpdating];
+		}
 		return numberNeedsUpdating; // red status
-	if(numberInYellow>0)
+	}
+	if(numberInYellow>0) {
+		if(label) {
+			label.hidden = NO;
+			label.backgroundColor = [UIColor clearColor];
+			label.textColor = [UIColor grayColor];
+			label.text=[NSString stringWithFormat:@"%d", numberInYellow];
+		}
 		return numberInYellow*-1; // yellow status
-	else
-		return 0; // green status
+	}
+
+	if(label)
+		label.hidden = YES;
+
+	return 0; // green status
 	
 }
 
@@ -982,7 +1002,7 @@
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:context];
 		totalRecords++;
-		if(obj.val_confirm_flg && obj.bal_confirm_flg)
+		if(obj.status==0)
 			completeRecords++;
 	}
 	if(totalRecords>0)

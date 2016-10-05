@@ -139,14 +139,22 @@
 
 -(void)totalDebtStatus {
 	double amount=0;
+	double totalValue=0;
 	int year = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	int month = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
 	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:self.managedObjectContext ascendingFlg:NO];
 	for(NSManagedObject *mo in items) {
-		amount += [[mo valueForKey:@"balance_owed"] doubleValue];
+		double balance_owed = [[mo valueForKey:@"balance_owed"] doubleValue];
+		amount += balance_owed;
+		if(balance_owed>0)
+			totalValue += [[mo valueForKey:@"asset_value"] doubleValue];
 	}
 	self.progressLabel.text = [NSString stringWithFormat:@"Step %d Progress:  %@ debt remaining.", self.step, [ObjectiveCScripts convertNumberToMoneyString:amount]];
+
+	if(totalValue>0) {
+		[self showProgressBarForGoal:totalValue currentAmount:amount];
+	}
 
 }
 

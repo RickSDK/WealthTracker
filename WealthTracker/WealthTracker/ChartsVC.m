@@ -125,7 +125,7 @@
 	cell.prevYearButton.enabled=chartValuesArray.count>0;
 
 	if(segment==0)
-		cell.graphImageView.image = [GraphLib graphChartForMonth:displayMonth year:displayYear context:self.managedObjectContext numYears:(int)self.timeSegment.selectedSegmentIndex+1 type:(int)indexPath.section barsFlg:self.typeSegment.selectedSegmentIndex==1];
+		cell.graphImageView.image = [GraphLib graphChartForMonth:displayMonth year:displayYear context:self.managedObjectContext numYears:(int)self.timeSegment.selectedSegmentIndex+1 type:(int)indexPath.section barsFlg:self.typeSegment.selectedSegmentIndex==1 asset_type:99 amount_type:99];
 	if(segment==1)
 		cell.graphImageView.image =[GraphLib graphBarsWithItems:chartValuesArray];
 	if(segment==2)

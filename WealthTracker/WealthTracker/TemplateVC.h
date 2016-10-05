@@ -47,6 +47,7 @@
 
 -(float)screenWidth;
 -(float)screenHeight;
+-(IBAction)popupButtonClicked:(id)sender;
 -(IBAction)xButtonClicked:(id)sender;
 -(IBAction)topSegmentChanged:(id)sender;
 -(NSString *)budgetAnalysis:(NSString *)name budget:(int)budget spent:(int)spent;

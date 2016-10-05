@@ -123,7 +123,7 @@
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.tag = self.tag;
-	detailViewController.type = type;
+	detailViewController.type = self.tag;
 	detailViewController.fieldType = fieldType;
 	detailViewController.displayYear=self.displayYear;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -609,7 +609,9 @@
 	
 	NSString *line3 = @"";
 	if(monthlyChange>=0) {
-		if(retirementAge<65) {
+		if(retirementAge<60) {
+			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a fantastic number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
+		} else if(retirementAge<65) {
 			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a pretty good number for you.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
 		} else {
 			line3 = [NSString stringWithFormat:@"Your total net worth is now up to %@, which is a little on the low side for this stage of your life.", [ObjectiveCScripts convertNumberToMoneyString:netWorthToday]];
@@ -629,7 +631,7 @@
 	NSString *line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, this will take you about %d years, allowing you to retire at age %d.", idealNetWorthString, timeToReach, retirementAge];
 	
 	if(retirementAge<65)
-		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, you will hit this goal in about %d years, at age %d. Just keep in mind, for most people it is wise to hold off retirement until (at least) age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString, timeToReach, retirementAge];
+		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, you will hit this goal in about %d years, at age %d. Just keep in mind, for many people it is wise to hold off retirement until age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString, timeToReach, retirementAge];
 	
 	if(timeToReach>50)
 		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];

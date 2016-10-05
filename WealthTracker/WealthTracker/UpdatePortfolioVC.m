@@ -20,6 +20,7 @@
 #import "PayoffVC.h"
 #import "BreakdownByMonthVC.h"
 #import "UpdatePortfolioVC.h"
+#import "AmountObj.h"
 
 @interface UpdatePortfolioVC ()
 
@@ -29,10 +30,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
+	NSLog(@"UpdatePortfolioVC");
 	self.valuesArray = [[NSMutableArray alloc] init];
 	self.namesArray = [[NSMutableArray alloc] init];
 	self.colorsArray = [[NSMutableArray alloc] init];
+	self.amountArray = [[NSMutableArray alloc] init];
 
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -43,6 +46,180 @@
 	[self setTitle:self.itemObject.name];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
+	
+	[self populateOriginationDate];
+}
+
+-(void)populateOriginationDate {
+	[self.amountArray removeAllObjects];
+	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"item_id = %d", [self.itemObject.rowId intValue]];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:@"year_month" mOC:self.managedObjectContext ascendingFlg:YES];
+	BOOL confimMonthFlg = NO;
+	for(NSManagedObject *mo in items) {
+		AmountObj *obj = [self objFromMO:mo];
+		if(obj.value>0 || obj.balance>0)
+			[self.amountArray addObject:[self objFromMO:mo]];
+		
+		if(!confimMonthFlg) {
+			if (obj.amount_confirm_flg) {
+				confimMonthFlg = YES;
+				self.confirmMonth = obj.month;
+				self.confirmYear = obj.year;
+				self.confirmValue = obj.value;
+				self.confirmBalance = obj.balance;
+				NSLog(@"+++confirm it!: %d/%d %f %f", obj.month, obj.year, obj.value, obj.balance);
+			}
+		}
+	}
+	if (self.amountArray.count>0) {
+		AmountObj *obj = [self.amountArray objectAtIndex:0];
+		self.origMonth = obj.month;
+		self.origYear = obj.year;
+		self.newOrigYear = self.origYear;
+		self.newOrigMonth = self.origMonth;
+		self.startValue = obj.value;
+		self.startBalance = obj.balance;
+		self.origValueTextField.text = [ObjectiveCScripts convertNumberToMoneyString:obj.value];
+		self.origBalanceTextField.text = [ObjectiveCScripts convertNumberToMoneyString:obj.balance];
+		self.origValueTextField2.text = [ObjectiveCScripts convertNumberToMoneyString:obj.value];
+		self.origBalanceTextField2.text = [ObjectiveCScripts convertNumberToMoneyString:obj.balance];
+		self.origDateLabel.text = [NSString stringWithFormat:@"%d/%d", obj.month, obj.year];
+	}
+	[self updatePopupValues];
+}
+
+-(void)updatePopupValues {
+	self.origMonthTextField.text = [NSString stringWithFormat:@"%d", self.newOrigMonth];
+	self.origYearTextField.text = [NSString stringWithFormat:@"%d", self.newOrigYear];
+	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"item_id = %d AND month = %d AND year = %d", [self.itemObject.rowId intValue], self.newOrigMonth, self.newOrigYear];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:@"year_month" mOC:self.managedObjectContext ascendingFlg:YES];
+	self.origValueTextField2.text = @"0";
+	self.origBalanceTextField2.text = @"0";
+	if(items.count>0) {
+		AmountObj *obj = [self objFromMO:[items objectAtIndex:0]];
+		self.origValueTextField2.text = [ObjectiveCScripts convertNumberToMoneyString:obj.value];
+		self.origBalanceTextField2.text = [ObjectiveCScripts convertNumberToMoneyString:obj.balance];
+	}
+	self.yearUpButton.enabled = (self.newOrigYear<self.confirmYear);
+	self.monthUpButton.enabled = (self.newOrigYear<self.confirmYear || self.newOrigMonth<self.confirmMonth);
+}
+
+-(IBAction)upMonthClicked:(id)sender {
+	self.newOrigMonth++;
+	if(self.newOrigMonth>12) {
+		self.newOrigMonth=1;
+		self.newOrigYear++;
+	}
+	[self updatePopupValues];
+}
+-(IBAction)downMonthClicked:(id)sender {
+	self.newOrigMonth--;
+	if(self.newOrigMonth<1) {
+		self.newOrigMonth=12;
+		self.newOrigYear--;
+	}
+	[self updatePopupValues];
+}
+-(IBAction)upYearClicked:(id)sender {
+	self.newOrigYear++;
+	if(self.newOrigYear==self.confirmYear && self.newOrigMonth > self.confirmMonth)
+		self.newOrigMonth = self.confirmMonth;
+	
+	[self updatePopupValues];
+}
+-(IBAction)downYearClicked:(id)sender {
+	self.newOrigYear--;
+	[self updatePopupValues];
+}
+
+-(AmountObj *)objFromMO:(NSManagedObject *)mo {
+	AmountObj *obj = [[AmountObj alloc] init];
+	obj.value = [[mo valueForKey:@"asset_value"] doubleValue];
+	obj.balance = [[mo valueForKey:@"balance_owed"] doubleValue];
+	obj.val_confirm_flg = [[mo valueForKey:@"val_confirm_flg"] boolValue];
+	obj.bal_confirm_flg = [[mo valueForKey:@"bal_confirm_flg"] boolValue];
+	obj.amount_confirm_flg = (obj.val_confirm_flg || obj.bal_confirm_flg);
+	obj.year_month = [mo valueForKey:@"year_month"];
+	obj.month = [[mo valueForKey:@"month"] intValue];
+	obj.year = [[mo valueForKey:@"year"] intValue];
+	return obj;
+}
+
+-(IBAction)updateButtonClicked:(id)sender {
+	self.popupView.hidden=YES;
+	[self.origValueTextField2 resignFirstResponder];
+	[self.origBalanceTextField2 resignFirstResponder];
+	self.startValue = [ObjectiveCScripts convertMoneyStringToDouble:self.origValueTextField2.text];
+	self.startBalance = [ObjectiveCScripts convertMoneyStringToDouble:self.origBalanceTextField2.text];
+	int month = [self.origMonthTextField.text intValue];
+	int year = [self.origYearTextField.text intValue];
+	NSLog(@"startValue %f %f %d %d", self.startValue, self.startBalance, month, year);
+	int numberOfMonthsToUpdate = (self.confirmYear-self.newOrigYear)*12 + (self.confirmMonth-self.newOrigMonth);
+	NSLog(@"numberOfMonthsToUpdate %d", numberOfMonthsToUpdate);
+	int newYearMonth = [self yearMonthNumberfromMonth:month year:year];
+	int origYearMonth = [self yearMonthNumberfromMonth:self.origMonth year:self.origYear];
+	int confirmYearMonth = [self yearMonthNumberfromMonth:self.confirmMonth year:self.confirmYear];
+	int thisYearMonth = newYearMonth;
+	while (thisYearMonth < origYearMonth) {
+		numberOfMonthsToUpdate++;
+		NSPredicate *predicate=[NSPredicate predicateWithFormat:@"item_id = %d AND month = %d AND year = %d", [self.itemObject.rowId intValue], month, year];
+		NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:@"year_month" mOC:self.managedObjectContext ascendingFlg:YES];
+		if(items.count==0) {
+			NSLog(@"+++%d <--- create Record!!!", thisYearMonth);
+			NSManagedObject *mo = [NSEntityDescription insertNewObjectForEntityForName:@"VALUE_UPDATE" inManagedObjectContext:self.managedObjectContext];
+			[mo setValue:[NSNumber numberWithInt:[self.itemObject.rowId intValue]] forKey:@"item_id"];
+			[mo setValue:[NSNumber numberWithInt:month] forKey:@"month"];
+			[mo setValue:[NSNumber numberWithInt:year] forKey:@"year"];
+			[mo setValue:[NSString stringWithFormat:@"%d%02d", year, month] forKey:@"year_month"];
+		}
+		month++;
+		if(month>12) {
+			month=1;
+			year++;
+		}
+		thisYearMonth = [self yearMonthNumberfromMonth:month year:year];
+	}
+	NSLog(@"numberOfMonthsToUpdate %d", numberOfMonthsToUpdate);
+	
+	NSPredicate *predicate=[NSPredicate predicateWithFormat:@"item_id = %d", [self.itemObject.rowId intValue]];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:@"year_month" mOC:self.managedObjectContext ascendingFlg:YES];
+	numberOfMonthsToUpdate++;
+	if(numberOfMonthsToUpdate>0) {
+		float valAmount = (self.confirmValue-self.startValue)/numberOfMonthsToUpdate;
+		float valBalance = (self.confirmBalance-self.startBalance)/numberOfMonthsToUpdate;
+		int i=0;
+		for(NSManagedObject *mo in items) {
+			AmountObj *obj = [self objFromMO:mo];
+			int thisYearMonth = [self yearMonthNumberfromMonth:obj.month year:obj.year];
+			double value=self.startValue+i*valAmount;
+			double balance=self.startBalance+i*valBalance;
+			NSLog(@"%@ %@ %@ [%d %d]", obj.year_month, [ObjectiveCScripts convertNumberToMoneyString:value], [ObjectiveCScripts convertNumberToMoneyString:balance], thisYearMonth, newYearMonth);
+			if(thisYearMonth>=newYearMonth && thisYearMonth<confirmYearMonth) {
+				[mo setValue:[NSNumber numberWithDouble:round(value)] forKey:@"asset_value"];
+				[mo setValue:[NSNumber numberWithDouble:round(balance)] forKey:@"balance_owed"];
+				NSLog(@"+++<--- set!!!");
+				if(thisYearMonth==newYearMonth) {
+					NSLog(@"+++<--- confirmed!!!");
+					[mo setValue:[NSNumber numberWithBool:YES] forKey:@"val_confirm_flg"];
+					[mo setValue:[NSNumber numberWithBool:YES] forKey:@"bal_confirm_flg"];
+				}
+				i++;
+			}
+			if(thisYearMonth<newYearMonth) {
+				[mo setValue:[NSNumber numberWithDouble:0] forKey:@"asset_value"];
+				[mo setValue:[NSNumber numberWithDouble:0] forKey:@"balance_owed"];
+				NSLog(@"+++%@ <--- set to zero!!!", obj.year_month);
+			}
+		}
+	}
+	[self.managedObjectContext save:nil];
+
+	[self populateOriginationDate];
+	
+}
+
+-(int)yearMonthNumberfromMonth:(int)month year:(int)year {
+	return [[NSString stringWithFormat:@"%d%02d", year, month] intValue];
 }
 
 -(void)editButtonPressed {

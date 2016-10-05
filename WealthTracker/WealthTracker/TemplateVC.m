@@ -48,6 +48,10 @@
 	self.popupView.hidden=YES;
 }
 
+-(IBAction)popupButtonClicked:(id)sender {
+	self.popupView.hidden=NO;
+}
+
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
 	[self.navigationController popViewControllerAnimated:YES];
 }

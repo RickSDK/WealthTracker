@@ -37,7 +37,7 @@
     [super viewDidLoad];
 	[self setTitle:self.itemObject?self.itemObject.name:[ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType]];
 	
-	NSLog(@"+++BreakdownByMonthVC type: %d, fieldType: %d", self.type, self.fieldType);
+	NSLog(@"+++BreakdownByMonthVC type: %d, fieldType: %d [%d]", self.type, self.fieldType, self.row_id);
 
 	
 	self.topGraphImageView = [[UIImageView alloc] init];
@@ -66,6 +66,8 @@
 		self.topSegmentControl.selectedSegmentIndex=1;
 		self.topSegmentControl.enabled=NO;
 	}
+	
+	self.topSegmentControl.hidden = (self.type==5);
 	
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
@@ -110,6 +112,17 @@
 	
 	[self.dataArray2 removeAllObjects];
 
+	NSString *field = @""; // <-- equity
+	if(self.topSegmentControl.selectedSegmentIndex==0) {
+		field = @"asset_value";
+	}
+	if(self.topSegmentControl.selectedSegmentIndex==1) {
+		field = @"balance_owed";
+	}
+	
+	if(self.type==5)
+		field = @"interest";
+	
 	int year=self.displayYear;
 	int month=self.displayMonth;
 	year--;
@@ -121,14 +134,6 @@
 			year++;
 		}
 
-		NSString *field = @""; // <-- equity
-		if(self.topSegmentControl.selectedSegmentIndex==0)
-			field = @"asset_value";
-		if(self.topSegmentControl.selectedSegmentIndex==1)
-			field = @"balance_owed";
-		
-		if(self.type==5)
-			field = @"interest";
 		double amount = [ObjectiveCScripts changedForItem:self.row_id month:month year:year field:field context:self.managedObjectContext numMonths:1 type:self.type];
 
 		double total = [ObjectiveCScripts amountForItem:self.row_id month:month year:year field:field context:self.managedObjectContext type:self.type];
@@ -141,9 +146,17 @@
 	else
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.type]];
 	
-	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.type==5) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==0];
+//	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.type==5) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==0];
 	
-	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
+//	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
+	
+	
+	int amount_type = (int)self.topSegmentControl.selectedSegmentIndex;
+	if(self.type==5)
+		amount_type = 3;
+	
+	self.topGraphImageView.image = [GraphLib graphChartForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext numYears:1 type:self.type barsFlg:self.changeSegmentControl.selectedSegmentIndex==1 asset_type:self.type amount_type:amount_type];
+
 	int width = [[UIScreen mainScreen] bounds].size.width;
 	self.topGraphImageView.frame = CGRectMake(0, 20, width, width/2-20);
 

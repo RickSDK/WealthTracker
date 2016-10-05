@@ -10,10 +10,6 @@
 #import "UIColor+ATTColor.h"
 
 static NSInteger FONT_SIZE			= 14;
-static NSInteger COLUMN_SEP			= 6;
-static CGFloat LABEL_PROPORTION		= 0.4;
-static NSInteger Y_INSET			= 5;
-static NSInteger X_INSET			= 5;
 
 @implementation AnalysisCell
 

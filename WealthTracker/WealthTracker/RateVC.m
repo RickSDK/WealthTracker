@@ -37,7 +37,7 @@
 	double amount = [ObjectiveCScripts changedForItem:0 month:month year:year field:@"" context:self.managedObjectContext numMonths:1 type:type];
 	
 	if(month==nowMonth)
-		[ObjectiveCScripts displayNetChangeLabel:label amount:amount lightFlg:YES revFlg:NO];
+		[ObjectiveCScripts displayNetChangeLabel:label amount:amount lightFlg:NO revFlg:NO];
 	
 	if(mySwitch.on)
 		return amount;
@@ -46,24 +46,30 @@
 }
 
 -(void)setupData {
-	int nowYear = [ObjectiveCScripts nowYear];
+	int year = [ObjectiveCScripts nowYear]-1;
 	int nowMonth = [ObjectiveCScripts nowMonth];
+	int month = nowMonth;
 	
 	float amountThisMonth=0;
 	NSMutableArray *items = [[NSMutableArray alloc] init];
 	for(int i=1; i<=12; i++) {
+		month++;
+		if(month>12) {
+			month=1;
+			year++;
+		}
 		double amount = 0;
 		
-		amount += [self addAmountForType:1 label:self.homeLabel mySwitch:self.homeSwitch month:i nowMonth:nowMonth year:nowYear];
-		amount += [self addAmountForType:2 label:self.vehicleLabel mySwitch:self.vehicleSwitch month:i nowMonth:nowMonth year:nowYear];
-		amount += [self addAmountForType:4 label:self.assetLabel mySwitch:self.assetSwitch month:i nowMonth:nowMonth year:nowYear];
-		amount += [self addAmountForType:3 label:self.debtLabel mySwitch:self.debtSwitch month:i nowMonth:nowMonth year:nowYear];
+		amount += [self addAmountForType:1 label:self.homeLabel mySwitch:self.homeSwitch month:month nowMonth:nowMonth year:year];
+		amount += [self addAmountForType:2 label:self.vehicleLabel mySwitch:self.vehicleSwitch month:month nowMonth:nowMonth year:year];
+		amount += [self addAmountForType:7 label:self.assetLabel mySwitch:self.assetSwitch month:month nowMonth:nowMonth year:year];
+		amount += [self addAmountForType:6 label:self.debtLabel mySwitch:self.debtSwitch month:month nowMonth:nowMonth year:year];
 		
-		if(i==nowMonth)
+		if(month==[ObjectiveCScripts nowMonth])
 			amountThisMonth=amount;
 		
 		GraphObject *obj = [[GraphObject alloc] init];
-		obj.name = [[ObjectiveCScripts monthListShort] objectAtIndex:i-1];
+		obj.name = [[ObjectiveCScripts monthListShort] objectAtIndex:month-1];
 		obj.amount = amount;
 		[items addObject:obj];
 	}

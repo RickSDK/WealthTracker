@@ -92,6 +92,9 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
 	
+	self.itemCountLabel.layer.cornerRadius = 7.0;
+	self.itemCountLabel.layer.masksToBounds = YES;				// clips background images to rounded corners
+
 	self.messageView.hidden=YES;
 	self.arrowImage.hidden=YES;
 	
@@ -186,7 +189,9 @@
 	if(self.chartSegmentControl.selectedSegmentIndex==2) {
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.barGraphObjects startDegree:0];
 	} else
-		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0];
+		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0 asset_type:0 amount_type:2];
+
+	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.itemCountLabel];
 
 }
 

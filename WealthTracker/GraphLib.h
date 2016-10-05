@@ -32,9 +32,9 @@
 +(NSArray *)barChartValuesLast6MonthsForItem:(int)row_id month:(int)month year:(int)year reverseColorFlg:(BOOL)reverseColorFlg type:(int)type context:(NSManagedObjectContext *)context fieldType:(int)fieldType displayTotalFlg:(BOOL)displayTotalFlg;
 +(float)spinPieChart:(UIImageView *)imageView startTouchPosition:(CGPoint)startTouchPosition newTouchPosition:(CGPoint)newTouchPosition startDegree:(float)startDegree barGraphObjects:(NSMutableArray *)barGraphObjects;
 +(int)getMonthFromView:(UIImageView *)imageView point:(CGPoint)point startingMonth:(int)startingMonth;
-+(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type;
-+(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context;
-+(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg;
++(NSArray *)yearGraphItemsForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type amount_type:(int)amount_type;
++(AmountObj *)amountForType:(int)type month:(int)month year:(int)year context:(NSManagedObjectContext *)context asset_type:(int)asset_type amount_type:(int)amount_type;
++(UIImage *)graphChartForMonth:(int)displayMonth year:(int)displayYear context:(NSManagedObjectContext *)context numYears:(int)numYears type:(int)type barsFlg:(BOOL)barsFlg asset_type:(int)asset_type amount_type:(int)amount_type;
 +(NSArray *)pieItemsForMonth:(int)month year:(int)year context:(NSManagedObjectContext *)context;
 +(NSArray *)itemsForMonth:(int)month year:(int)year type:(int)type context:(NSManagedObjectContext *)context;
 

@@ -173,6 +173,9 @@
 	int annualIncome = monthlyIncome*12*1.2;
 	double equityTotal=0;
 	double equityLastMonth=0;
+	double equityLast12=0;
+	double equityLast24=0;
+	double equityLast36=0;
 	int prevMonth = self.nowMonth-1;
 	int prevYear = self.nowYear;
 	if(prevMonth<1) {
@@ -184,10 +187,16 @@
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 		equityTotal+=[self equityForRowId:[obj.rowId intValue] month:[ObjectiveCScripts nowMonth] year:[ObjectiveCScripts nowYear] context:self.managedObjectContext];
 		equityLastMonth+=[self equityForRowId:[obj.rowId intValue] month:prevMonth year:prevYear context:self.managedObjectContext];
+		equityLast12+=[self equityForRowId:[obj.rowId intValue] month:self.nowMonth year:self.nowYear-1 context:self.managedObjectContext];
+		equityLast24+=[self equityForRowId:[obj.rowId intValue] month:self.nowMonth year:self.nowYear-2 context:self.managedObjectContext];
+		equityLast36+=[self equityForRowId:[obj.rowId intValue] month:self.nowMonth year:self.nowYear-3 context:self.managedObjectContext];
 	}
 	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
 	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth" value:@"" amount:equityTotal hi:annualIncome*2 lo:annualIncome/2 reverseFlg:NO]];
 	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth this month" value:@"" amount:equityTotal-equityLastMonth hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 12 mo" value:@"" amount:equityTotal-equityLast12 hi:annualIncome/10 lo:annualIncome/20 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 24 mo" value:@"" amount:equityTotal-equityLast24 hi:annualIncome/5 lo:annualIncome/10 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 36 mo" value:@"" amount:equityTotal-equityLast36 hi:annualIncome/3 lo:annualIncome/6 reverseFlg:NO]];
 	return thisArray;
 }
 
