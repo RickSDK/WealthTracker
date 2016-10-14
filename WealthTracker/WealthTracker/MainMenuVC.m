@@ -92,7 +92,7 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
 	
-	self.itemCountLabel.layer.cornerRadius = 7.0;
+	self.itemCountLabel.layer.cornerRadius = 4.0;
 	self.itemCountLabel.layer.masksToBounds = YES;				// clips background images to rounded corners
 
 	self.messageView.hidden=YES;

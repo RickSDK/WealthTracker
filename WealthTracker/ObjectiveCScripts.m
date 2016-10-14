@@ -642,6 +642,8 @@
 }
 
 +(NSPredicate *)predicateForItem:(int)item_id month:(int)month year:(int)year type:(int)type {
+	if(type==3 && item_id==0)
+		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d", year, month];
 	if(type==6 && item_id==0)
 		return [NSPredicate predicateWithFormat:@"year = %d AND month = %d AND type = %d", year, month, 3];
 	if(type==7 && item_id==0)
@@ -784,8 +786,8 @@
 	if(numberInYellow>0) {
 		if(label) {
 			label.hidden = NO;
-			label.backgroundColor = [UIColor clearColor];
-			label.textColor = [UIColor grayColor];
+			label.backgroundColor = [UIColor colorWithWhite:.7 alpha:1];
+			label.textColor = [UIColor whiteColor];
 			label.text=[NSString stringWithFormat:@"%d", numberInYellow];
 		}
 		return numberInYellow*-1; // yellow status
@@ -852,6 +854,12 @@
 	[button setTitle:[self fontAwesomeTextForType:type] forState:UIControlStateNormal];
 }
 
++(void)fontAwesomeButton:(UIButton *)button iconType:(int)iconType size:(float)size {
+	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
+	
+	[button setTitle:[self fontAwesomeIconForType:iconType] forState:UIControlStateNormal];
+}
+
 +(void)fontAwesomeAltButton:(UIButton *)button type:(int)type size:(float)size {
 	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:size];
 	
@@ -870,7 +878,7 @@
 					  [NSString fontAwesomeIconStringForEnum:FAHome],
 					  [NSString fontAwesomeIconStringForEnum:FAautomobile],
 					  [NSString fontAwesomeIconStringForEnum:FACreditCard],
-					  [NSString fontAwesomeIconStringForEnum:FAUsd],
+					  [NSString fontAwesomeIconStringForEnum:FAlineChart],
 					  nil];
 	return [icons objectAtIndex:type];
 }
@@ -881,7 +889,7 @@
 	if([@"Debt" isEqualToString:type])
 		return [NSString fontAwesomeIconStringForEnum:FACreditCard];
 	if([@"Asset" isEqualToString:type])
-		return [NSString fontAwesomeIconStringForEnum:FAUsd];
+		return [NSString fontAwesomeIconStringForEnum:FAlineChart];
 
 	return [NSString fontAwesomeIconStringForEnum:FAHome];
 }
@@ -973,6 +981,17 @@
 					  [NSString fontAwesomeIconStringForEnum:FApaw],
 					  [NSString fontAwesomeIconStringForEnum:FAHome],
 					  [NSString fontAwesomeIconStringForEnum:FAbed],
+					  nil];
+	return [icons objectAtIndex:number%icons.count];
+}
+
++(NSString *)fontAwesomeIconForType:(int)number {
+	NSArray *icons = [NSArray arrayWithObjects:
+					  [NSString fontAwesomeIconStringForEnum:FAChevronLeft],
+					  [NSString fontAwesomeIconStringForEnum:FAChevronRight],
+					  [NSString fontAwesomeIconStringForEnum:FAMoney],
+					  [NSString fontAwesomeIconStringForEnum:FACreditCard],
+					  [NSString fontAwesomeIconStringForEnum:FAbank],
 					  nil];
 	return [icons objectAtIndex:number%icons.count];
 }

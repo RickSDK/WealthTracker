@@ -195,12 +195,8 @@
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.type=0;
-	if(self.typeSegment.selectedSegmentIndex==0) {
-		detailViewController.tag=4;
-		detailViewController.fieldType=2; // equity
-	} else {
-		detailViewController.tag=(self.filterType==1)?11:12;
-		detailViewController.fieldType=self.filterType==2;
+	if(self.typeSegment.selectedSegmentIndex==2) {
+		detailViewController.type=3;
 	}
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

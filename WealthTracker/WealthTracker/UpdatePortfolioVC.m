@@ -45,6 +45,11 @@
 
 	[self setTitle:self.itemObject.name];
 	
+	[ObjectiveCScripts fontAwesomeButton:self.monthDownButton iconType:0 size:14];
+	[ObjectiveCScripts fontAwesomeButton:self.monthUpButton iconType:1 size:14];
+	[ObjectiveCScripts fontAwesomeButton:self.yearDownButton iconType:0 size:14];
+	[ObjectiveCScripts fontAwesomeButton:self.yearUpButton iconType:1 size:14];
+	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 	
 	[self populateOriginationDate];
@@ -838,6 +843,10 @@
 }
 
 -(void) textFieldDidBeginEditing:(UITextField *)textField {
+	if(textField==self.origValueTextField2)
+		return;
+	if(textField==self.origBalanceTextField2)
+		return;
 	if(textField==self.valueTextField) {
 		self.editTextFieldNum=1;
 	}

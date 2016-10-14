@@ -92,7 +92,7 @@
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.type=self.type;
-	detailViewController.fieldType=self.fieldType;
+//	detailViewController.fieldType=self.fieldType;
 	detailViewController.displayYear=self.displayYear;
 	detailViewController.tag = self.tag;
 	[self.navigationController pushViewController:detailViewController animated:YES];

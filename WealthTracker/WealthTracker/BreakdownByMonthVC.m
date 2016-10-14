@@ -35,9 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:self.itemObject?self.itemObject.name:[ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType]];
 	
-	NSLog(@"+++BreakdownByMonthVC type: %d, fieldType: %d [%d]", self.type, self.fieldType, self.row_id);
 
 	
 	self.topGraphImageView = [[UIImageView alloc] init];
@@ -45,12 +43,12 @@
 	self.changeSegmentControl.selectedSegmentIndex=1;
 	
 	if(self.itemObject) {
-		self.titleLabel.text = self.itemObject.name;
+//		self.titleLabel.text = self.itemObject.name;
 		self.type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 		self.row_id = [self.itemObject.rowId intValue];
-	} else {
-		self.titleLabel.text = [ObjectiveCScripts typeLabelForType:self.type fieldType:self.fieldType];
 	}
+
+	NSLog(@"+++BreakdownByMonthVC type: %d, [%d]", self.type, self.row_id);
 
 	self.nowYear = [[[NSDate date] convertDateToStringWithFormat:@"yyyy"] intValue];
 	self.nowMonth = [[[NSDate date] convertDateToStringWithFormat:@"MM"] intValue];
@@ -60,15 +58,21 @@
 	
 	if(self.type==1 ||self.type==2 ||self.type==4)
 		self.topSegmentControl.selectedSegmentIndex=2;
-	if(self.type==3)
+	if(self.type==3) {
 		self.topSegmentControl.selectedSegmentIndex=1;
-	if(self.type==5) {
+		self.topSegmentControl.enabled=NO;
+	}
+	if(self.type==5 || self.type==6) {
 		self.topSegmentControl.selectedSegmentIndex=1;
+		self.topSegmentControl.enabled=NO;
+	}
+	if(self.type==7) {
+		self.topSegmentControl.selectedSegmentIndex=0;
 		self.topSegmentControl.enabled=NO;
 	}
 	
 	self.topSegmentControl.hidden = (self.type==5);
-	
+	[self setTitle:self.itemObject?self.itemObject.name:[self labelForType:self.type]];
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 	
@@ -80,6 +84,11 @@
 
 	[self.topSegmentControl changeSegment];
 	[self setupData];
+}
+
+-(NSString *)labelForType:(int)type {
+	NSArray *titles = [NSArray arrayWithObjects:@"Assets", @"Real Estate", @"Vehicle", @"Debt", @"Net Worth", @"Interest", @"Loans/Credit Card", @"Investments", nil];
+	return [titles objectAtIndex:type];
 }
 
 -(void)mainMenuClicked {
@@ -146,16 +155,20 @@
 	else
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Change by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.type]];
 	
-//	NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.type==5) type:self.type context:self.managedObjectContext fieldType:self.fieldType displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==0];
-	
-//	self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
 	
 	
 	int amount_type = (int)self.topSegmentControl.selectedSegmentIndex;
 	if(self.type==5)
 		amount_type = 3;
 	
-	self.topGraphImageView.image = [GraphLib graphChartForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext numYears:1 type:self.type barsFlg:self.changeSegmentControl.selectedSegmentIndex==1 asset_type:self.type amount_type:amount_type];
+	
+	if(self.row_id>0) {
+		NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:self.row_id month:self.displayMonth year:self.displayYear reverseColorFlg:(self.topSegmentControl.selectedSegmentIndex==1 || self.type==5) type:self.type context:self.managedObjectContext fieldType:amount_type displayTotalFlg:self.changeSegmentControl.selectedSegmentIndex==0];
+		
+		self.topGraphImageView.image = [GraphLib graphBarsWithItems:graphArray];
+	} else {
+		self.topGraphImageView.image = [GraphLib graphChartForMonth:self.displayMonth year:self.displayYear context:self.managedObjectContext numYears:1 type:self.type barsFlg:self.changeSegmentControl.selectedSegmentIndex==1 asset_type:self.type amount_type:amount_type];
+	}
 
 	int width = [[UIScreen mainScreen] bounds].size.width;
 	self.topGraphImageView.frame = CGRectMake(0, 20, width, width/2-20);
@@ -254,7 +267,7 @@
 }
 
 -(IBAction)topSegmentChanged:(id)sender {
-	self.fieldType = (int)self.topSegmentControl.selectedSegmentIndex;
+//	self.fieldType = (int)self.topSegmentControl.selectedSegmentIndex;
 	[self.topSegmentControl changeSegment];
 	[self setupData];
 }
@@ -290,7 +303,7 @@
 		detailViewController.displayMonth=month;
 		detailViewController.nowYear=self.nowYear;
 		detailViewController.nowMonth=self.nowMonth;
-		detailViewController.fieldType=self.fieldType;
+		detailViewController.fieldType=(int)self.topSegmentControl.selectedSegmentIndex;
 		detailViewController.type=self.type;
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}

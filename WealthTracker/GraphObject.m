@@ -20,4 +20,12 @@
 	return obj;
 }
 
+- (NSComparisonResult)compare:(GraphObject *)otherObject {
+	//	NSString *amount = [NSString stringWithFormat:@"%f", self.amount];
+	//	NSString *othertAmount = [NSString stringWithFormat:@"%f", otherObject.amount];
+	//	return [amount compare:othertAmount];
+	//	return [[NSNumber numberWithDouble:self.amount] compare:[NSNumber numberWithDouble:otherObject.amount]];
+	return [[NSNumber numberWithDouble:otherObject.amount] compare:[NSNumber numberWithDouble:self.amount]];
+}
+
 @end

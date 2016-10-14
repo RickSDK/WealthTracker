@@ -17,6 +17,8 @@
                 <outlet property="noEntriesLabel" destination="91g-Lw-vjL" id="t03-9r-Vgv"/>
                 <outlet property="popupView" destination="OYP-xo-OSr" id="WEU-tj-9VT"/>
                 <outlet property="progressView" destination="45h-MR-ZJy" id="MbV-zS-dk6"/>
+                <outlet property="purchaseTypeButton" destination="XGU-jM-X05" id="JFP-pA-ykr"/>
+                <outlet property="purchaseTypeLabel" destination="BQB-FL-M1w" id="z2P-TH-Nlp"/>
                 <outlet property="remainingLabel" destination="Jfs-7w-9wN" id="ERA-Zg-khR"/>
                 <outlet property="topSegment" destination="fS1-Zm-Naa" id="nyG-9K-Kfx"/>
                 <outlet property="totalSpentLabel" destination="xXT-4R-AY2" id="5xY-bV-jLr"/>
@@ -115,6 +117,24 @@
                             </state>
                             <connections>
                                 <action selector="deleteButtonPressed:" destination="-1" eventType="touchDown" id="uoV-fT-o78"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cash Purchase" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" id="BQB-FL-M1w">
+                            <rect key="frame" x="18" y="152" width="110" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XGU-jM-X05" customClass="CustomButton">
+                            <rect key="frame" x="50" y="121" width="46" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <state key="normal" title="B">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="paymentTypeButtonPressed:" destination="-1" eventType="touchDown" id="SyS-Ub-H3U"/>
                             </connections>
                         </button>
                     </subviews>

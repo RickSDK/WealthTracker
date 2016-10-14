@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AnalysisDetailsVC">
             <connections>
+                <outlet property="chartTypeSegment" destination="rtS-mL-3jG" id="R8V-0E-vog"/>
                 <outlet property="graphImageView" destination="mED-JX-r6J" id="GA1-Oc-6Xg"/>
                 <outlet property="mainSegmentControl" destination="2ey-xV-1vP" id="FLA-1t-n2g"/>
                 <outlet property="mainTableView" destination="LLD-AK-Ki0" id="NqN-qw-3lq"/>
@@ -15,7 +16,7 @@
                 <outlet property="prevButton" destination="uVd-Yf-zLm" id="trk-DL-ed2"/>
                 <outlet property="topLeftLabel" destination="fK7-ds-i0X" id="X6a-E6-JCK"/>
                 <outlet property="topRightlabel" destination="Xir-aI-JtR" id="Pxm-Cj-LNk"/>
-                <outlet property="topSegment" destination="9GG-et-r2A" id="Sgp-Iq-RD3"/>
+                <outlet property="topSegment" destination="UbG-jC-unt" id="9Cf-hw-a5X"/>
                 <outlet property="typeSegment" destination="u7B-Pg-ZyJ" id="7rq-Rp-2ys"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -25,6 +26,10 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greenTexture.jpg" id="g9W-Pz-du0">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                </imageView>
                 <view contentMode="scaleToFill" id="2TM-oT-JpE">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="21"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -82,7 +87,7 @@
                     <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="LLD-AK-Ki0">
-                    <rect key="frame" x="0.0" y="107" width="320" height="266"/>
+                    <rect key="frame" x="0.0" y="109" width="320" height="264"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
@@ -103,19 +108,8 @@
                         <action selector="typeSegmentChanged:" destination="-1" eventType="valueChanged" id="FQ5-S0-YaO"/>
                     </connections>
                 </segmentedControl>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="9GG-et-r2A" customClass="PieChartSegment">
-                    <rect key="frame" x="0.0" y="79" width="320" height="29"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <segments>
-                        <segment title="Net Change"/>
-                        <segment title="Total"/>
-                    </segments>
-                    <connections>
-                        <action selector="segmentChanged:" destination="-1" eventType="valueChanged" id="ggQ-FG-nbw"/>
-                    </connections>
-                </segmentedControl>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mED-JX-r6J">
-                    <rect key="frame" x="0.0" y="107" width="320" height="180"/>
+                    <rect key="frame" x="0.0" y="109" width="320" height="180"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="2ey-xV-1vP" customClass="CustomSegment">
@@ -124,10 +118,33 @@
                     <segments>
                         <segment title="First"/>
                         <segment title="Second"/>
-                        <segment title=""/>
+                        <segment title="Charts"/>
                     </segments>
                     <connections>
                         <action selector="topSegmentChanged:" destination="-1" eventType="valueChanged" id="arp-hb-vw3"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="rtS-mL-3jG" customClass="CustomSegment">
+                    <rect key="frame" x="0.0" y="290" width="320" height="29"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Year"/>
+                        <segment title="Month"/>
+                        <segment title="Month"/>
+                    </segments>
+                    <connections>
+                        <action selector="chartTypeSegmentChanged:" destination="-1" eventType="valueChanged" id="DAf-OY-Dq9"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="UbG-jC-unt" customClass="CustomSegment">
+                    <rect key="frame" x="0.0" y="79" width="320" height="29"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Net Change"/>
+                        <segment title="Totals"/>
+                    </segments>
+                    <connections>
+                        <action selector="segmentChanged:" destination="-1" eventType="valueChanged" id="94Z-rT-vwY"/>
                     </connections>
                 </segmentedControl>
             </subviews>
@@ -138,6 +155,9 @@
             <point key="canvasLocation" x="345" y="474"/>
         </view>
     </objects>
+    <resources>
+        <image name="greenTexture.jpg" width="800" height="1280"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpdatePortfolioVC">
             <connections>
                 <outlet property="mainTableView" destination="mQ7-Ij-FER" id="rLd-5R-joC"/>
+                <outlet property="monthDownButton" destination="vRL-Df-Tdj" id="iAs-FN-2vS"/>
                 <outlet property="monthUpButton" destination="7gO-2r-uhC" id="Lbo-dF-qDu"/>
                 <outlet property="origBalanceTextField" destination="3HP-tW-Nm9" id="IgB-yd-i8H"/>
                 <outlet property="origBalanceTextField2" destination="dXy-S0-5QU" id="e15-DM-gQU"/>
@@ -18,6 +19,7 @@
                 <outlet property="origYearTextField" destination="JdJ-nu-uro" id="SJg-zX-ToT"/>
                 <outlet property="popupView" destination="CHr-5l-8Ah" id="TYl-64-hQo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="yearDownButton" destination="hRd-OL-f8i" id="tt2-Zf-JX8"/>
                 <outlet property="yearUpButton" destination="1Va-43-sKB" id="84i-Qf-Bpp"/>
             </connections>
         </placeholder>
@@ -197,7 +199,10 @@
                             <rect key="frame" x="82" y="124" width="160" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="mSr-my-dBY"/>
+                            </connections>
                         </textField>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="g9T-gG-cFl">
                             <rect key="frame" x="8" y="128" width="66" height="21"/>
@@ -210,7 +215,10 @@
                             <rect key="frame" x="82" y="162" width="160" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="saA-EV-QEr"/>
+                            </connections>
                         </textField>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Balance:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Jnh-eJ-Vb6">
                             <rect key="frame" x="8" y="166" width="66" height="21"/>

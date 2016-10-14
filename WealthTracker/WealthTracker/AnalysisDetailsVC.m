@@ -58,7 +58,25 @@
 	
 	
 	self.monthlyIncome=[ObjectiveCScripts calculateIncome:self.managedObjectContext];
-	NSLog(@"+++tag: %d, monthlyIncome: %d", self.tag, self.monthlyIncome);
+	self.chartTypeSegment.hidden = (self.mainSegmentControl.selectedSegmentIndex != 2);
+	id pieChart  = [NSString fontAwesomeIconStringForEnum:FApieChart];
+	id barChartO = [NSString fontAwesomeIconStringForEnum:FABarChartO];
+	
+	UIFont *font = [UIFont fontWithName:kFontAwesomeFamilyName size:17.f];
+	NSMutableDictionary *attribsNormal;
+	attribsNormal = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil];
+	
+	NSMutableDictionary *attribsSelected;
+	attribsSelected = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, nil];
+	
+	[self.chartTypeSegment setTitleTextAttributes:attribsNormal forState:UIControlStateNormal];
+	[self.chartTypeSegment setTitleTextAttributes:attribsSelected forState:UIControlStateSelected];
+	
+	[self.chartTypeSegment setTitle:[NSString stringWithFormat:@"%@ Year", barChartO] forSegmentAtIndex:0];
+	[self.chartTypeSegment setTitle:[NSString stringWithFormat:@"%@ Month", barChartO] forSegmentAtIndex:1];
+	[self.chartTypeSegment setTitle:[NSString stringWithFormat:@"%@ Month", pieChart] forSegmentAtIndex:2];
+
+//	NSLog(@"+++tag: %d, monthlyIncome: %d", self.tag, self.monthlyIncome);
 
 
 	self.graphImageView.layer.cornerRadius = 8.0;
@@ -106,25 +124,26 @@
 
 
 -(void)breakdownButtonPressed {
-	int type=self.tag;
-	int fieldType = 0;
-	if(type==3) {
-		type=0;
-		fieldType=1;
-	}
-	if(type==4) {
-		type=0;
-		fieldType=2;
-	}
+//	int type=self.mainSegmentControl.selectedSegmentIndex;
+//	NSLog(@"type: %d", type);
+//	int fieldType = 0;
+//	if(type==3) {
+//		type=0;
+//		fieldType=1;
+//	}
+//	if(type==4) {
+//		type=0;
+//		fieldType=2;
+//	}
 	
 	NSArray *titles = [NSArray arrayWithObjects:@"Profile", @"Real Estate", @"Auto", @"Debt", @"Wealth", nil];
 	[self setTitle:[titles objectAtIndex:self.tag]];
 	
 	BreakdownByMonthVC *detailViewController = [[BreakdownByMonthVC alloc] initWithNibName:@"BreakdownByMonthVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
-	detailViewController.tag = self.tag;
+//	detailViewController.tag = self.tag;
 	detailViewController.type = self.tag;
-	detailViewController.fieldType = fieldType;
+//	detailViewController.fieldType = fieldType;
 	detailViewController.displayYear=self.displayYear;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -167,7 +186,6 @@
 -(void)setupData {
 	
 	[self setTitle:[ObjectiveCScripts fontAwesomeTextForType:self.tag]];
-
 	
 	NSArray *topLeft = [NSArray arrayWithObjects:@"", @"Monthly Payments:", @"Vehicle Value", @"Total Debt", @"Net Worth", nil];
 	
@@ -421,7 +439,7 @@
 			break;
 	}
 	
-	if(self.topSegment.selectedSegmentIndex==0 || self.tag==4)
+	if(self.chartTypeSegment.selectedSegmentIndex<2)
 		self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
 	else
 		self.graphImageView.image = [GraphLib pieChartWithItems:self.chartValuesArray startDegree:self.startDegree];
@@ -530,11 +548,11 @@
 	}
 	if(debtEquity>max) {
 		max=debtEquity;
-		maxString = @"Debt equity";
+		maxString = @"Loans/Credit-Card equity";
 	}
 	if(assetEquity>max) {
 		max=assetEquity;
-		maxString = @"Other-Asset equity";
+		maxString = @"Investment equity";
 	}
 
 	NSString *minString = @"Real Estate equity";
@@ -544,11 +562,11 @@
 		minString = @"Auto equity";
 	}
 	if(debtEquity<min) {
-		minString = @"Debt equity";
+		minString = @"Loans/Credit-Card equity";
 		min=debtEquity;
 	}
 	if(assetEquity<min) {
-		minString = @"Other-Asset equity";
+		minString = @"Investment equity";
 		min=assetEquity;
 	}
 	
@@ -839,7 +857,7 @@
 		[self.valuesArray0 addObject:[ObjectiveCScripts convertNumberToMoneyString:totalAmount]];
 		[self.colorsArray0 addObject:[ObjectiveCScripts colorBasedOnNumber:totalAmount*reverseNum lightFlg:NO]];
 	}
-	if(month==self.nowMonth && year==self.nowYear && self.topSegment.selectedSegmentIndex==0)
+	if(self.chartTypeSegment.selectedSegmentIndex==0)
 		[self createBarGraph];
 
 	return totalValueObj;
@@ -847,7 +865,7 @@
 
 -(void)createBarGraph {
 	[self.chartValuesArray removeAllObjects];
-	self.chartValuesArray = [self barItemsForMonth:self.nowMonth nowYear:self.nowYear type:self.tag];
+	self.chartValuesArray = [self barItemsForMonth:self.displayMonth nowYear:self.displayYear type:self.tag];
 }
 
 -(NSString *)netChangeForAmount:(double)amount {
@@ -1188,21 +1206,29 @@
 }
 
 -(IBAction)prevButtonPressed:(id)sender {
-	self.monthOffset--;
-	self.displayMonth--;
-	if(self.displayMonth<=0) {
-		self.displayMonth=12;
+	if(self.chartTypeSegment.selectedSegmentIndex==0 && self.mainSegmentControl.selectedSegmentIndex==2)
 		self.displayYear--;
+	else {
+		self.monthOffset--;
+		self.displayMonth--;
+		if(self.displayMonth<=0) {
+			self.displayMonth=12;
+			self.displayYear--;
+		}
 	}
 	[self setupData];
 }
 
 -(IBAction)nextButtonPressed:(id)sender {
-	self.monthOffset++;
-	self.displayMonth++;
-	if(self.displayMonth>12) {
-		self.displayMonth=1;
+	if(self.chartTypeSegment.selectedSegmentIndex==0 && self.mainSegmentControl.selectedSegmentIndex==2)
 		self.displayYear++;
+	else {
+		self.monthOffset++;
+		self.displayMonth++;
+		if(self.displayMonth>12) {
+			self.displayMonth=1;
+			self.displayYear++;
+		}
 	}
 	[self setupData];
 }
@@ -1254,7 +1280,7 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [[event allTouches] anyObject];
 	self.startTouchPosition = [touch locationInView:self.view];
-	if(self.topSegment.selectedSegmentIndex==0 && CGRectContainsPoint(self.graphImageView.frame, self.startTouchPosition)) {
+	if(self.chartTypeSegment.selectedSegmentIndex==0 && CGRectContainsPoint(self.graphImageView.frame, self.startTouchPosition)) {
 		[self drawChartatPoint:self.startTouchPosition];
 	}
 }
@@ -1263,20 +1289,21 @@
 	UITouch *touch = [[event allTouches] anyObject];
 	CGPoint newTouchPosition = [touch locationInView:self.view];
 	if(CGRectContainsPoint(self.graphImageView.frame, newTouchPosition)) {
-		if(self.topSegment.selectedSegmentIndex==1) {
+		if(self.chartTypeSegment.selectedSegmentIndex==2) {
 			
 			self.startDegree = [GraphLib spinPieChart:self.graphImageView startTouchPosition:self.startTouchPosition newTouchPosition:newTouchPosition startDegree:self.startDegree barGraphObjects:self.chartValuesArray];
 			self.startTouchPosition=newTouchPosition;
 		} else {
-			[self drawChartatPoint:newTouchPosition];
+			if(self.chartTypeSegment.selectedSegmentIndex==0)
+				[self drawChartatPoint:newTouchPosition];
 		}
 	}
 }
 
 -(void)drawChartatPoint:(CGPoint)point {
 	[self.chartValuesArray removeAllObjects];
-	int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.nowMonth];
-	self.chartValuesArray = [self barItemsForMonth:month nowYear:self.nowYear type:self.tag];
+	int month = [GraphLib getMonthFromView:self.graphImageView point:point startingMonth:self.displayMonth];
+	self.chartValuesArray = [self barItemsForMonth:month nowYear:self.displayYear type:self.tag];
 	self.graphImageView.image = [GraphLib graphBarsWithItems:self.chartValuesArray];
 }
 
@@ -1284,7 +1311,7 @@
 	double prevNetWorth=0;
 	double prevValue=0;
 	double prevBalance=0;
-	
+	NSLog(@"+++type: %d", type);
 	int displayYear = nowYear-1;
 	int month = self.nowMonth;
 	NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"year = %d AND month = %d", displayYear, month];
@@ -1367,8 +1394,13 @@
 		prevValue = value;
 		prevBalance = balance;
 		
+		if(self.topSegment.selectedSegmentIndex==1)
+			last30 = value-balance;
+		if(self.topSegment.selectedSegmentIndex==1 && type==3)
+			last30 = balance;
+		
 		if(month==nowMonth) {
-			self.topLeftLabel.text = @"Debt Changes by Month";
+			self.topLeftLabel.text = (self.topSegment.selectedSegmentIndex==1)?@"Total":@"Change";
 			[ObjectiveCScripts displayNetChangeLabel:self.topRightlabel amount:last30 lightFlg:NO revFlg:type==3];
 		}
 		
@@ -1385,6 +1417,8 @@
 	self.topSegment.enabled=self.mainSegmentControl.selectedSegmentIndex != 1;
 	
 	[self.mainSegmentControl changeSegment];
+	self.chartTypeSegment.hidden = (self.mainSegmentControl.selectedSegmentIndex != 2);
+
 	[self.mainTableView reloadData];
 }
 
@@ -1400,6 +1434,11 @@
 -(IBAction)segmentChanged:(id)sender {
 	
 	[self.topSegment changeSegment];
+	[self setupData];
+}
+
+-(IBAction)chartTypeSegmentChanged:(id)sender {
+	[self.chartTypeSegment changeSegment];
 	[self setupData];
 }
 

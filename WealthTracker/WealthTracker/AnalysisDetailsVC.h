@@ -46,6 +46,7 @@
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet CustomSegment *topSegment;
 @property (nonatomic, strong) IBOutlet CustomSegment *typeSegment;
+@property (nonatomic, strong) IBOutlet CustomSegment *chartTypeSegment;
 @property (nonatomic, strong) IBOutlet UIView *topView;
 @property (nonatomic, strong) IBOutlet UILabel *topLeftlabel;
 @property (nonatomic, strong) IBOutlet UILabel *topRightlabel;
@@ -62,5 +63,6 @@
 -(IBAction)nextButtonPressed:(id)sender;
 -(IBAction)prevButtonPressed:(id)sender;
 -(IBAction)typeSegmentChanged:(id)sender;
+-(IBAction)chartTypeSegmentChanged:(id)sender;
 
 @end

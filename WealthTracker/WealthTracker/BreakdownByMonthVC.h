@@ -31,11 +31,12 @@
 @property (nonatomic) int row_id;
 @property (nonatomic) int tag;
 @property (nonatomic) int type;
+@property (nonatomic) int amount_type;
 @property (nonatomic) int nowYear;
 @property (nonatomic) int nowMonth;
 @property (nonatomic) int displayYear;
 @property (nonatomic) int displayMonth;
-@property (nonatomic) int fieldType;
+//@property (nonatomic) int fieldType;
 
 -(IBAction)topSegmentChanged:(id)sender;
 -(IBAction)changeSegmentChanged:(id)sender;

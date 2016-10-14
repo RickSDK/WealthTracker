@@ -1419,11 +1419,10 @@
 }
 
 +(double)amountForObject:(NSManagedObject *)mo asset_type:(int)asset_type amount_type:(int)amount_type {
-	NSString *itemType = [mo valueForKey:@"type"];
-	
-	if (asset_type==1 && ![@"Real Estate" isEqualToString:itemType])
+	int itemType = [[mo valueForKey:@"type"] intValue];
+	if (asset_type==1 && itemType!=1)
 		return 0;
-	if (asset_type==2 && ![@"Vehicle" isEqualToString:itemType])
+	if (asset_type==2 && itemType!=2)
 		return 0;
 	
 	double asset_value = [[mo valueForKey:@"asset_value"] doubleValue];
@@ -1448,7 +1447,6 @@
 	NSArray *itemsPre = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
 	for (NSManagedObject *mo in itemsPre) {
 		amount += [self amountForObject:mo asset_type:asset_type amount_type:amount_type];
-//		amount += [self amountForObject:mo type:type itemType:@""];
 	}
 	amountObj.amount = amount;
 	amountObj.amount_confirm_flg = amount_confirm_flg;
@@ -1484,7 +1482,8 @@
 		amountObj.amountChange = amountObj.amount - prevAmountObj.amount;
 		
 		NSString *monthName = [[ObjectiveCScripts monthListShort] objectAtIndex:displayMonth-1];
-		[graphArray addObject:[GraphLib graphObjectWithName:monthName amount:amountObj.amountChange rowId:1 reverseColorFlg:(type==3 || type==5) currentMonthFlg:displayMonth==nowMonth && displayYear==nowYear]];
+		
+		[graphArray addObject:[GraphLib graphObjectWithName:monthName amount:amountObj.amountChange rowId:1 reverseColorFlg:(type==3 || type==5 || amount_type==1) currentMonthFlg:displayMonth==nowMonth && displayYear==nowYear]];
 
 		prevAmountObj = amountObj;
 

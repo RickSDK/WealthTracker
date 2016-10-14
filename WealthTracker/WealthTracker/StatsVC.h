@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) IBOutlet UILabel *totalValueLabel;
 @property (nonatomic, strong) IBOutlet CustomSegment *amountSegment;
+@property (nonatomic, strong) NSMutableArray *categoryItems;
 
 -(IBAction)amountSegmentChanged:(id)sender;
 -(IBAction)topSegmentChanged:(id)sender;

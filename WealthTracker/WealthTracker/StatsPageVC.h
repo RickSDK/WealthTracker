@@ -23,11 +23,15 @@
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UIButton *editDateButton;
 @property (nonatomic, strong) IBOutlet UIButton *addItemButton;
+@property (nonatomic, strong) IBOutlet UIButton *purchaseTypeButton;
+@property (nonatomic, strong) IBOutlet UILabel *purchaseTypeLabel;
+
 @property (nonatomic, strong) IBOutlet UITextField *amountTextField;
 
 
 @property (nonatomic) float totalSpent;
 @property (nonatomic) int selectedRecord;
+@property (nonatomic) int paymentType;
 @property (nonatomic) BOOL editingFlg;
 
 
@@ -36,5 +40,6 @@
 -(IBAction)deleteButtonPressed:(id)sender;
 -(IBAction)editDateButtonPressed:(id)sender;
 -(IBAction)addItemButtonPressed:(id)sender;
+-(IBAction)paymentTypeButtonPressed:(id)sender;
 
 @end

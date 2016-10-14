@@ -132,6 +132,7 @@
 	label.text = [ObjectiveCScripts convertNumberToMoneyString:value];
 	[self displayAmountsForSlider:self.selectedSlider value:value];
 	self.popupView.hidden=YES;
+	[self.amountTextField resignFirstResponder];
 }
 
 

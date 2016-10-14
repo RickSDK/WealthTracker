@@ -74,7 +74,7 @@
 					  [NSString fontAwesomeIconStringForEnum:FAMoney],
 					  [NSString fontAwesomeIconStringForEnum:FAautomobile],
 					  [NSString fontAwesomeIconStringForEnum:FAHome],
-					  [NSString fontAwesomeIconStringForEnum:FAbank],
+					  [NSString fontAwesomeIconStringForEnum:FAlineChart],
 					  nil];
 	cell.textLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20.f];
 	cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", [icons objectAtIndex:indexPath.row], [self.menuItems objectAtIndex:indexPath.row]];

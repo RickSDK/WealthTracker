@@ -79,10 +79,6 @@
 			amount = [ObjectiveCScripts amountForItem:rowId month:self.displayMonth year:self.displayYear field:field context:self.managedObjectContext type:self.type];
 		
 		if(amount!=0) {
-			[self.fieldNamesArray addObject:[mo valueForKey:@"name"]];
-			[self.fieldValuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:amount]];
-			[self.fieldColorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:amount lightFlg:NO]];
-			
 			GraphObject *graphObject = [[GraphObject alloc] init];
 			graphObject.name = [mo valueForKey:@"name"];
 			graphObject.amount=amount;
@@ -91,6 +87,16 @@
 			total+=amount;
 		}
 	}
+	
+	NSArray *sortedArray = [self.dataArray sortedArrayUsingSelector:@selector(compare:)];
+	self.dataArray = [NSMutableArray arrayWithArray:sortedArray];
+	
+	for(GraphObject *graphObject in self.dataArray) {
+		[self.fieldNamesArray addObject:graphObject.name];
+		[self.fieldValuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:graphObject.amount]];
+		[self.fieldColorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:graphObject.amount lightFlg:NO]];
+	}
+
 	[self.fieldNamesArray addObject:@"Total"];
 	[self.fieldValuesArray addObject:[ObjectiveCScripts convertNumberToMoneyString:total]];
 	[self.fieldColorsArray addObject:[ObjectiveCScripts colorBasedOnNumber:total lightFlg:NO]];

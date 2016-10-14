@@ -26,12 +26,24 @@
 	
 	[self loadData];
 	
+	self.paymentType=2;
+	[ObjectiveCScripts fontAwesomeButton:self.purchaseTypeButton iconType:self.paymentType size:20];
+	
 
 	self.addItemButton.layer.borderColor = [UIColor grayColor].CGColor;
 	self.addItemButton.layer.borderWidth = 1.;
 	self.deleteButton.backgroundColor = [UIColor redColor];
 	self.editDateButton.backgroundColor = [UIColor grayColor];
 	
+}
+
+-(IBAction)paymentTypeButtonPressed:(id)sender {
+	self.paymentType++;
+	if(self.paymentType>4)
+		self.paymentType=2;
+	[ObjectiveCScripts fontAwesomeButton:self.purchaseTypeButton iconType:self.paymentType size:20];
+	NSArray *list = [NSArray arrayWithObjects:@"Cash Purchase", @"Credit Card", @"Debit Purchase", nil];
+	self.purchaseTypeLabel.text = [list objectAtIndex:self.paymentType-2];
 }
 
 -(void)loadData {
@@ -119,6 +131,8 @@
 	self.popupView.hidden=NO;
 	self.deleteButton.hidden=YES;
 	self.editDateButton.hidden=YES;
+	self.purchaseTypeButton.hidden=NO;
+	self.purchaseTypeLabel.hidden=NO;
 	self.editingFlg=NO;
 	self.nameTextField.text = [NSString stringWithFormat:@"%@ Purchase", [ObjectiveCScripts getUserDefaultValue:[NSString stringWithFormat:@"button%dName", self.bucket]]];
 	self.amountTextField.text = @"";
@@ -160,8 +174,32 @@
 	[mo setValue:self.nameTextField.text forKey:@"name"];
 	[self.managedObjectContext save:nil];
 
-	[self updateBankAccountBySubtracting:newAmount-oldValue];
+//	if(self.paymentType==3) // cc purchase
+//		[self updateCreditCard:newAmount-oldValue];
+	if(self.paymentType==4) // debit purchase
+		[self updateBankAccountBySubtracting:newAmount-oldValue];
+	
 	[self loadData];
+}
+
+-(void)updateCreditCard:(float)amount {
+	NSManagedObject *mo = nil;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", @"Credit Card"];
+	NSArray *items = [CoreDataLib selectRowsFromEntity:@"CASH_FLOW" predicate:predicate sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
+	if(items.count>0) {
+		mo = [items objectAtIndex:0];
+		float oldAmount = [[mo valueForKey:@"amount"] floatValue];
+		[mo setValue:[NSNumber numberWithFloat:oldAmount+amount] forKey:@"amount"];
+	} else {
+		mo = [NSEntityDescription insertNewObjectForEntityForName:@"CASH_FLOW" inManagedObjectContext:self.managedObjectContext];
+		[mo setValue:@"Credit Card" forKey:@"name"];
+		[mo setValue:[NSNumber numberWithFloat:amount] forKey:@"amount"];
+		[mo setValue:[NSNumber numberWithInt:6] forKey:@"type"]; // credit card
+		[mo setValue:[NSNumber numberWithInt:30] forKey:@"statement_day"];
+	}
+
+	[self.managedObjectContext save:nil];
+	
 }
 
 -(void)updateBankAccountBySubtracting:(float)value {
@@ -243,6 +281,8 @@
 	self.editDateButton.enabled=YES;
 	self.deleteButton.hidden=NO;
 	self.editDateButton.hidden=NO;
+	self.purchaseTypeButton.hidden=YES;
+	self.purchaseTypeLabel.hidden=YES;
 	self.editingFlg=YES;
 
 	PurchaseObj *item = [self.itemsArray objectAtIndex:indexPath.row];

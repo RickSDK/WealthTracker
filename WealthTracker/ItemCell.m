@@ -141,6 +141,7 @@
 	[ObjectiveCScripts displayNetChangeLabel:cell.equityChangeLabel amount:obj.equityChange lightFlg:NO revFlg:NO];
 	
 	cell.valStatusImage.image = [ObjectiveCScripts imageForStatus:obj.status];
+	cell.statement_dayLabel.textColor =  (obj.status==2)?[UIColor whiteColor]:[UIColor blackColor];
 	
 	if([obj.statement_day intValue]==0) {
 		cell.statement_dayLabel.text=@"";
