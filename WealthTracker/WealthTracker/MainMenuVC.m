@@ -27,6 +27,7 @@
 #import "BudgetVC.h"
 #import "PortfolioVC.h"
 #import "AssetsDebtsVC.h"
+#import "UsersVC.h"
 
 @interface MainMenuVC ()
 
@@ -66,6 +67,11 @@
 	[self.b2bButton setTitle:[NSString stringWithFormat:@"%@ Broke to Baron", [NSString fontAwesomeIconStringForEnum:FAStar]] forState:UIControlStateNormal];
 	[self.b2bButton setBackgroundColor:[ObjectiveCScripts lightColor]];
 	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	
+	self.usersButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:14.f];
+	[self.usersButton setTitle:[NSString stringWithFormat:@"%@ Users", [NSString fontAwesomeIconStringForEnum:FAUsers]] forState:UIControlStateNormal];
+	self.usersButton.backgroundColor = [UIColor orangeColor];
+	
 	
 	self.expiredFlg = [self checkForExpiredFlg];
 	
@@ -290,7 +296,7 @@
 		return NO;
 	}
 	int secondsSinceInstall = [[NSDate date] timeIntervalSinceDate:[installTime convertStringToDateWithFormat:nil]];
-	if(secondsSinceInstall>(60*60*24*30*3)) // 3 month's old
+	if(secondsSinceInstall>(60*60*24*30*12)) // 12 month's old
 		return YES;
 	else
 		return NO;
@@ -410,6 +416,12 @@
 	}
 
 	AnalysisVC *detailViewController = [[AnalysisVC alloc] initWithNibName:@"AnalysisVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)usersButtonClicked:(id)sender {
+	UsersVC *detailViewController = [[UsersVC alloc] initWithNibName:@"UsersVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

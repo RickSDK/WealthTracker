@@ -20,8 +20,10 @@ static NSInteger FONT_SIZE			= 14;
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
 		float width=self.frame.size.width;
+		
+		int descHeight = [AnalysisCell descHeightForDesc:self.desc];
 
-		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, width-4, self.dataArray.count*20+35)];
+		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight)];
 		self.bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
 		self.bgView.layer.cornerRadius = 8.0;
 		self.bgView.layer.masksToBounds = YES;
@@ -89,18 +91,39 @@ static NSInteger FONT_SIZE			= 14;
 			
 			yPos+=20;
 		}
+		
+		self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, yPos, 310, descHeight)];
+		self.descriptionLabel.font = [UIFont systemFontOfSize:FONT_SIZE];
+		self.descriptionLabel.adjustsFontSizeToFitWidth = NO;
+		self.descriptionLabel.numberOfLines = 0;
+		self.descriptionLabel.text = self.desc;
+		self.descriptionLabel.textAlignment = NSTextAlignmentLeft;
+		self.descriptionLabel.textColor = [UIColor blackColor];
+		self.descriptionLabel.backgroundColor = [UIColor colorWithWhite:.93 alpha:1];
+		[self.contentView addSubview:self.descriptionLabel];
+		
 		self.backgroundColor = [UIColor grayColor];
 
 	}
 	return self;
 }
 
-+ (CGFloat)cellHeightForData:(NSArray *)dataArray {
-	return 38+dataArray.count*20;
++(CGFloat)descHeightForDesc:(NSString *)desc {
+	CGSize labelSize = [desc sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE]
+								constrainedToSize:CGSizeMake(310, 1000)
+									lineBreakMode:NSLineBreakByWordWrapping];
+	
+	CGFloat labelHeight = labelSize.height;
+	return labelHeight+8;
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(NSArray *)data {
++ (CGFloat)cellHeightForData:(NSArray *)dataArray desc:(NSString *)desc  {
+	return 38+dataArray.count*20+[self descHeightForDesc:desc];
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(NSArray *)data desc:(NSString *)desc {
 	self.dataArray = data;
+	self.desc = desc;
 	return [self initWithStyle:style reuseIdentifier:reuseIdentifier];
 }
 

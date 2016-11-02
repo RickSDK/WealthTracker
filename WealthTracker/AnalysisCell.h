@@ -12,10 +12,12 @@
 @interface AnalysisCell : UITableViewCell
 
 @property (nonatomic, retain) UILabel *nameLabel;
+@property (nonatomic, retain) UILabel *descriptionLabel;
 @property (nonatomic, retain) UIView *bgView;
 @property (nonatomic, retain) NSArray *dataArray;
+@property (nonatomic, retain) NSString *desc;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(NSArray *)data;
-+ (CGFloat)cellHeightForData:(NSArray *)dataArray;
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(NSArray *)data desc:(NSString *)desc;
++ (CGFloat)cellHeightForData:(NSArray *)dataArray desc:(NSString *)desc;
 
 @end

@@ -32,6 +32,7 @@
 @property (nonatomic, strong) IBOutlet UITextField *duesTextField;
 @property (nonatomic, strong) IBOutlet UILabel *interestRateLabel;
 @property (nonatomic, strong) IBOutlet CustomSegment *typeSegment;
+@property (nonatomic, strong) IBOutlet UISwitch *showAllSwitch;
 
 @property (nonatomic, strong) ItemObject *itemObject;
 
@@ -50,5 +51,6 @@
 -(IBAction)keyboardButtonClicked:(id)sender;
 -(IBAction)viewDetailsButtonClicked:(id)sender;
 -(IBAction)typeSegmentChanged:(id)sender;
+-(IBAction)showAllSwitchChanged:(id)sender;
 
 @end

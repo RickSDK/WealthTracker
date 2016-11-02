@@ -23,8 +23,8 @@
 }
 
 +(BOOL)isUpgraded {
-//	return ([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0);
-	return YES;
+	return ([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length>0);
+//	return YES;
 }
 
 +(NSString *)getProjectDisplayVersion
@@ -506,18 +506,14 @@
 
 	
 	obj.status = 0; //-- green
-	if([obj.statement_day intValue]>0) {
-		if([obj.statement_day intValue]>nowDay)
-			obj.status=1; //--yellow
-		else if (![self isStatusGreen:obj])
-			obj.status=2;
+	if(obj.value>0 || obj.balance>0) {
+		if([obj.statement_day intValue]>0) {
+			if([obj.statement_day intValue]>nowDay)
+				obj.status=1; //--yellow
+			else if (![self isStatusGreen:obj])
+				obj.status=2;
+		}
 	}
-//	if([obj.statement_day intValue]==0) {
-//		obj.status=0; // emergency fund
-//		obj.val_confirm_flg=YES;
-//		obj.bal_confirm_flg=YES;
-//	}
-//	NSLog(@"+++Here!: %@ %@ %@ [%d]", obj.name, obj.bal_confirm_flg?@"Y":@"N", obj.val_confirm_flg?@"Y":@"N", obj.status);
 
 	return obj;
 }
@@ -1020,13 +1016,17 @@
 	int percentComplete = 0;
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:context];
-		totalRecords++;
-		if(obj.status==0)
-			completeRecords++;
+		if(obj.value>0 || obj.balance>0) {
+			totalRecords++;
+			if(obj.status==0)
+				completeRecords++;
+		}
 	}
 	if(totalRecords>0)
 		percentComplete = completeRecords*100/totalRecords;
-	
+//	NSLog(@"totalRecords: %d", totalRecords);
+//	NSLog(@"completeRecords: %d", completeRecords);
+//	NSLog(@"percentComplete: %d", percentComplete);
 	return percentComplete;
 }
 

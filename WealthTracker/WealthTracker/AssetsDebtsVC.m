@@ -33,6 +33,7 @@
 	self.subType=0;
 	[self displayButtons];
 
+	self.showAllSwitch.on=NO;
 	
 	
 	if(self.filterType==2 && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
@@ -137,32 +138,32 @@
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"type" mOC:self.managedObjectContext ascendingFlg:NO];
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-		
-		BOOL isAsset = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Asset" isEqualToString:obj.type]);
-		BOOL isDebt = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Debt" isEqualToString:obj.type]);
-		if(self.filterType==0)
-			[self.itemsArray addObject:obj];
-		else if(self.filterType==1 && isAsset)
-			[self.itemsArray addObject:obj];
-		else if(self.filterType==2 && isDebt)
-			[self.itemsArray addObject:obj];
-		
-		double amount = (self.filterType==1)?obj.value:obj.balance;
-		if(self.filterType==0)
-			amount=obj.equity;
-		if(self.topSegment.selectedSegmentIndex==1) {
-			amount = (self.filterType==1)?obj.valueChange:obj.balanceChange;
+		if(obj.value>0 || obj.balance>0 || self.showAllSwitch.on || obj.status>0) {
+			BOOL isAsset = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Asset" isEqualToString:obj.type]);
+			BOOL isDebt = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Debt" isEqualToString:obj.type]);
 			if(self.filterType==0)
-				amount=obj.equityChange;
+				[self.itemsArray addObject:obj];
+			else if(self.filterType==1 && isAsset)
+				[self.itemsArray addObject:obj];
+			else if(self.filterType==2 && isDebt)
+				[self.itemsArray addObject:obj];
+			
+			double amount = (self.filterType==1)?obj.value:obj.balance;
+			if(self.filterType==0)
+				amount=obj.equity;
+			if(self.topSegment.selectedSegmentIndex==1) {
+				amount = (self.filterType==1)?obj.valueChange:obj.balanceChange;
+				if(self.filterType==0)
+					amount=obj.equityChange;
+			}
+			
+			self.totalAmount+=amount;
+			
+			GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO];
+			
+			if(amount != 0)
+				[self.graphObjects addObject:gObj];
 		}
-		
-		self.totalAmount+=amount;
-		
-		GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO];
-
-		if(amount != 0)
-			[self.graphObjects addObject:gObj];
-		
 	}
 	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:self.filterType==2];
 	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
@@ -463,6 +464,10 @@
 	
 	[self setupData];
 	
+}
+
+-(IBAction)showAllSwitchChanged:(id)sender {
+	[self setupData];
 }
 
 -(void)initialyzeDatabaseRecord:(NSManagedObject *)record {

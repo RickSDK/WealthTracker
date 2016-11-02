@@ -355,10 +355,12 @@
 	  int debtAtEndOfLastYear = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth]];
 	  int debtAt2YearsAgo = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth-12]];
 	  int debtAt3YearsAgo = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:self.monthOffset-self.displayMonth-24]];
+	  int debt36MoAgo = [self debtForMonth:[ObjectiveCScripts yearMonthStringNowPlusMonths:-36]];
 	  
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear-2] amountNow:debtAt2YearsAgo amountThen:debtAt3YearsAgo revFlg:YES];
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear-1] amountNow:debtAtEndOfLastYear amountThen:debtAt2YearsAgo revFlg:YES];
 	  [self addNetPercentChangeLabel:[NSString stringWithFormat:@"Debt Change in %d", self.displayYear] amountNow:debtToday amountThen:debtAtEndOfLastYear revFlg:YES];
+	  [self addNetPercentChangeLabel:@"Debt change past 36 mo" amountNow:debtToday amountThen:debt36MoAgo revFlg:YES];
 
 	  NSString *debtString = [self debtAnalysisWithDetbToAssets:detbToAssets badDebtToIncome:badDebtToIncome interestToIncome:interestToIncome];
 	  [self debtAnalysisMonthlyWithReduction:reduction allDebt30:allDebt30 classADebt:totalValueObj.badDebt classAReduction:classAReduction debtThisYear:debtToday-debtAtEndOfLastYear debtString:debtString];
@@ -538,7 +540,14 @@
 	double realEstateEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:1];
 	double autoEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:2];
 	double debtEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:3];
-	double assetEquity = networth-realEstateEquity-autoEquity-debtEquity;
+	double assetEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:7];
+	debtEquity = networth-realEstateEquity-autoEquity-assetEquity;
+	NSLog(@"+++networth: %f", networth);
+	NSLog(@"+++realEstateEquity: %f", realEstateEquity);
+	NSLog(@"+++autoEquity: %f", autoEquity);
+	NSLog(@"+++debtEquity: %f", debtEquity);
+	NSLog(@"+++assetEquity: %f", assetEquity);
+//	NSLog(@"+++investEquity: %f", investEquity);
 
 	int max=realEstateEquity;
 	NSString *maxString = @"Real Estate equity";
@@ -900,7 +909,6 @@
 -(NSString *)percentComplateString {
 	int percentComplete = [self percentComplete];
 	NSString *line0=@"";
-	NSLog(@"+++percentComplete: %d", percentComplete);
 	if(percentComplete==0)
 		line0 = @"Note: You have not started updating your portfolio for this month, so the following analysis may not be relevant.\n\n";
 	else if(percentComplete<75)

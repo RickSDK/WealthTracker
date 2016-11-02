@@ -17,6 +17,7 @@
 @property (nonatomic, strong) IBOutlet UIView *ButtonsView;
 
 @property (nonatomic, strong) IBOutlet NSMutableArray *dataArray;
+@property (nonatomic, strong) IBOutlet NSMutableArray *descArray;
 
 @property (nonatomic, strong) IBOutlet UIImageView *debt1ImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *debt2ImageView;
@@ -34,6 +35,13 @@
 
 @property (nonatomic, strong) IBOutlet UILabel *currentStepLabel;
 @property (nonatomic, strong) IBOutlet UILabel *advisorLabel;
+@property (nonatomic) double homeEquityThisYear;
+@property (nonatomic) double homeEquityThisMonth;
+@property (nonatomic) double totalEquity;
+@property (nonatomic) double totalEquityThisMonth;
+@property (nonatomic) double totalConsumerDebt;
+@property (nonatomic) double totalDebt;
+@property (nonatomic) double debtThisMonth;
 
 -(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)detailsButtonClicked:(id)sender;

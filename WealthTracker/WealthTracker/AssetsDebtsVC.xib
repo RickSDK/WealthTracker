@@ -24,6 +24,7 @@
                 <outlet property="nameTextField" destination="maH-oB-34T" id="MF0-Ru-QFl"/>
                 <outlet property="paymentTextField" destination="va8-d5-4QE" id="hfs-DB-fmW"/>
                 <outlet property="popupView" destination="03p-5f-OZL" id="VWT-ZD-tDf"/>
+                <outlet property="showAllSwitch" destination="ljD-jL-7MK" id="PzT-9a-ysD"/>
                 <outlet property="subTypeButton" destination="cgR-A8-E3R" id="1Qx-qZ-bBH"/>
                 <outlet property="submitButton" destination="pcq-z0-PEJ" id="MzS-p2-vFP"/>
                 <outlet property="titleLabel" destination="iEj-iA-EyF" id="V4V-ae-pQg"/>
@@ -80,28 +81,39 @@
                     <rect key="frame" x="0.0" y="454" width="320" height="50"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ATN-At-gwe" customClass="CustomButton">
-                            <rect key="frame" x="22" y="10" width="166" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Breakdown">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="breakdownButtonClicked:" destination="-1" eventType="touchDown" id="0cO-7k-i3V"/>
-                            </connections>
-                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tTf-LP-aie">
-                            <rect key="frame" x="212" y="2" width="100" height="21"/>
+                            <rect key="frame" x="212.00000026702878" y="2" width="100" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="Jb8-9L-Jxw">
-                            <rect key="frame" x="206" y="21" width="106" height="21"/>
+                            <rect key="frame" x="206.00000026702878" y="21" width="106" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="ljD-jL-7MK">
+                            <rect key="frame" x="8" y="11" width="51" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <connections>
+                                <action selector="showAllSwitchChanged:" destination="-1" eventType="valueChanged" id="Z9F-8d-2Mx"/>
+                            </connections>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show All" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xXN-J1-H3L">
+                            <rect key="frame" x="65" y="3" width="93" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defaults to hide items with 0 value &amp; 0 balance" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OfC-E8-hIT">
+                            <rect key="frame" x="65" y="21" width="139" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>

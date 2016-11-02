@@ -55,6 +55,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *chartsButton;
 @property (nonatomic, strong) IBOutlet UIButton *analysisButton;
 @property (nonatomic, strong) IBOutlet UIButton *okButton;
+@property (nonatomic, strong) IBOutlet UIButton *usersButton;
 @property (nonatomic, strong) IBOutlet UILabel *monthNameLabel;
 @property (nonatomic, strong) IBOutlet UILabel *monthDayLabel;
 
@@ -87,5 +88,6 @@
 -(IBAction)okButtonClicked:(id)sender;
 -(IBAction)segmentClicked:(id)sender;
 -(IBAction)myPlanButtonClicked:(id)sender;
+-(IBAction)usersButtonClicked:(id)sender;
 
 @end
