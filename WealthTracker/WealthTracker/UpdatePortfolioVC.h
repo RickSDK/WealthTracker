@@ -33,6 +33,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *yearUpButton;
 @property (nonatomic, strong) IBOutlet UIButton *monthDownButton;
 @property (nonatomic, strong) IBOutlet UIButton *yearDownButton;
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel;
 
 @property (nonatomic, strong) UIButton *updateValueButton;
 @property (nonatomic, strong) UIButton *updateBalanceButton;

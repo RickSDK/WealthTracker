@@ -37,7 +37,7 @@
 	
 	
 	if(self.filterType==2 && [ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
-		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"Enter all loans and debts"];
+		[ObjectiveCScripts showAlertPopup:@"Enter Debts" message:@"If you have any loans or credit card debts, enter them here. Then press 'Back' button."];
 		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"DebtsCheckFlg"];
 	}
 }
@@ -63,7 +63,7 @@
 -(void)displayButtons {
 	[self.iconButton setTitle:[ObjectiveCScripts faIconOfType:self.type] forState:UIControlStateNormal];
 	[self.subTypeButton setTitle:[self subTypeStringForSubType:self.subType type:self.type] forState:UIControlStateNormal];
-	self.typeLabel.text = [ObjectiveCScripts typeNameForType:self.type];
+	self.typeLabel.text = [ObjectiveCScripts typeNameForType2:self.type];
 	self.valueTextField.hidden=(self.type==3);
 	self.balanceTextField.hidden=(self.type==4);
 	self.interestTextField.hidden=(self.type==4);
@@ -139,13 +139,11 @@
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
 		if(obj.value>0 || obj.balance>0 || self.showAllSwitch.on || obj.status>0) {
-			BOOL isAsset = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Asset" isEqualToString:obj.type]);
-			BOOL isDebt = ([@"Real Estate" isEqualToString:obj.type] || [@"Vehicle" isEqualToString:obj.type] || [@"Debt" isEqualToString:obj.type]);
 			if(self.filterType==0)
 				[self.itemsArray addObject:obj];
-			else if(self.filterType==1 && isAsset)
+			else if(self.filterType==1 && obj.value>0)
 				[self.itemsArray addObject:obj];
-			else if(self.filterType==2 && isDebt)
+			else if(self.filterType==2 && obj.balance>0)
 				[self.itemsArray addObject:obj];
 			
 			double amount = (self.filterType==1)?obj.value:obj.balance;
@@ -168,8 +166,15 @@
 	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:self.filterType==2];
 	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
 	self.messageLabel.hidden=self.itemsArray.count>0;
+	self.typeSegment.enabled=self.itemsArray.count>0;
+	self.topSegment.enabled=self.itemsArray.count>0;
 	if(self.filterType==2)
 		self.messageLabel.text = @"Press the '+' button above to enter debts";
+	
+	if([ObjectiveCScripts getUserDefaultValue:@"DebtsCheckFlg"].length==0) {
+		self.typeSegment.enabled=NO;
+		self.topSegment.enabled=NO;
+	}
 	[self.mainTableView reloadData];
 }
 
@@ -387,13 +392,23 @@
 
 
 -(IBAction)submitButtonClicked:(id)sender {
+	[self resignKeyboards];
 	if(self.nameTextField.text.length==0) {
 		[ObjectiveCScripts showAlertPopup:@"Enter a name" message:@""];
 		return;
 	}
+	int balance = [self.balanceTextField.text intValue];
+	int value = [self.valueTextField.text intValue];
+	if(balance==0 && (self.type==3)) {
+		[ObjectiveCScripts showAlertPopup:@"Whoa!" message:@"Be sure to entire a current balance."];
+		return;
+	}
+	if(value==0 && self.type!=3) {
+		[ObjectiveCScripts showAlertPopup:@"Whoa!" message:@"Be sure to entire the current value of this asset."];
+		return;
+	}
 	
 	self.popupView.hidden=YES;
-	[self resignKeyboards];
 	
 	if(self.newItemFlg) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New or Existing?"
@@ -430,6 +445,12 @@
 	self.submitButton.enabled=YES;
 	if(self.type>4)
 		self.type=1;
+	
+	if(self.filterType==1 && self.type==3)
+		self.type=4;
+	if(self.filterType==2)
+		self.type=3;
+	
 	self.subType=0;
 	[self displayButtons];
 }
@@ -492,7 +513,7 @@
 	[types addObject:@"int"];
 	
 	[keys addObject:@"type"];
-	[values addObject:[ObjectiveCScripts typeNameForType:self.type]];
+	[values addObject:[ObjectiveCScripts typeNameForType2:self.type]];
 	[types addObject:@"text"];
 	
 	[keys addObject:@"sub_type"];

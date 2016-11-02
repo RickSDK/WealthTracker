@@ -48,6 +48,14 @@
 	self.popupView.hidden=YES;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	[textField resignFirstResponder];
+	return YES;
+}
+
+
+
 -(IBAction)popupButtonClicked:(id)sender {
 	self.popupView.hidden=NO;
 }

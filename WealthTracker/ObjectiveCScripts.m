@@ -345,6 +345,20 @@
 	return [types objectAtIndex:type];
 }
 
++(NSString *)typeNameForType2:(int)type {
+	NSArray *types = [NSArray arrayWithObjects:
+					  @"Profile",
+					  @"Real Estate",
+					  @"Vehicle",
+					  @"Debt",
+					  @"Asset",
+					  @"Interest",
+					  @"N/A",
+					  nil];
+	return [types objectAtIndex:type];
+}
+
+
 +(NSArray *)typeList {
 	return [NSArray arrayWithObjects:
 			@"Profile",

@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	NSLog(@"UpdatePortfolioVC");
+//	NSLog(@"UpdatePortfolioVC");
 	self.valuesArray = [[NSMutableArray alloc] init];
 	self.namesArray = [[NSMutableArray alloc] init];
 	self.colorsArray = [[NSMutableArray alloc] init];
@@ -43,7 +43,8 @@
 	self.displayYear = self.nowYear;
 	self.displayMonth = self.nowMonth;
 
-	[self setTitle:self.itemObject.name];
+	[self setTitle:@"Update Portfolio"];
+	self.nameLabel.text = self.itemObject.name;
 	
 	[ObjectiveCScripts fontAwesomeButton:self.monthDownButton iconType:0 size:14];
 	[ObjectiveCScripts fontAwesomeButton:self.monthUpButton iconType:1 size:14];

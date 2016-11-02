@@ -66,6 +66,7 @@
 +(int)badgeStatusForAppWithContext:(NSManagedObjectContext *)context label:(UILabel *)label;
 +(NSString *)fieldTypeNameForFieldType:(int)fieldType;
 +(NSString *)typeLabelForType:(int)type fieldType:(int)fieldType;
++(NSString *)typeNameForType2:(int)type;
 +(int)calculatePaydownRate:(double)balToday balLastYear:(double)balLastYear bal30:(double)bal30 bal90:(double)bal90;
 +(UIImage *)imageForStatus:(int)status;
 +(int)nowYear;
