@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSString *altStr;
 @property (nonatomic, strong) NSMutableArray *graphObjects;
 @property (nonatomic, strong) IBOutlet UIImageView *chartImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *chartImageView2;
 @property (nonatomic, strong) IBOutlet CustomSegment *mainSegmentControl;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;
 @property (nonatomic, strong) IBOutlet UILabel *monthLabel;

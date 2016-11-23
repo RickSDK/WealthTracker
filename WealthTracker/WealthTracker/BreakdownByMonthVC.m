@@ -120,6 +120,7 @@
 	self.nextYearButton.enabled = !(self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth);
 	
 	[self.dataArray2 removeAllObjects];
+	NSMutableArray *chart2Objects = [[NSMutableArray alloc] init];
 
 	NSString *field = @""; // <-- equity
 	if(self.topSegmentControl.selectedSegmentIndex==0) {
@@ -147,9 +148,12 @@
 
 		double total = [ObjectiveCScripts amountForItem:self.row_id month:month year:year field:field context:self.managedObjectContext type:self.type];
 		[self.dataArray2 addObject:[NSString stringWithFormat:@"%f|%f", total, amount]];
+		[chart2Objects addObject:[GraphObject graphObjectWithName:[ObjectiveCScripts monthNameForNum:month-1] amount:total rowId:1 reverseColorFlg:NO currentMonthFlg:NO]];
 		
 	}
-	
+
+	self.chartImageView2.image = [GraphLib graphBarsWithItems:chart2Objects];
+
 	if(self.changeSegmentControl.selectedSegmentIndex==0)
 		self.graphTitleLabel.text = [NSString stringWithFormat:@"%@ Totals by Month", [ObjectiveCScripts fieldTypeNameForFieldType:self.type]];
 	else
@@ -189,7 +193,8 @@
 		if(cell==nil)
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:self.topGraphImageView.image];
+//		cell.backgroundView = [[UIImageView alloc] initWithImage:self.topGraphImageView.image];
+		cell.backgroundView	= [ObjectiveCScripts imageViewForWidth:self.view.frame.size.width chart1:self.topGraphImageView.image chart2:self.chartImageView2.image switchFlg:self.topSegment.selectedSegmentIndex==1];
 		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -357,7 +362,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
-		return [ObjectiveCScripts chartHeightForSize:190];
+		return 190;
+//		return [ObjectiveCScripts chartHeightForSize:190];
 	else
 		return 34;
 }

@@ -91,5 +91,6 @@
 +(NSString *)titleForType:(int)type;
 +(double)emergencyFundWithContext:(NSManagedObjectContext *)context;
 +(int)percentCompleteWithContext:(NSManagedObjectContext *)context;
++(UIImageView *)imageViewForWidth:(float)width chart1:(UIImage *)chart1 chart2:(UIImage *)chart2 switchFlg:(BOOL)switchFlg;
 
 @end

@@ -88,7 +88,7 @@
 		else if(netWorthChange>=0)
 			return [NSString stringWithFormat:@"You had a positive month, seeing your net worth increase by %@, bringing you up to %@. That's a %.1f%% annual rate of increase.", [ObjectiveCScripts convertNumberToMoneyString:netWorthChange], [ObjectiveCScripts convertNumberToMoneyString:self.totalEquity], percentChange*12];
 		else
-			return [NSString stringWithFormat:@"Unfortunately you had a negative month, seeing your net worth decrease by %@, bringing you down to %@. That's a %.1f%% drop in net worth.", [ObjectiveCScripts convertNumberToMoneyString:netWorthChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalEquity], percentChange];
+			return [NSString stringWithFormat:@"Unfortunately you had a negative month, seeing your net worth decrease by %@, bringing you down to %@. That's a %.1f%% drop in net worth.", [ObjectiveCScripts convertNumberToMoneyString:netWorthChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalEquity], percentChange*-1];
 	} else {
 		double averageAmount = [ObjectiveCScripts averageNetWorth:self.managedObjectContext];
 		double idealAmount = [ObjectiveCScripts idealNetWorth:self.managedObjectContext];
@@ -115,9 +115,15 @@
 	double debtChange = [ObjectiveCScripts changedForItem:0 month:self.nowMonth year:self.nowYear field:@"balance_owed" context:self.managedObjectContext numMonths:1 type:0];
 	if(percent>=100) {
 		if(self.totalConsumerDebt>0) {
-			return [NSString stringWithFormat:@"You were able to pay off %@ of debt this month, leaving you with %@ remaining. Your goal should be to pay that down as quickly as possible.", [ObjectiveCScripts convertNumberToMoneyString:debtChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
+			if(debtChange>=0)
+				return [NSString stringWithFormat:@"Things are moving in the wrong direction this month as you added %@ of debt, bringing your total up to %@. Your goal should be to pay that down as quickly as possible.", [ObjectiveCScripts convertNumberToMoneyString:debtChange], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
+			else
+				return [NSString stringWithFormat:@"You were able to pay off %@ of debt this month, leaving you with %@ remaining. Your goal should be to pay that down as quickly as possible.", [ObjectiveCScripts convertNumberToMoneyString:debtChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
 		} else if(self.totalDebt>0) {
-			return [NSString stringWithFormat:@"You were able to pay off %@ of debt this month, leaving you with %@ housing debt remaining. Your consumer debt is now paid off leaving you just to focus on the real estate debt.", [ObjectiveCScripts convertNumberToMoneyString:debtChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
+			if(debtChange>=0)
+				return [NSString stringWithFormat:@"Unfortunately you added %@ of debt this month, bringing your total up to %@. Your goal should be to pay that down as quickly as possible.", [ObjectiveCScripts convertNumberToMoneyString:debtChange], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
+			else
+				return [NSString stringWithFormat:@"You were able to pay off %@ of debt this month, leaving you with %@ housing debt remaining. Your consumer debt is now paid off leaving you just to focus on the real estate debt.", [ObjectiveCScripts convertNumberToMoneyString:debtChange*-1], [ObjectiveCScripts convertNumberToMoneyString:self.totalDebt]];
 		} else {
 			return @"Great job paying off your debt! You are now completely debt free! Continue working the Broke to Baron steps to get youself building wealth and setting yourself up for a great retirement.";
 		}

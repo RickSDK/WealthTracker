@@ -10,8 +10,12 @@
 #import "CoreDataLib.h"
 #import "ObjectiveCScripts.h"
 
-#define kInAppPurchaseProUpgradeProductId @"proVersion"
+// this one for WT
+//#define kInAppPurchaseProUpgradeProductId @"proVersion"
+// this one for B2B
 //#define kInAppPurchaseProUpgradeProductId @"B2BUpgrade"
+// this one for WW
+#define kInAppPurchaseProUpgradeProductId @"WWPro"
 
 @interface InAppPurchaseVC ()
 

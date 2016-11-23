@@ -28,6 +28,7 @@
 	
 	self.itemsArray = [[NSMutableArray alloc] init];
 	self.chartImageView = [[UIImageView alloc] init];
+	self.chartImageView2 = [[UIImageView alloc] init];
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.analysisStr = [[NSString alloc] init];
 	self.titleStr = [[NSString alloc] init];
@@ -53,6 +54,12 @@
 	[textField resignFirstResponder];
 	return YES;
 }
+
+-(void)viewDidLayoutSubviews {
+	[super viewDidLayoutSubviews];
+	[self.mainTableView reloadData];
+}
+
 
 
 

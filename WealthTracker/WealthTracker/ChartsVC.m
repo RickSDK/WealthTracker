@@ -131,8 +131,6 @@
 	if(segment==2)
 		cell.graphImageView.image =[GraphLib pieChartWithItems:chartValuesArray startDegree:0];
 	
-	
-	
 	if(displayYear==self.nowYear && displayMonth==self.nowMonth)
 		cell.nextYearButton.enabled=NO;
 	else
@@ -215,6 +213,7 @@
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 290;
 	return [ObjectiveCScripts chartHeightForSize:290];
 }
 

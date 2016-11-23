@@ -18,8 +18,9 @@
 
 
 +(NSString *)appName {
-	return @"Wealth Tracker";
+//	return @"Wealth Tracker";
 //	return @"Broke to Baron";
+	return @"Wealth Wizard";
 }
 
 +(BOOL)isUpgraded {
@@ -1043,6 +1044,25 @@
 //	NSLog(@"percentComplete: %d", percentComplete);
 	return percentComplete;
 }
+
++(UIImageView *)imageViewForWidth:(float)width chart1:(UIImage *)chart1 chart2:(UIImage *)chart2 switchFlg:(BOOL)switchFlg {
+	if(width>320) {
+		UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 190)];
+		bgView.backgroundColor = [UIColor orangeColor];
+		UIImageView *chart = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, width/2, 190)];
+		chart.image = chart1;
+		[bgView addSubview:chart];
+		UIImageView *chart2View = [[UIImageView alloc] initWithFrame:CGRectMake(width/2, 1, width/2, 190)];
+		chart2View.image = chart2;
+		[bgView addSubview:chart2View];
+		return bgView;
+	} else {
+		UIImageView *backgroundView = [[UIImageView alloc] initWithImage:switchFlg?chart2:chart1];
+		return backgroundView;
+	}
+}
+
+
 
 
 

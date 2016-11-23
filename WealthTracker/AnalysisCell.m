@@ -20,7 +20,7 @@ static NSInteger FONT_SIZE			= 14;
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
 		float width=self.frame.size.width;
-		
+//		NSLog(@"+++width: %f", width);
 		int descHeight = [AnalysisCell descHeightForDesc:self.desc];
 
 		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight)];
@@ -92,7 +92,7 @@ static NSInteger FONT_SIZE			= 14;
 			yPos+=20;
 		}
 		
-		self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, yPos, 310, descHeight)];
+		self.descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, yPos, width-10, descHeight)];
 		self.descriptionLabel.font = [UIFont systemFontOfSize:FONT_SIZE];
 		self.descriptionLabel.adjustsFontSizeToFitWidth = NO;
 		self.descriptionLabel.numberOfLines = 0;
@@ -129,7 +129,11 @@ static NSInteger FONT_SIZE			= 14;
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
+	
 //	float width=self.frame.size.width;
+//	int descHeight = [AnalysisCell descHeightForDesc:self.desc];
+//	self.bgView.frame = CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight);
+//	self.descriptionLabel.frame = CGRectMake(5, 30+self.dataArray.count*20, width-10, descHeight);
 }
 
 

@@ -37,6 +37,7 @@
 -(void)setupData {
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"statement_day" mOC:self.managedObjectContext ascendingFlg:YES];
 	[self.graphObjects removeAllObjects];
+	NSMutableArray *chart2Objects = [[NSMutableArray alloc] init];
 	float totalAmount=0;
 	float totalPrev=0;
 	float totalEquity=0;
@@ -77,6 +78,8 @@
 		if([@"Asset" isEqualToString:obj.type])
 			equity4 += thisEquity;
 
+//		double amountLeft = amountToday;
+		double amountRight = amountToday-prevAmount;
 		double thisAmount = (self.amountSegment.selectedSegmentIndex==0)?amountToday:amountToday-prevAmount;
 		totalAmount+=thisAmount;
 		totalPrev+=prevAmount;
@@ -87,6 +90,9 @@
 			graphObject.prevAmount = prevAmount;
 			graphObject.rowId = [obj.rowId intValue];
 			[self.graphObjects addObject:graphObject];
+			
+			[chart2Objects addObject:[GraphObject graphObjectWithName:obj.name amount:amountRight rowId:1 reverseColorFlg:NO currentMonthFlg:NO]];
+
 		}
 	}
 	[self.categoryItems removeAllObjects];
@@ -103,6 +109,7 @@
 		self.totalValueLabel.text = [NSString stringWithFormat:@"Value: %@, Equity: %@", [ObjectiveCScripts convertNumberToMoneyString:totalAmount], [ObjectiveCScripts convertNumberToMoneyString:totalEquity]];
 	
 	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
+	self.chartImageView2.image = [GraphLib graphBarsWithItems:chart2Objects];
 }
 
 -(MultiLineObj *)multiObjWithName:(NSString *)name amount:(double)amount {
@@ -137,7 +144,10 @@
 		if(indexPath.row==0) {
 			UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 			
-			cell.backgroundView = [[UIImageView alloc] initWithImage:self.chartImageView.image];
+//			cell.backgroundView = [[UIImageView alloc] initWithImage:self.chartImageView.image];
+			
+			cell.backgroundView	= [ObjectiveCScripts imageViewForWidth:self.view.frame.size.width chart1:self.chartImageView.image chart2:self.chartImageView2.image switchFlg:self.topSegment.selectedSegmentIndex==1];
+
 			cell.accessoryType= UITableViewCellAccessoryNone;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			return cell;
@@ -223,7 +233,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.row==0)
-		return 150;
+		return 190;
 	else if(indexPath.row==1)
 		return 18*self.graphObjects.count+20;
 	else

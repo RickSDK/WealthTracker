@@ -17,6 +17,7 @@
                 <outlet property="b2bButton" destination="LSa-lS-rh8" id="QkA-QO-Q1D"/>
                 <outlet property="botView" destination="xxk-67-dKc" id="zMc-UT-5xG"/>
                 <outlet property="budgetLabel" destination="QhE-1u-bvN" id="wvz-R1-8Z4"/>
+                <outlet property="chartImageView2" destination="79E-oA-mKh" id="mnO-LD-Eph"/>
                 <outlet property="chartLabel" destination="SyA-hj-Zol" id="bP4-D9-iBM"/>
                 <outlet property="chartSegmentControl" destination="tNg-Ke-h4U" id="fn7-Kb-Ggf"/>
                 <outlet property="chartsButton" destination="Z4i-hK-oSI" id="Z4F-I3-Lci"/>
@@ -24,6 +25,7 @@
                 <outlet property="debtNameLabel" destination="exy-eC-MiG" id="ugg-Ug-2mj"/>
                 <outlet property="debtsLabel" destination="O9R-Of-47H" id="in9-DL-B9J"/>
                 <outlet property="graphImageView" destination="wvL-NL-PcE" id="GEs-Zi-st5"/>
+                <outlet property="graphImageView2" destination="79E-oA-mKh" id="52r-Af-bxv"/>
                 <outlet property="itemCountLabel" destination="H1D-LZ-tEN" id="7oq-j9-hOF"/>
                 <outlet property="messageLabel" destination="ZAj-xP-Fnl" id="6GI-az-yYM"/>
                 <outlet property="messageView" destination="hQ7-IQ-DRk" id="AD4-eT-gyp"/>
@@ -59,7 +61,7 @@
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="wvL-NL-PcE">
                     <rect key="frame" x="0.0" y="144" width="320" height="200"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="ChartSegmentControl">
@@ -80,7 +82,7 @@
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nov" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="xnR-7s-evu">
                             <rect key="frame" x="279" y="-3" width="42" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -149,7 +151,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Budget Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QhE-1u-bvN">
-                            <rect key="frame" x="165.00000008627785" y="42" width="145" height="25"/>
+                            <rect key="frame" x="165" y="42" width="145.0000001096144" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -384,6 +386,10 @@
                     <rect key="frame" x="50" y="200" width="123" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-1024.png" id="79E-oA-mKh">
+                    <rect key="frame" x="80" y="144" width="240" height="200"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
@@ -393,6 +399,7 @@
         </view>
     </objects>
     <resources>
+        <image name="Icon-1024.png" width="1024" height="1024"/>
         <image name="blueArrowDown.png" width="189" height="267"/>
         <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="red.png" width="300" height="300"/>

@@ -572,12 +572,23 @@
 		if(cell==nil)
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear numYears:1]];
+//		cell.backgroundView = [[UIImageView alloc] initWithImage:[GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear numYears:1]];
 		
+		UIImage *image1 = [GraphLib plotItemChart:self.managedObjectContext type:[ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type] displayYear:self.displayYear item_id:[self.itemObject.rowId intValue] displayMonth:self.displayMonth startMonth:self.displayMonth startYear:self.displayYear numYears:1];
+		
+		BOOL reverseColorFlg=NO;
+		int type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
+		if(type==3)
+			reverseColorFlg=YES; // debt
+		NSArray *graphArray = [GraphLib barChartValuesLast6MonthsForItem:[self.itemObject.rowId intValue] month:self.displayMonth year:self.displayYear reverseColorFlg:reverseColorFlg type:type context:self.managedObjectContext fieldType:0 displayTotalFlg:NO];
+		UIImage *image2 = [GraphLib graphBarsWithItems:graphArray];
+		
+		cell.backgroundView	= [ObjectiveCScripts imageViewForWidth:self.view.frame.size.width chart1:image1 chart2:image2 switchFlg:NO];
+
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if(indexPath.section==1) {
+	} else if(self.view.frame.size.width<=320 && indexPath.section==1) {
 		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
@@ -636,32 +647,7 @@
 	[self scrollToHeight:0];
 	[self setupData];
 }
-/*
--(void)prevMonthButtonPressed {
-	self.displayMonth--;
-	if(self.displayMonth<=0) {
-		self.displayYear--;
-		self.displayMonth=12;
-	}
-	NSLog(@"+++monthOffset: %d", self.monthOffset);
-	self.monthOffset--;
-	NSLog(@"+++monthOffset: %d", self.monthOffset);
-	[self setupData];
-}
 
--(void)nextMonthButtonPressed {
-	 if (self.displayYear>=self.nowYear && self.displayMonth>=self.nowMonth)
-		 return;
-
-	self.displayMonth++;
-	if(self.displayMonth>=13) {
-		self.displayYear++;
-		self.displayMonth=1;
-	}
-	self.monthOffset++;
-	[self setupData];
-}
-*/
 -(BOOL)isCurrent {
 	return (self.displayYear==self.nowYear && self.displayMonth==self.nowMonth);
 }
@@ -739,7 +725,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 3;
+	return self.view.frame.size.width < 768?3:2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -815,8 +801,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(indexPath.section<2)
-		return [ObjectiveCScripts chartHeightForSize:200];
+	BOOL imageFlg = indexPath.section==0 || (indexPath.section==1 && self.view.frame.size.width < 768);
+	if(imageFlg)
+		return 190;
+//		return [ObjectiveCScripts chartHeightForSize:200];
 	else
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
 																			  tableView:self.mainTableView

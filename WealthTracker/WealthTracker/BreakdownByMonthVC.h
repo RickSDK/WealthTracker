@@ -10,8 +10,9 @@
 #import "ItemObject.h"
 #import "CustomButton.h"
 #import "CustomSegment.h"
+#import "TemplateVC.h"
 
-@interface BreakdownByMonthVC : UIViewController
+@interface BreakdownByMonthVC : TemplateVC
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UITableView *mainTableView;

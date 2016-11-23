@@ -133,7 +133,13 @@
 		self.vaultImageView.hidden=YES;
 		self.appLockedFlg=NO;
 	}
+	
 	[self setupData];
+}
+
+
+-(void)viewDidLayoutSubviews {
+	self.itemCountLabel.center = CGPointMake(self.portfolioButton.center.x+self.portfolioButton.frame.size.width/2-15, self.portfolioButton.center.y-10);
 }
 
 -(void)countItems {
@@ -198,6 +204,18 @@
 	} else
 		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0 asset_type:0 amount_type:2];
 
+	self.graphImageView2.hidden=YES;
+	if(self.view.frame.size.width>320) {
+		self.graphImageView2.hidden=NO;
+		self.graphImageView2.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:YES asset_type:0 amount_type:2];
+		
+		float width = self.view.frame.size.width/2;
+//		float height = self.view.frame.size.height;
+		self.graphImageView.frame = CGRectMake(0, 200, width, width);
+		self.graphImageView2.frame = CGRectMake(width, 200, width, width);
+		self.chartSegmentControl.hidden=YES;
+	}
+	
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.itemCountLabel];
 
 }
@@ -338,7 +356,8 @@
 	self.startTouchPosition = [touch locationInView:self.view];
 	
 	if(self.chartSegmentControl.selectedSegmentIndex<2 && CGRectContainsPoint(self.graphImageView.frame, self.startTouchPosition)) {
-		[self toggleChartSegment];
+		if(self.view.frame.size.width<768)
+			[self toggleChartSegment];
 		return;
 	}
 	

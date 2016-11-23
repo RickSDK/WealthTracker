@@ -138,7 +138,7 @@
                 </segmentedControl>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="UbG-jC-unt" customClass="CustomSegment">
                     <rect key="frame" x="0.0" y="79" width="320" height="29"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <segments>
                         <segment title="Net Change"/>
                         <segment title="Totals"/>

@@ -25,6 +25,7 @@
 @property (nonatomic, strong) IBOutlet UIView *netWorthView;
 @property (nonatomic, strong) IBOutlet UIView *botView;
 @property (nonatomic, strong) IBOutlet UIImageView *graphImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *graphImageView2;
 @property (nonatomic, strong) IBOutlet UIImageView *updateStatusImageView;
 
 @property (nonatomic, strong) IBOutlet UIView *popUpView;

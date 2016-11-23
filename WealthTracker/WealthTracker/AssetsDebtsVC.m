@@ -48,6 +48,7 @@
 	[self setupData];
 }
 
+
 -(IBAction)topSegmentChanged:(id)sender {
 	[self.topSegment changeSegment];
 	[self setupData];
@@ -134,6 +135,7 @@
 	
 	[self.graphObjects removeAllObjects];
 	[self.itemsArray removeAllObjects];
+	NSMutableArray *chart2Objects = [[NSMutableArray alloc] init];
 	self.totalAmount=0;
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"type" mOC:self.managedObjectContext ascendingFlg:NO];
 	for(NSManagedObject *mo in items) {
@@ -146,25 +148,34 @@
 			else if(self.filterType==2 && obj.balance>0)
 				[self.itemsArray addObject:obj];
 			
-			double amount = (self.filterType==1)?obj.value:obj.balance;
+			double amountLeft = (self.filterType==1)?obj.value:obj.balance;
 			if(self.filterType==0)
-				amount=obj.equity;
-			if(self.topSegment.selectedSegmentIndex==1) {
-				amount = (self.filterType==1)?obj.valueChange:obj.balanceChange;
+				amountLeft=obj.equity;
+			
+//			if(self.topSegment.selectedSegmentIndex==1) {
+				double amountRight = (self.filterType==1)?obj.valueChange:obj.balanceChange;
 				if(self.filterType==0)
-					amount=obj.equityChange;
-			}
+					amountRight=obj.equityChange;
+//			}
+			
+			double amount =(self.topSegment.selectedSegmentIndex==0)?amountLeft:amountRight;
 			
 			self.totalAmount+=amount;
 			
-			GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amount rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO];
-			
-			if(amount != 0)
+			if(amount != 0) {
+				GraphObject *gObj = [GraphObject graphObjectWithName:obj.name amount:amountLeft rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO];
 				[self.graphObjects addObject:gObj];
+
+				[chart2Objects addObject:[GraphObject graphObjectWithName:obj.name amount:amountRight rowId:1 reverseColorFlg:self.filterType==2 currentMonthFlg:NO]];
+
+			}
 		}
 	}
 	[ObjectiveCScripts displayMoneyLabel:self.totalAmountLabel amount:self.totalAmount lightFlg:YES revFlg:self.filterType==2];
+	
 	self.chartImageView.image = [GraphLib graphBarsWithItems:self.graphObjects];
+	self.chartImageView2.image = [GraphLib graphBarsWithItems:chart2Objects];
+	
 	self.messageLabel.hidden=self.itemsArray.count>0;
 	self.typeSegment.enabled=self.itemsArray.count>0;
 	self.topSegment.enabled=self.itemsArray.count>0;
@@ -219,7 +230,7 @@
 		if(cell==nil)
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		
-		cell.backgroundView = [[UIImageView alloc] initWithImage:self.chartImageView.image];
+		cell.backgroundView	= [ObjectiveCScripts imageViewForWidth:self.view.frame.size.width chart1:self.chartImageView.image chart2:self.chartImageView2.image switchFlg:self.topSegment.selectedSegmentIndex==1];
 		
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -307,7 +318,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(indexPath.section==0)
-		return [ObjectiveCScripts chartHeightForSize:190];
+		return 190;
+//		return [ObjectiveCScripts chartHeightForSize:190];
 	else
 		return 50;
 }
