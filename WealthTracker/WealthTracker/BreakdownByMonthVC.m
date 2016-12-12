@@ -31,6 +31,9 @@
 	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
 		[self setEdgesForExtendedLayout:UIRectEdgeBottom];
 	
+	if(![ObjectiveCScripts isIpadWidth:self.view.frame.size.width])
+		self.changeSegmentControl.selectedSegmentIndex=1;
+	[self setupData];
 }
 
 - (void)viewDidLoad {
@@ -40,10 +43,8 @@
 	
 	self.topGraphImageView = [[UIImageView alloc] init];
 	self.dataArray2 = [[NSMutableArray alloc] init];
-	self.changeSegmentControl.selectedSegmentIndex=1;
 	
 	if(self.itemObject) {
-//		self.titleLabel.text = self.itemObject.name;
 		self.type = [ObjectiveCScripts typeNumberFromTypeString:self.itemObject.type];
 		self.row_id = [self.itemObject.rowId intValue];
 	}
@@ -81,9 +82,7 @@
 	} else {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
 	}
-
 	[self.topSegmentControl changeSegment];
-	[self setupData];
 }
 
 -(NSString *)labelForType:(int)type {

@@ -2,7 +2,7 @@
 {\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fnil\fcharset0 HelveticaNeue-Light;\f2\fnil\fcharset0 Menlo-Regular;
 \f3\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;\red59\green59\blue59;\red92\green38\blue153;\red196\green26\blue22;
-\red0\green0\blue0;}
+}
 \margl1440\margr1440\vieww10800\viewh8400\viewkind0
 \deftab720
 \pard\pardeftab720
@@ -11,42 +11,52 @@
 \f1\b0 \cf2 \expnd0\expndtw0\kerning0
 \
 \
-1) \cf0 \kerning1\expnd0\expndtw0 \ul \ulc0 bundle\cf2 \expnd0\expndtw0\kerning0
+1) \cf0 \kerning1\expnd0\expndtw0 \ul \ulc0 Info.plist bundle\cf2 \expnd0\expndtw0\kerning0
 \ulnone \
 broke2baron\
 com.rmpservice.WealthTracker\
 moneyMaster2016\
 \
-2) \cf0 \kerning1\expnd0\expndtw0 \ul \ulc0 Info.plist. bundle display name\cf2 \expnd0\expndtw0\kerning0
+2) \cf0 \kerning1\expnd0\expndtw0 \ul Info.plist. bundle display name\cf2 \expnd0\expndtw0\kerning0
 \ulnone \
 Broke 2 Baron\
 Wealth Tracker\
 Wealth Wizard\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f2\fs22 \cf0 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+3) \ul \CocoaLigature1 Launch Screen\ulnone \CocoaLigature0 \
+launchScreen.xib\
 \
-3) \cf0 \kerning1\expnd0\expndtw0 \ul \ulc0 App name\cf2 \expnd0\expndtw0\kerning0
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\fs26 \cf2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 4) \cf0 \kerning1\expnd0\expndtw0 \ul App name\cf2 \expnd0\expndtw0\kerning0
 \ulnone \
 \pard\tx529\pardeftab529\pardirnatural
 
 \f2\fs22 \cf0 \kerning1\expnd0\expndtw0 \CocoaLigature0 ObjectiveCScripts\
 +(\cf3 NSString\cf0  *)appName\
 \
-4) \ul \CocoaLigature1 Launch Screen\ulnone \CocoaLigature0 \
-launchScreen.xib\
-\
 5) \ul \CocoaLigature1 In-app purchase\ulnone \CocoaLigature0 \
 \pard\tx529\pardeftab529\pardirnatural
 \cf4 InAppPurchaseVC.m\
 \
-\cf5 6) \cf0 \ul \ulc0 \CocoaLigature1 Provisioning\cf5 \ulnone \CocoaLigature0 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf0 6) \ul \CocoaLigature1 Provisioning\ulnone \CocoaLigature0 \
 Project --> Build Settings --> Code Signing\
 Change Provisioning Files\
+WW2016\
+WT2016\
+Broke2016\
 \
 7) Clean, build, archive, submit\cf4 \
 \
 //----------------------------------------------\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\pardirnatural
 
-\f3\fs24 \cf0 \CocoaLigature1 0 = assets\
+\f3\fs24 \cf0 \CocoaLigature1 types\
+0 = assets\
 1 = real estate\
 2 = vehicle\
 3 = debt\
@@ -68,12 +78,11 @@ amount_type\
 \
 \ul categories\ulnone \
 real estate\
-\
 vehicle\
 investment\
 loans/credit-card\
 \
 \ul terms\ulnone \
-consumer debt = loans+vehicle\
-all debt = all\
-assets = all}
+consumer debt = loans+vehicle debt\
+all debt = all balances\
+assets = all values}

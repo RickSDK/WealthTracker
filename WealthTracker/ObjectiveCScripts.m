@@ -18,9 +18,9 @@
 
 
 +(NSString *)appName {
-//	return @"Wealth Tracker";
+	return @"Wealth Tracker";
 //	return @"Broke to Baron";
-	return @"Wealth Wizard";
+//	return @"Wealth Wizard";
 }
 
 +(BOOL)isUpgraded {
@@ -36,6 +36,14 @@
 	NSString *model = [device model];
 	
 	return [NSString stringWithFormat:@"Version %@ (%@)", version, model];
+}
+
+
++(BOOL)isIpadWidth:(float)width {
+	if(width>700)
+		return YES;
+	else
+		return NO;
 }
 
 +(UIColor *)darkColor {
@@ -1046,7 +1054,7 @@
 }
 
 +(UIImageView *)imageViewForWidth:(float)width chart1:(UIImage *)chart1 chart2:(UIImage *)chart2 switchFlg:(BOOL)switchFlg {
-	if(width>320) {
+	if([ObjectiveCScripts isIpadWidth:width]) {
 		UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 190)];
 		bgView.backgroundColor = [UIColor orangeColor];
 		UIImageView *chart = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, width/2, 190)];

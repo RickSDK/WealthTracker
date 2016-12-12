@@ -11,11 +11,11 @@
 #import "ObjectiveCScripts.h"
 
 // this one for WT
-//#define kInAppPurchaseProUpgradeProductId @"proVersion"
+#define kInAppPurchaseProUpgradeProductId @"proVersion"
 // this one for B2B
 //#define kInAppPurchaseProUpgradeProductId @"B2BUpgrade"
 // this one for WW
-#define kInAppPurchaseProUpgradeProductId @"WWPro"
+//#define kInAppPurchaseProUpgradeProductId @"WWPro"
 
 @interface InAppPurchaseVC ()
 

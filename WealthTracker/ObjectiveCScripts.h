@@ -21,6 +21,7 @@
 +(NSString *)appName;
 +(BOOL)isUpgraded;
 +(NSString *)getProjectDisplayVersion;
++(BOOL)isIpadWidth:(float)width;
 +(UIColor *)darkColor;
 +(UIColor *)mediumkColor;
 +(UIColor *)lightColor;

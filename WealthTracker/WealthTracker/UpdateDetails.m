@@ -588,7 +588,7 @@
 		cell.accessoryType= UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		return cell;
-	} else if(self.view.frame.size.width<=320 && indexPath.section==1) {
+	} else if(![ObjectiveCScripts isIpadWidth:self.view.frame.size.width] && indexPath.section==1) {
 		NSString *cellIdentifier = [NSString stringWithFormat:@"cellIdentifierSection%dRow%d", (int)indexPath.section, (int)indexPath.row];
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
@@ -725,7 +725,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return self.view.frame.size.width < 768?3:2;
+	return [ObjectiveCScripts isIpadWidth:self.view.frame.size.width]?2:3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -801,10 +801,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	BOOL imageFlg = indexPath.section==0 || (indexPath.section==1 && self.view.frame.size.width < 768);
+	BOOL imageFlg = indexPath.section==0 || (indexPath.section==1 && ![ObjectiveCScripts isIpadWidth:self.view.frame.size.width]);
 	if(imageFlg)
 		return 190;
-//		return [ObjectiveCScripts chartHeightForSize:200];
 	else
 		return [MultiLineDetailCellWordWrap cellHeightWithNoMainTitleForData:self.valuesArray
 																			  tableView:self.mainTableView

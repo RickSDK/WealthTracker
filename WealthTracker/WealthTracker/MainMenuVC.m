@@ -42,7 +42,7 @@
 	if(kTestMode)
 		[self setTitle:@"Test Mode!"];
 	
-	
+	self.usersButton.hidden=YES;
 	self.graphObjects = [[NSMutableArray alloc] init];
 	self.barGraphObjects = [[NSMutableArray alloc] init];
 	
@@ -205,12 +205,11 @@
 		self.graphImageView.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:self.chartSegmentControl.selectedSegmentIndex==0 asset_type:0 amount_type:2];
 
 	self.graphImageView2.hidden=YES;
-	if(self.view.frame.size.width>320) {
+	if([ObjectiveCScripts isIpadWidth:self.view.frame.size.width]) {
 		self.graphImageView2.hidden=NO;
 		self.graphImageView2.image = [GraphLib graphChartForMonth:self.nowMonth year:self.nowYear context:self.managedObjectContext numYears:1 type:4 barsFlg:YES asset_type:0 amount_type:2];
 		
 		float width = self.view.frame.size.width/2;
-//		float height = self.view.frame.size.height;
 		self.graphImageView.frame = CGRectMake(0, 200, width, width);
 		self.graphImageView2.frame = CGRectMake(width, 200, width, width);
 		self.chartSegmentControl.hidden=YES;
@@ -219,8 +218,6 @@
 	[ObjectiveCScripts badgeStatusForAppWithContext:self.managedObjectContext label:self.itemCountLabel];
 
 }
-
-
 
 -(void)displayBottomLabels {
 	
