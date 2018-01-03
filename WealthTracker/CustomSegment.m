@@ -37,7 +37,7 @@
 	self.layer.borderColor = [UIColor blackColor].CGColor;
 	self.layer.borderWidth = 1;
 	
-	UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:12];
+	UIFont *font = [UIFont fontWithName:kFontAwesomeFamilyName size:12.f];
 	NSMutableDictionary *attribsNormal;
 	attribsNormal = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil];
 	
@@ -51,7 +51,7 @@
 }
 
 -(void)changeSegment {
-	NSString *checkMark = [NSString stringWithFormat:@"%@ ", @"\u2705"];
+	NSString *checkMark = [NSString fontAwesomeIconStringForEnum:FACheck];
 	for(int i=0; i<self.numberOfSegments; i++) {
 		NSString *title = [self titleForSegmentAtIndex:i];
 		[self setTitle:[title stringByReplacingOccurrencesOfString:checkMark withString:@""] forSegmentAtIndex:i];

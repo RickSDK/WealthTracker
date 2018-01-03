@@ -16,6 +16,7 @@
 #import "GraphLib.h"
 #import "GraphCell.h"
 #import "MultiLineDetailCellWordWrap.h"
+#import "PopupView.h"
 
 @interface TemplateVC : UIViewController
 
@@ -35,6 +36,7 @@
 @property (nonatomic, strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) IBOutlet UITextField *amountTextField;
 @property (nonatomic, strong) IBOutlet UITextField *dueDayTextField;
+@property (nonatomic, strong) IBOutlet PopupView *popupView2;
 
 @property (nonatomic) int step;
 @property (nonatomic) double monthlyBudget;
@@ -48,6 +50,7 @@
 
 -(float)screenWidth;
 -(float)screenHeight;
+-(void)addHomeButton;
 -(IBAction)popupButtonClicked:(id)sender;
 -(IBAction)xButtonClicked:(id)sender;
 -(IBAction)topSegmentChanged:(id)sender;

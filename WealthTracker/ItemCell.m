@@ -17,33 +17,21 @@
 {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
+		
 		self.bgView = [[UIView alloc] initWithFrame:CGRectZero];
-		self.bgView.backgroundColor=[UIColor whiteColor];
-		self.bgView.layer.cornerRadius = 7.0;
-		self.bgView.layer.masksToBounds = YES;				// clips background images to rounded corners
-		self.bgView.layer.borderColor = [ObjectiveCScripts mediumkColor].CGColor;
-		self.bgView.layer.borderWidth = 1.;
 		[self.contentView addSubview:self.bgView];
 		
-//		self.redLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, 316, 5)];
-//		self.redLineView.backgroundColor=[UIColor redColor];
-//		[self.bgView addSubview:self.redLineView];
-
-
-		self.valStatusImage = [[UIImageView alloc] initWithFrame:CGRectMake(4, 7, 30, 30)];
-		self.valStatusImage.image = [UIImage imageNamed:@"red.png"];
-		self.valStatusImage.alpha=1;
-		[self.bgView addSubview:self.valStatusImage];
-		
-		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 7, 30, 30)];
+		self.statement_dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 9, 25, 25)];
 		self.statement_dayLabel.font = [UIFont boldSystemFontOfSize:15];
 		self.statement_dayLabel.adjustsFontSizeToFitWidth = YES;
 		self.statement_dayLabel.minimumScaleFactor = .8;
+		self.statement_dayLabel.layer.cornerRadius = 12;
+		self.statement_dayLabel.layer.masksToBounds = YES;				// clips background images to rounded corners
 		self.statement_dayLabel.text = @"15";
 		self.statement_dayLabel.textAlignment = NSTextAlignmentCenter;
-		self.statement_dayLabel.textColor = [UIColor blackColor];
-		self.statement_dayLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.statement_dayLabel];
+		self.statement_dayLabel.textColor = [UIColor whiteColor];
+		self.statement_dayLabel.backgroundColor = [UIColor redColor];
+		[self.contentView addSubview:self.statement_dayLabel];
 
 		self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(38, kTopEdge-2, 170, 22)];
 		self.nameLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -53,7 +41,7 @@
 		self.nameLabel.textAlignment = NSTextAlignmentLeft;
 		self.nameLabel.textColor = [UIColor blackColor];
 		self.nameLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.nameLabel];
+		[self.contentView addSubview:self.nameLabel];
 		
 		
 
@@ -65,7 +53,7 @@
 		self.subTypeLabel.textAlignment = NSTextAlignmentLeft;
 		self.subTypeLabel.textColor = [ObjectiveCScripts darkColor];
 		self.subTypeLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.subTypeLabel];
+		[self.contentView addSubview:self.subTypeLabel];
 		
 //		float kRow1 = kTopEdge+30;
 //		float kRow2 = kTopEdge+30+15;
@@ -79,7 +67,7 @@
 		self.arrowLabel.textAlignment = NSTextAlignmentCenter;
 		self.arrowLabel.textColor = [UIColor blackColor];
 		self.arrowLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.arrowLabel];
+		[self.contentView addSubview:self.arrowLabel];
 
 
 		self.rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, kTopEdge-2, 120, 22)];
@@ -88,7 +76,7 @@
 		self.rightLabel.textColor = [UIColor blackColor];
 		self.rightLabel.font = [UIFont boldSystemFontOfSize:11];
 		self.rightLabel.text = @"This Month";
-		[self.bgView addSubview:self.rightLabel];
+		[self.contentView addSubview:self.rightLabel];
 
 		
 		float kCol2 = kleftEdge+150;
@@ -102,7 +90,7 @@
 		self.equityLabel.textAlignment = NSTextAlignmentCenter;
 		self.equityLabel.textColor = [UIColor purpleColor];
 		self.equityLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.equityLabel];
+		[self.contentView addSubview:self.equityLabel];
 		
 		self.equityChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCol2, 22, 100, 22)];
 		self.equityChangeLabel.font = [UIFont systemFontOfSize:14];
@@ -112,7 +100,7 @@
 		self.equityChangeLabel.textAlignment = NSTextAlignmentCenter;
 		self.equityChangeLabel.textColor = [UIColor purpleColor];
 		self.equityChangeLabel.backgroundColor = [UIColor clearColor];
-		[self.bgView addSubview:self.equityChangeLabel];
+		[self.contentView addSubview:self.equityChangeLabel];
 		
 		
 		
@@ -126,11 +114,6 @@
 	cell.nameLabel.text = obj.name;
 	cell.subTypeLabel.text = obj.sub_type;
 	
-	if(obj.equityChange>0 && obj.status==0)
-		cell.bgView.layer.borderColor = [UIColor colorWithRed:0 green:.6 blue:0 alpha:1].CGColor;
-	if(obj.equityChange<0)
-		cell.bgView.layer.borderColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:1].CGColor;
-	
 	[ObjectiveCScripts displayMoneyLabel:cell.balanceLabel amount:[obj.loan_balance doubleValue] lightFlg:NO revFlg:YES];
 	[ObjectiveCScripts displayNetChangeLabel:cell.balanceChangeLabel amount:obj.balanceChange lightFlg:NO revFlg:YES];
 	
@@ -140,8 +123,8 @@
 	[ObjectiveCScripts displayMoneyLabel:cell.equityLabel amount:obj.equity lightFlg:NO revFlg:NO];
 	[ObjectiveCScripts displayNetChangeLabel:cell.equityChangeLabel amount:obj.equityChange lightFlg:NO revFlg:NO];
 	
-	cell.valStatusImage.image = [ObjectiveCScripts imageForStatus:obj.status];
-	cell.statement_dayLabel.textColor =  (obj.status==2)?[UIColor whiteColor]:[UIColor blackColor];
+	cell.statement_dayLabel.backgroundColor = [self colorForStatus:obj.status];
+	cell.statement_dayLabel.textColor =  (obj.status==1)?[UIColor blackColor]:[UIColor whiteColor];
 	
 	if([obj.statement_day intValue]==0) {
 		cell.statement_dayLabel.text=@"";
@@ -162,11 +145,21 @@
 	
 }
 
++(UIColor *)colorForStatus:(int)status {
+	if(status == 1)
+		return [UIColor yellowColor];
+	else if(status == 2)
+		return [UIColor redColor];
+	
+	return [UIColor colorWithRed:0 green:.5 blue:0 alpha:1];
+}
+
+
 - (void)layoutSubviews {
 	
 	[super layoutSubviews];
 	float width=self.frame.size.width;
-	self.bgView.frame = CGRectMake(2, 2, width-4, 46);
+	self.bgView.frame = CGRectMake(0, 0, width, 48);
 	self.rightLabel.frame = CGRectMake(width-110, 0, 100, 15);
 	self.equityLabel.frame = CGRectMake(width-110, 10, 100, 22);
 	self.equityChangeLabel.frame = CGRectMake(width-110, 25, 100, 22);

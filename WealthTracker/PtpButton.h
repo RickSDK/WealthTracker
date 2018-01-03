@@ -1,14 +1,14 @@
 //
-//  CustomButton.h
+//  PtpButton.h
 //  PokerTracker
 //
-//  Created by Rick Medved on 6/26/15.
+//  Created by Rick Medved on 8/11/17.
 //
 //
 
 #import <UIKit/UIKit.h>
 
-@interface CustomButton : UIButton
+@interface PtpButton : UIButton
 
 @property (nonatomic) int mode;
 

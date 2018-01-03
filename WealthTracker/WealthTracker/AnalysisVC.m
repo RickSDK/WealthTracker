@@ -199,8 +199,10 @@
 			line2 = [NSString stringWithFormat:@"This has been a good month for your real estate as your value has increaed by %@, and your equity is up by %@", [ObjectiveCScripts convertNumberToMoneyString:realEstateValueChange], [ObjectiveCScripts convertNumberToMoneyString:realEstateEquityChange]];
 		} else if(realEstateEquityChange<0 && realEstateValueChange<0)
 			line2 = [NSString stringWithFormat:@"This has been a bad month for your real estate with a value change of %@, and your equity is down by %@", [ObjectiveCScripts convertNumberToMoneyString:realEstateValueChange], [ObjectiveCScripts convertNumberToMoneyString:realEstateEquityChange*-1]];
+		else if(realEstateEquityChange>0)
+			line2 = [NSString stringWithFormat:@"This month has been a mixed bag for your real estate with a value down %@, but your equity is up by %@", [ObjectiveCScripts convertNumberToMoneyString:realEstateValueChange*-1], [ObjectiveCScripts convertNumberToMoneyString:realEstateEquityChange]];
 		else
-			line2 = [NSString stringWithFormat:@"This month has been a mixed bag for your real estate with a value change of %@, but your equity is up by %@", [ObjectiveCScripts convertNumberToMoneyString:realEstateValueChange], [ObjectiveCScripts convertNumberToMoneyString:realEstateEquityChange]];
+			line2 = [NSString stringWithFormat:@"This month has been a mixed bag for your real estate with a value increase of %@, but your equity is down by %@", [ObjectiveCScripts convertNumberToMoneyString:realEstateValueChange], [ObjectiveCScripts convertNumberToMoneyString:realEstateEquityChange*-1]];
 		
 		return [NSString stringWithFormat:@"%@\n\n%@", line1, line2];
 	} else {
@@ -264,10 +266,10 @@
 	self.homeEquityThisYear = equityTotal-equity2015;
 	self.homeEquityThisMonth = equityTotal-equityLastMonth;
 	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity Total" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity this month" value:@"" amount:self.homeEquityThisMonth hi:1 lo:-1 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:[NSString stringWithFormat:@"Equity in %d", [ObjectiveCScripts nowYear]] value:@"" amount:self.homeEquityThisYear hi:1 lo:-1 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity last 12 mo" value:@"" amount:equityTotal-equity12 hi:1 lo:-1 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity Total" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO delta:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity this month" value:@"" amount:self.homeEquityThisMonth hi:1 lo:-1 reverseFlg:NO delta:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:[NSString stringWithFormat:@"Equity in %d", [ObjectiveCScripts nowYear]] value:@"" amount:self.homeEquityThisYear hi:1 lo:-1 reverseFlg:NO delta:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity last 12 mo" value:@"" amount:equityTotal-equity12 hi:1 lo:-1 reverseFlg:NO delta:YES]];
 	return thisArray;
 }
 
@@ -293,9 +295,9 @@
 	}
 	
 	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Value of Vehicles" value:[ObjectiveCScripts convertNumberToMoneyString:valueTotal] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"% of Income" value:[NSString stringWithFormat:@"%d%%", percentOfIncome] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Equity" value:@"" amount:equityTotal hi:1 lo:-1 reverseFlg:NO delta:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Value of Vehicles" value:[ObjectiveCScripts convertNumberToMoneyString:valueTotal] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES delta:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"% of Income" value:[NSString stringWithFormat:@"%d%%", percentOfIncome] amount:percentOfIncome hi:45 lo:55 reverseFlg:YES delta:NO]];
 	
 
 	return thisArray;
@@ -327,10 +329,10 @@
 	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
 	self.totalConsumerDebt = debtToday-houseDebtToday;
 	self.totalDebt = debtToday;
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Consumer Debt" value:@"" amount:debtToday-houseDebtToday hi:annualIncome/10 lo:annualIncome/100 reverseFlg:YES]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Total Debt" value:@"" amount:debtToday hi:annualIncome*2 lo:annualIncome/2 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Consumer Debt" value:@"" amount:debtToday-houseDebtToday hi:annualIncome/10 lo:annualIncome/100 reverseFlg:YES delta:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Total Debt" value:@"" amount:debtToday hi:annualIncome*2 lo:annualIncome/2 reverseFlg:YES delta:NO]];
 	self.debtThisMonth = debtToday-debtLastMonth;
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Debt this month" value:@"" amount:self.debtThisMonth hi:1 lo:-1 reverseFlg:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Debt this month" value:@"" amount:self.debtThisMonth hi:1 lo:-1 reverseFlg:YES delta:YES]];
 	return thisArray;
 }
 
@@ -360,11 +362,11 @@
 	self.totalEquity = equityTotal;
 	self.totalEquityThisMonth = equityTotal-equityLastMonth;
 	NSMutableArray *thisArray = [[NSMutableArray alloc] init];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth" value:@"" amount:equityTotal hi:annualIncome*2 lo:annualIncome/2 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth this month" value:@"" amount:self.totalEquityThisMonth hi:1 lo:-1 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 12 mo" value:@"" amount:equityTotal-equityLast12 hi:annualIncome/10 lo:annualIncome/20 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 24 mo" value:@"" amount:equityTotal-equityLast24 hi:annualIncome/5 lo:annualIncome/10 reverseFlg:NO]];
-	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 36 mo" value:@"" amount:equityTotal-equityLast36 hi:annualIncome/3 lo:annualIncome/6 reverseFlg:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth" value:@"" amount:equityTotal hi:annualIncome*2 lo:annualIncome/2 reverseFlg:NO delta:NO]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth this month" value:@"" amount:self.totalEquityThisMonth hi:1 lo:-1 reverseFlg:NO delta:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 12 mo" value:@"" amount:equityTotal-equityLast12 hi:annualIncome/10 lo:annualIncome/20 reverseFlg:NO delta:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 24 mo" value:@"" amount:equityTotal-equityLast24 hi:annualIncome/5 lo:annualIncome/10 reverseFlg:NO delta:YES]];
+	[thisArray addObject:[AnalysisObj objectWithTitle:@"Net Worth last 36 mo" value:@"" amount:equityTotal-equityLast36 hi:annualIncome/3 lo:annualIncome/6 reverseFlg:NO delta:YES]];
 	return thisArray;
 }
 

@@ -19,8 +19,9 @@ static NSInteger FONT_SIZE			= 14;
 {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	if (self) {
-		float width=self.frame.size.width;
-//		NSLog(@"+++width: %f", width);
+//		float width=self.frame.size.width;
+		float width=[[UIScreen mainScreen] bounds].size.width;
+//		NSLog(@"+++width: %f %f %f", width, self.frame.size.width, [[UIScreen mainScreen] bounds].size.width);
 		int descHeight = [AnalysisCell descHeightForDesc:self.desc];
 
 		self.bgView = [[UIView alloc] initWithFrame:CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight)];
@@ -129,11 +130,11 @@ static NSInteger FONT_SIZE			= 14;
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
+	float width=self.contentView.bounds.size.width;
 //	float width=self.frame.size.width;
-//	int descHeight = [AnalysisCell descHeightForDesc:self.desc];
-//	self.bgView.frame = CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight);
-//	self.descriptionLabel.frame = CGRectMake(5, 30+self.dataArray.count*20, width-10, descHeight);
+	int descHeight = [AnalysisCell descHeightForDesc:self.desc];
+	self.bgView.frame = CGRectMake(2, 2, width-4, self.dataArray.count*20+35+descHeight);
+	self.descriptionLabel.frame = CGRectMake(5, 30+self.dataArray.count*20, width-10, descHeight);
 }
 
 

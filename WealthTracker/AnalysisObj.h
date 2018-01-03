@@ -21,7 +21,7 @@
 @property (nonatomic) int lo;
 @property (nonatomic) BOOL reverseFlg;
 
-+(AnalysisObj *)objectWithTitle:(NSString *)title value:(NSString *)value amount:(double)amount hi:(int)hi lo:(int)lo reverseFlg:(BOOL)reverseFlg;
++(AnalysisObj *)objectWithTitle:(NSString *)title value:(NSString *)value amount:(double)amount hi:(int)hi lo:(int)lo reverseFlg:(BOOL)reverseFlg delta:(BOOL)delta;
 
 
 @end

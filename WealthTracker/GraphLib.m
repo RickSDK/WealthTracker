@@ -926,7 +926,7 @@
 				
 			}
 			
-			if(1 || type !=4 ) {
+			if(1) {
 				// draw red line (not needed for asset)
 				CGContextSetLineWidth(c, 2);
 				CGContextSetRGBStrokeColor(c, .5, 0, 0, 1); // green

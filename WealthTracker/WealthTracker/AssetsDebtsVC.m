@@ -140,7 +140,7 @@
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"ITEM" predicate:nil sortColumn:@"type" mOC:self.managedObjectContext ascendingFlg:NO];
 	for(NSManagedObject *mo in items) {
 		ItemObject *obj = [ObjectiveCScripts itemObjectFromManagedObject:mo moc:self.managedObjectContext];
-		if(obj.value>0 || obj.balance>0 || self.showAllSwitch.on || obj.status>0) {
+		if(obj.value>0 || obj.balance>0 || self.showAllSwitch.on || obj.status>0 || obj.valueChange!=0 || obj.balanceChange!=0) {
 			if(self.filterType==0)
 				[self.itemsArray addObject:obj];
 			else if(self.filterType==1 && obj.value>0)
@@ -152,11 +152,9 @@
 			if(self.filterType==0)
 				amountLeft=obj.equity;
 			
-//			if(self.topSegment.selectedSegmentIndex==1) {
 				double amountRight = (self.filterType==1)?obj.valueChange:obj.balanceChange;
 				if(self.filterType==0)
 					amountRight=obj.equityChange;
-//			}
 			
 			double amount =(self.topSegment.selectedSegmentIndex==0)?amountLeft:amountRight;
 			

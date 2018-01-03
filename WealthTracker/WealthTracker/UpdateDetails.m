@@ -46,8 +46,6 @@
 	
 	self.topView.backgroundColor = [ObjectiveCScripts mediumkColor];
 
-//	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStylePlain target:self action:@selector(mainMenuButtonClicked)];
-
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Update" style:UIBarButtonItemStyleBordered target:self action:@selector(editButtonPressed)];
 	UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
 																					 action:@selector(handleSwipeLeft:)];
@@ -135,9 +133,8 @@
 		return YES;
 	
 	NSString *value = [NSString stringWithFormat:@"%@%@", textFieldlocal.text, string];
-	value = [value stringByReplacingOccurrencesOfString:@"$" withString:@""];
-	value = [value stringByReplacingOccurrencesOfString:@"," withString:@""];
-	value = [ObjectiveCScripts convertNumberToMoneyString:[value doubleValue]];
+	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
+	value = [ObjectiveCScripts convertNumberToMoneyString:amount];
 	textFieldlocal.text = value;
 	return NO;
 }

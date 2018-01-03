@@ -540,8 +540,11 @@
 	double realEstateEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:1];
 	double autoEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:2];
 	double debtEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:3];
+	
+	NSLog(@"----------Now lets get it----------");
 	double assetEquity = [ObjectiveCScripts changedForItem:0 month:self.displayMonth year:self.displayYear field:@"" context:self.managedObjectContext numMonths:1 type:7];
 	debtEquity = networth-realEstateEquity-autoEquity-assetEquity;
+//	double assetEquity = 0;
 	NSLog(@"+++networth: %f", networth);
 	NSLog(@"+++realEstateEquity: %f", realEstateEquity);
 	NSLog(@"+++autoEquity: %f", autoEquity);
@@ -603,10 +606,11 @@
 	
 	NSString *idealNetWorthString = [GraphLib smallLabelForMoney:idealNetWorth totalMoneyRange:idealNetWorth];
 	
-	int timeToReach = 99;
+	double timeToReachF = 99.0;
 	if(estValuePerYear>1000)
-		timeToReach = (idealNetWorth-netWorthToday)/estValuePerYear;
+		timeToReachF = (idealNetWorth-netWorthToday)/estValuePerYear;
 	
+	int timeToReach = ceil(timeToReachF);
 	NSString *line0=[self percentComplateString];
 
 	
@@ -659,6 +663,13 @@
 	
 	if(retirementAge<65)
 		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. At your current rate, you will hit this goal in about %d years, at age %d. Just keep in mind, for many people it is wise to hold off retirement until age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString, timeToReach, retirementAge];
+	
+	if (timeToReach < 2) {
+		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which means you are able to retire whenever you want! Good job! Just keep in mind, some people choose to hold off retirement until age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString];
+	}
+	if (timeToReach == 1) {
+		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which means you are very close to hitting that goal! Good job! Just keep in mind, some people choose to hold off retirement until age 65 when Medicare and full Social Security benefits kick in.", idealNetWorthString];
+	}
 	
 	if(timeToReach>50)
 		line5=[NSString stringWithFormat:@"Your target net worth goal is: %@, which will allow you to live the same lifestyle after you retire. However, if things don't change, you are unlikely to achieve this. Start the plan on the main menu screen to improve your outlook.", idealNetWorthString];

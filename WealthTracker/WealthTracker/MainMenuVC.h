@@ -39,6 +39,7 @@
 @property (nonatomic, strong) IBOutlet UIImageView *popupValImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *popupBalImageView;
 @property (nonatomic, strong) IBOutlet UIButton *b2bButton;
+@property (nonatomic, strong) IBOutlet UIButton *moneyTestButton;
 
 @property (nonatomic, strong) IBOutlet UIImageView *redCircleImageView;
 @property (nonatomic, strong) IBOutlet UILabel *needsUpdatingLabel;
@@ -90,5 +91,6 @@
 -(IBAction)segmentClicked:(id)sender;
 -(IBAction)myPlanButtonClicked:(id)sender;
 -(IBAction)usersButtonClicked:(id)sender;
+-(IBAction)moneyTestButtonClicked:(id)sender;
 
 @end

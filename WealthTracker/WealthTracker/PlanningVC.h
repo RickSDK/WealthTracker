@@ -15,5 +15,6 @@
 
 
 -(IBAction)myPlanButtonClicked:(id)sender;
+-(IBAction)moneyTestButtonClicked:(id)sender;
 
 @end

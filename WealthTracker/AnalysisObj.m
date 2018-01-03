@@ -12,7 +12,7 @@
 @implementation AnalysisObj
 
 
-+(AnalysisObj *)objectWithTitle:(NSString *)title value:(NSString *)value amount:(double)amount hi:(int)hi lo:(int)lo reverseFlg:(BOOL)reverseFlg
++(AnalysisObj *)objectWithTitle:(NSString *)title value:(NSString *)value amount:(double)amount hi:(int)hi lo:(int)lo reverseFlg:(BOOL)reverseFlg delta:(BOOL)delta
 {
 	AnalysisObj *obj = [[AnalysisObj alloc] init];
 	obj.title = title;
@@ -24,6 +24,9 @@
 	obj.lo = lo;
 	obj.reverseFlg = reverseFlg;
 	obj.amount = amount;
+	if(delta && amount>0 && value.length==0)
+		obj.value = [NSString stringWithFormat:@"+%@", obj.value];
+		
 	return obj;
 }
 

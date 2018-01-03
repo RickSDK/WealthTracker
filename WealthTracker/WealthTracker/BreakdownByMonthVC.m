@@ -80,7 +80,8 @@
 	if(self.type==4) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Rate" style:UIBarButtonItemStyleBordered target:self action:@selector(rateVC)];
 	} else {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
+		[self addHomeButton];
+//		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
 	}
 	[self.topSegmentControl changeSegment];
 }
@@ -90,9 +91,6 @@
 	return [titles objectAtIndex:type];
 }
 
--(void)mainMenuClicked {
-	[self.navigationController popToRootViewControllerAnimated:YES];
-}
 
 -(void)payoffDay {
 	

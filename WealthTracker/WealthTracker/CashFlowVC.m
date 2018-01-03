@@ -89,9 +89,8 @@
 	if([@"." isEqualToString:string])
 		return YES;
 		NSString *value = [NSString stringWithFormat:@"%@%@", textFieldlocal.text, string];
-		value = [value stringByReplacingOccurrencesOfString:@"$" withString:@""];
-		value = [value stringByReplacingOccurrencesOfString:@"," withString:@""];
-		value = [ObjectiveCScripts convertNumberToMoneyString:[value doubleValue]];
+		double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
+		value = [ObjectiveCScripts convertNumberToMoneyString:amount];
 		textFieldlocal.text = value;
 		return NO;
 }

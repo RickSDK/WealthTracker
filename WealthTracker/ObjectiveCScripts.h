@@ -39,6 +39,7 @@
 +(int)typeNumberFromSubType:(int)subtype;
 +(NSString *)typeNameForType:(int)type;
 +(int)subTypeFromSubTypeString:(NSString *)subType;
++(UIBarButtonItem *)UIBarButtonItemWithIcon:(NSString *)icon target:(id)target action:(SEL)action;
 +(ItemObject *)itemObjectFromManagedObject:(NSManagedObject *)mo moc:(NSManagedObjectContext *)moc;
 +(int)typeNumberFromTypeString:(NSString *)typeStr;
 +(NSArray *)typeList;

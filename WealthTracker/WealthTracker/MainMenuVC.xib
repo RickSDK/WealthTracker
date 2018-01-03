@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1911" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1911" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <development version="6000" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <objects>
@@ -16,7 +15,6 @@
                 <outlet property="assetsLabel" destination="QLx-Ur-Hyp" id="WuI-LA-D7A"/>
                 <outlet property="b2bButton" destination="LSa-lS-rh8" id="QkA-QO-Q1D"/>
                 <outlet property="botView" destination="xxk-67-dKc" id="zMc-UT-5xG"/>
-                <outlet property="budgetLabel" destination="QhE-1u-bvN" id="wvz-R1-8Z4"/>
                 <outlet property="chartImageView2" destination="79E-oA-mKh" id="mnO-LD-Eph"/>
                 <outlet property="chartLabel" destination="SyA-hj-Zol" id="bP4-D9-iBM"/>
                 <outlet property="chartSegmentControl" destination="tNg-Ke-h4U" id="fn7-Kb-Ggf"/>
@@ -29,9 +27,8 @@
                 <outlet property="itemCountLabel" destination="H1D-LZ-tEN" id="7oq-j9-hOF"/>
                 <outlet property="messageLabel" destination="ZAj-xP-Fnl" id="6GI-az-yYM"/>
                 <outlet property="messageView" destination="hQ7-IQ-DRk" id="AD4-eT-gyp"/>
+                <outlet property="moneyTestButton" destination="RTb-oS-5w9" id="nxW-C5-n34"/>
                 <outlet property="monthBotLabel" destination="sLJ-Dl-1Sk" id="HWV-hg-wJR"/>
-                <outlet property="monthDayLabel" destination="sMq-eY-lj5" id="9Ob-dg-ks1"/>
-                <outlet property="monthNameLabel" destination="xnR-7s-evu" id="6Sr-Vq-9vK"/>
                 <outlet property="myPlanButton" destination="ndZ-m8-Fb8" id="rcJ-HQ-MUo"/>
                 <outlet property="netWorthChangeLabel" destination="Uar-9G-0gr" id="zdw-Hx-E95"/>
                 <outlet property="netWorthLabel" destination="fai-S1-63e" id="eXt-OM-5Fd"/>
@@ -46,7 +43,6 @@
                 <outlet property="popupNWLabel" destination="GrC-6r-G5P" id="WCx-an-W0x"/>
                 <outlet property="popupValImageView" destination="guq-ZJ-Zb9" id="wvd-cx-1Gr"/>
                 <outlet property="portfolioButton" destination="0fg-HX-hHa" id="dQp-Z7-Nys"/>
-                <outlet property="usersButton" destination="kri-k2-Iue" id="2Tl-nE-XCS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -55,21 +51,17 @@
             <rect key="frame" x="0.0" y="64" width="320" height="504"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greenTexture.jpg" id="roj-Jj-M7l">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="wvL-NL-PcE">
-                    <rect key="frame" x="0.0" y="144" width="320" height="200"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <rect key="frame" x="0.0" y="165" width="320" height="179"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-1024.png" id="79E-oA-mKh">
                     <rect key="frame" x="80" y="144" width="240" height="200"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                 </imageView>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="ChartSegmentControl">
-                    <rect key="frame" x="0.0" y="344" width="320" height="29"/>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="tNg-Ke-h4U" customClass="ChartSegmentControl">
+                    <rect key="frame" x="0.0" y="343" width="320" height="30"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <segments>
                         <segment title="Bars"/>
@@ -81,29 +73,35 @@
                     </connections>
                 </segmentedControl>
                 <view contentMode="scaleToFill" id="hnj-jM-8sa">
-                    <rect key="frame" x="0.0" y="1" width="320" height="143"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="164"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nov" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="xnR-7s-evu">
-                            <rect key="frame" x="279" y="-3" width="42" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                            <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                            <size key="shadowOffset" width="1" height="1"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="sMq-eY-lj5">
-                            <rect key="frame" x="279" y="11" width="42" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                            <color key="textColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                            <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                            <size key="shadowOffset" width="1" height="1"/>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0fg-HX-hHa" customClass="CustomButton">
-                            <rect key="frame" x="5" y="32" width="155" height="50"/>
+                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LSa-lS-rh8" customClass="PtpButton">
+                            <rect key="frame" x="5" y="4" width="155" height="46"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                            <state key="normal" title="Broke To Baron">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="myPlanButtonClicked:" destination="-1" eventType="touchDown" id="mI6-ca-FtD"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="RTb-oS-5w9" customClass="PtpButton">
+                            <rect key="frame" x="165" y="4" width="150" height="46"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                            <state key="normal" title="Money Test!">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="moneyTestButtonClicked:" destination="-1" eventType="touchDown" id="QRH-aw-g6Q"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0fg-HX-hHa" customClass="PtpButton">
+                            <rect key="frame" x="5" y="53" width="155" height="50"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -115,12 +113,12 @@
                                 <action selector="portfolioButtonClicked:" destination="-1" eventType="touchDown" id="6qs-th-QPU"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ndZ-m8-Fb8" customClass="CustomButton">
-                            <rect key="frame" x="165" y="32" width="150" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ndZ-m8-Fb8" customClass="PtpButton">
+                            <rect key="frame" x="165" y="53" width="150" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
-                            <state key="normal" title="Planning">
+                            <state key="normal" title="Bud">
                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -128,8 +126,8 @@
                                 <action selector="budgetButtonClicked:" destination="-1" eventType="touchDown" id="dAC-R3-eho"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Z4i-hK-oSI" customClass="CustomButton">
-                            <rect key="frame" x="5" y="85" width="155" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Z4i-hK-oSI" customClass="PtpButton">
+                            <rect key="frame" x="5" y="106" width="155" height="50"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -141,8 +139,8 @@
                                 <action selector="chartsButtonClicked:" destination="-1" eventType="touchDown" id="eLT-Dz-VyO"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R0A-1V-g3a" customClass="CustomButton">
-                            <rect key="frame" x="165" y="85" width="150" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="R0A-1V-g3a" customClass="PtpButton">
+                            <rect key="frame" x="165" y="106" width="150" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -154,15 +152,8 @@
                                 <action selector="analysisButtonClicked:" destination="-1" eventType="touchDown" id="hrf-BB-TgL"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Budget Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QhE-1u-bvN">
-                            <rect key="frame" x="165.00000012614413" y="42" width="145" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="H1D-LZ-tEN">
-                            <rect key="frame" x="137" y="34" width="20" height="21"/>
+                            <rect key="frame" x="137" y="35" width="20" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -233,7 +224,7 @@
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" id="hEc-Ze-lUy" customClass="CustomView">
-                    <rect key="frame" x="50" y="137" width="220" height="20"/>
+                    <rect key="frame" x="50" y="158" width="220" height="20"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Net Worth Change Per Month" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SyA-hj-Zol">
@@ -335,28 +326,6 @@
                     </subviews>
                     <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LSa-lS-rh8" customClass="CustomButton">
-                    <rect key="frame" x="85" y="1" width="172" height="30"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Broke To Baron">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="myPlanButtonClicked:" destination="-1" eventType="touchDown" id="mI6-ca-FtD"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kri-k2-Iue" customClass="CustomButton">
-                    <rect key="frame" x="3" y="1" width="68" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Users">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="usersButtonClicked:" destination="-1" eventType="touchDown" id="b1Z-M0-hfI"/>
-                    </connections>
-                </button>
                 <view contentMode="scaleToFill" id="hQ7-IQ-DRk" customClass="CustomView">
                     <rect key="frame" x="17" y="16" width="293" height="244"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -391,7 +360,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -401,7 +370,6 @@
     <resources>
         <image name="Icon-1024.png" width="1024" height="1024"/>
         <image name="blueArrowDown.png" width="189" height="267"/>
-        <image name="greenTexture.jpg" width="800" height="1280"/>
         <image name="red.png" width="300" height="300"/>
         <image name="yellowButton.png" width="400" height="100"/>
     </resources>

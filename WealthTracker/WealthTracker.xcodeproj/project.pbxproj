@@ -85,6 +85,7 @@
 		6B42B0081BAA2ACB00CC649C /* RetirementVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B0061BAA2ACB00CC649C /* RetirementVC.xib */; };
 		6B42B00C1BAB309400CC649C /* TipsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42B00A1BAB309400CC649C /* TipsVC.m */; };
 		6B42B00D1BAB309400CC649C /* TipsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B42B00B1BAB309400CC649C /* TipsVC.xib */; };
+		6B55A5311F423CC200E79F5F /* PtpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55A5301F423CC200E79F5F /* PtpButton.m */; };
 		6B5B87F01B668EF600BBE741 /* asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EC1B668EF600BBE741 /* asset.png */; };
 		6B5B87F11B668EF600BBE741 /* debt.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87ED1B668EF600BBE741 /* debt.png */; };
 		6B5B87F21B668EF600BBE741 /* real_estate.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B5B87EE1B668EF600BBE741 /* real_estate.png */; };
@@ -185,6 +186,10 @@
 		6BBEDF031C0E5578001D372F /* ChartSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDF021C0E5578001D372F /* ChartSegmentControl.m */; };
 		6BBEDF071C0E60FF001D372F /* ChartViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBEDF051C0E60FF001D372F /* ChartViewVC.m */; };
 		6BBEDF081C0E60FF001D372F /* ChartViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BBEDF061C0E60FF001D372F /* ChartViewVC.xib */; };
+		6BC2B5D41F741D99000106D4 /* MoneyTestVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC2B5D21F741D98000106D4 /* MoneyTestVC.m */; };
+		6BC2B5D51F741D99000106D4 /* MoneyTestVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2B5D31F741D99000106D4 /* MoneyTestVC.xib */; };
+		6BC2B5D81F742785000106D4 /* MoneyTestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC2B5D71F742785000106D4 /* MoneyTestCell.m */; };
+		6BC2B5DB1F7430FC000106D4 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC2B5DA1F7430FC000106D4 /* PopupView.m */; };
 		6BC3065C1B8FDEEF00E10C9F /* PayoffVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */; };
 		6BC3065D1B8FDEEF00E10C9F /* PayoffVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */; };
 		6BC472281B6151D400F68341 /* UpdateWebCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC472271B6151D400F68341 /* UpdateWebCell.m */; };
@@ -341,6 +346,8 @@
 		6B42B0091BAB309400CC649C /* TipsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TipsVC.h; sourceTree = "<group>"; };
 		6B42B00A1BAB309400CC649C /* TipsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TipsVC.m; sourceTree = "<group>"; };
 		6B42B00B1BAB309400CC649C /* TipsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TipsVC.xib; sourceTree = "<group>"; };
+		6B55A52F1F423CC200E79F5F /* PtpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PtpButton.h; sourceTree = "<group>"; };
+		6B55A5301F423CC200E79F5F /* PtpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PtpButton.m; sourceTree = "<group>"; };
 		6B5B87EC1B668EF600BBE741 /* asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = asset.png; sourceTree = "<group>"; };
 		6B5B87ED1B668EF600BBE741 /* debt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = debt.png; sourceTree = "<group>"; };
 		6B5B87EE1B668EF600BBE741 /* real_estate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = real_estate.png; sourceTree = "<group>"; };
@@ -487,6 +494,13 @@
 		6BBEDF041C0E60FF001D372F /* ChartViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartViewVC.h; sourceTree = "<group>"; };
 		6BBEDF051C0E60FF001D372F /* ChartViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartViewVC.m; sourceTree = "<group>"; };
 		6BBEDF061C0E60FF001D372F /* ChartViewVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChartViewVC.xib; sourceTree = "<group>"; };
+		6BC2B5D11F741D98000106D4 /* MoneyTestVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoneyTestVC.h; sourceTree = "<group>"; };
+		6BC2B5D21F741D98000106D4 /* MoneyTestVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoneyTestVC.m; sourceTree = "<group>"; };
+		6BC2B5D31F741D99000106D4 /* MoneyTestVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoneyTestVC.xib; sourceTree = "<group>"; };
+		6BC2B5D61F742785000106D4 /* MoneyTestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoneyTestCell.h; sourceTree = "<group>"; };
+		6BC2B5D71F742785000106D4 /* MoneyTestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoneyTestCell.m; sourceTree = "<group>"; };
+		6BC2B5D91F7430FC000106D4 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
+		6BC2B5DA1F7430FC000106D4 /* PopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupView.m; sourceTree = "<group>"; };
 		6BC306591B8FDEEF00E10C9F /* PayoffVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayoffVC.h; sourceTree = "<group>"; };
 		6BC3065A1B8FDEEF00E10C9F /* PayoffVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayoffVC.m; sourceTree = "<group>"; };
 		6BC3065B1B8FDEEF00E10C9F /* PayoffVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PayoffVC.xib; sourceTree = "<group>"; };
@@ -615,6 +629,9 @@
 				6B2353BA1C932B50008947AF /* PlanningVC.h */,
 				6B2353BB1C932B50008947AF /* PlanningVC.m */,
 				6B2353BC1C932B50008947AF /* PlanningVC.xib */,
+				6BC2B5D11F741D98000106D4 /* MoneyTestVC.h */,
+				6BC2B5D21F741D98000106D4 /* MoneyTestVC.m */,
+				6BC2B5D31F741D99000106D4 /* MoneyTestVC.xib */,
 				6B2353C21C93C82F008947AF /* EducationVC.h */,
 				6B2353C31C93C82F008947AF /* EducationVC.m */,
 				6B2353C41C93C82F008947AF /* EducationVC.xib */,
@@ -840,6 +857,10 @@
 				6BB68BA41CDBDB4D00D71701 /* BalanceButton.m */,
 				6B3C180A1B70381E0039733B /* CustomView.h */,
 				6B3C180B1B70381E0039733B /* CustomView.m */,
+				6B55A52F1F423CC200E79F5F /* PtpButton.h */,
+				6B55A5301F423CC200E79F5F /* PtpButton.m */,
+				6BC2B5D91F7430FC000106D4 /* PopupView.h */,
+				6BC2B5DA1F7430FC000106D4 /* PopupView.m */,
 				6B416F141B509FC2009C9834 /* WebServiceView.h */,
 				6B416F151B509FC2009C9834 /* WebServiceView.m */,
 				6B8EB99A1B52272900F8A20B /* NSDate+ATTDate.h */,
@@ -865,6 +886,8 @@
 			children = (
 				6B416F241B50CF81009C9834 /* MoneyCell.h */,
 				6B416F251B50CF81009C9834 /* MoneyCell.m */,
+				6BC2B5D61F742785000106D4 /* MoneyTestCell.h */,
+				6BC2B5D71F742785000106D4 /* MoneyTestCell.m */,
 				6BB97E7C1D820DBB0092D945 /* AnalysisCell.h */,
 				6BB97E7D1D820DBB0092D945 /* AnalysisCell.m */,
 				6B8EB9A01B530EFB00F8A20B /* ItemCell.h */,
@@ -1012,6 +1035,7 @@
 				6B644CBE1B68204900483F98 /* PrivacyPolicyVC.xib in Resources */,
 				6B0444421B59DD48001E7007 /* redCircle.png in Resources */,
 				6B5B87F31B668EF600BBE741 /* vehicle.png in Resources */,
+				6BC2B5D51F741D99000106D4 /* MoneyTestVC.xib in Resources */,
 				6B2353B91C911952008947AF /* AutoBuyVC.xib in Resources */,
 				6B416F1D1B50A5B2009C9834 /* EnterValueVC.xib in Resources */,
 				6B5B87F11B668EF600BBE741 /* debt.png in Resources */,
@@ -1130,6 +1154,7 @@
 				6B3C18091B7015550039733B /* CashFlowCell.m in Sources */,
 				6B2353BD1C932B50008947AF /* PlanningVC.m in Sources */,
 				6B2A7FD41B8149CE009AF987 /* BreakdownSingleMonthVC.m in Sources */,
+				6B55A5311F423CC200E79F5F /* PtpButton.m in Sources */,
 				6BB68BA51CDBDB4D00D71701 /* BalanceButton.m in Sources */,
 				6B644CC21B68206000483F98 /* InAppPurchaseVC.m in Sources */,
 				6BB68BD71CDE446200D71701 /* PurchaseCell.m in Sources */,
@@ -1158,6 +1183,7 @@
 				6B3C180C1B70381E0039733B /* CustomView.m in Sources */,
 				6BBEDEFC1C0E2F93001D372F /* UIImage+FontAwesome.m in Sources */,
 				6BC4722C1B61576B00F68341 /* WebViewVC.m in Sources */,
+				6BC2B5D41F741D99000106D4 /* MoneyTestVC.m in Sources */,
 				6B2E23F81B556FAB00CC2851 /* AnalysisVC.m in Sources */,
 				6BB354E11B743B470003987A /* GraphSegmentCell.m in Sources */,
 				6BB97E7E1D820DBB0092D945 /* AnalysisCell.m in Sources */,
@@ -1210,6 +1236,8 @@
 				6BEE56241D77393C00724F1B /* StatsVC.m in Sources */,
 				6B8EB99C1B52272A00F8A20B /* NSDate+ATTDate.m in Sources */,
 				6B38E3DB1B6C565000EF8D40 /* CreditScoreTracker.m in Sources */,
+				6BC2B5D81F742785000106D4 /* MoneyTestCell.m in Sources */,
+				6BC2B5DB1F7430FC000106D4 /* PopupView.m in Sources */,
 				6B416EC61B506D52009C9834 /* main.m in Sources */,
 				6B42B0071BAA2ACB00CC649C /* RetirementVC.m in Sources */,
 			);
@@ -1336,13 +1364,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1352,13 +1380,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-2";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rick Medved (X9KCCTRTNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = WealthTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5a21bf9c-d2b8-4e05-8f5a-21b1106ccc2f";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

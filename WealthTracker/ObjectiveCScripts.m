@@ -58,6 +58,13 @@
 	return [UIColor colorWithRed:(58/255.0) green:(165/255.0) blue:(220/255.0) alpha:1.0];
 }
 
++(UIBarButtonItem *)UIBarButtonItemWithIcon:(NSString *)icon target:(id)target action:(SEL)action {
+	UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:icon style:UIBarButtonItemStylePlain target:target action:action];
+	
+	[button setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:kFontAwesomeFamilyName size:24.f], NSFontAttributeName, nil] forState:UIControlStateNormal];
+	return button;
+}
+
 +(void)showAlertPopup:(NSString *)title message:(NSString *)message
 {
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
@@ -339,6 +346,9 @@
 {
 	moneyStr = [moneyStr stringByReplacingOccurrencesOfString:@"$" withString:@""];
 	moneyStr = [moneyStr stringByReplacingOccurrencesOfString:@"," withString:@""];
+	moneyStr = [moneyStr stringByTrimmingCharactersInSet: [NSCharacterSet symbolCharacterSet]];
+	moneyStr = [moneyStr stringByTrimmingCharactersInSet: [NSCharacterSet letterCharacterSet]];
+	
 	return [moneyStr doubleValue];
 }
 
@@ -638,9 +648,8 @@
 		return YES;
 	
 	NSString *value = [NSString stringWithFormat:@"%@%@", textFieldlocal.text, string];
-	value = [value stringByReplacingOccurrencesOfString:@"$" withString:@""];
-	value = [value stringByReplacingOccurrencesOfString:@"," withString:@""];
-	value = [ObjectiveCScripts convertNumberToMoneyString:[value doubleValue]];
+	double amount = [ObjectiveCScripts convertMoneyStringToDouble:value];
+	value = [ObjectiveCScripts convertNumberToMoneyString:amount];
 	textFieldlocal.text = value;
 	return NO;
 }
@@ -686,8 +695,19 @@
 	double amount=0;
 	NSPredicate *predicate=[ObjectiveCScripts predicateForItem:item_id month:month year:year type:type];
 	NSArray *items = [CoreDataLib selectRowsFromEntity:@"VALUE_UPDATE" predicate:predicate sortColumn:nil mOC:context ascendingFlg:NO];
+	if(type==7)
+		NSLog(@"-------lets find it for 7----%d %d--- #items: %d %d %@", month, year, (int)items.count, item_id, field);
 	for(NSManagedObject *mo in items) {
-		if(field.length>0)
+		int item_id = [[mo valueForKey:@"item_id"] intValue];
+		if(item_id==1 && type==7)
+			NSLog(@"+++%d [%d] %f [%@]", item_id, type, [[mo valueForKey:@"asset_value"] doubleValue], field);
+		if(type==7 && field.length==0) {
+			int type = [[mo valueForKey:@"type"] intValue];
+			double asset_value = [[mo valueForKey:@"asset_value"] doubleValue];
+			double balance_owed = [[mo valueForKey:@"balance_owed"] doubleValue];
+			amount += asset_value-balance_owed;
+			NSLog(@"#7: %d [%d] %f (%d %d)", item_id, type, asset_value, month, year);
+		} else if(field.length>0)
 			amount += [[mo valueForKey:field] intValue];
 		else
 			amount += [[mo valueForKey:@"asset_value"] doubleValue]-[[mo valueForKey:@"balance_owed"] doubleValue];
@@ -717,7 +737,9 @@
 	
 	double prevAmount = [self amountForItem:item_id month:prevMonth year:prevYear field:field context:context type:type];
 	double amount = [self amountForItem:item_id month:month year:year field:field context:context type:type];
-	
+	if(type==7) {
+		NSLog(@"changedForItem: [%d] prevAmount: %f amount: %f", type, prevAmount, amount);
+	}
 	return amount-prevAmount;
 }
 

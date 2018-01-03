@@ -14,6 +14,7 @@
 #import "EducationVC.h"
 #import "FinancesVC.h"
 #import "InAppPurchaseVC.h"
+#import "MoneyTestVC.h"
 
 #define kMenu1	@"Education"
 #define kMenu2	@"Finances"
@@ -42,14 +43,6 @@
 	
 	self.b2bButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20.f];
 	[self.b2bButton setTitle:[NSString stringWithFormat:@"%@ Broke to Baron", [NSString fontAwesomeIconStringForEnum:FAStar]] forState:UIControlStateNormal];
-	[self.b2bButton setBackgroundColor:[ObjectiveCScripts lightColor]];
-	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-
-//	if([ObjectiveCScripts getUserDefaultValue:@"upgradeFlg"].length==0 && [ObjectiveCScripts getUserDefaultValue:@"upgradeFlgCheck"].length==0) {
-//		[ObjectiveCScripts setUserDefaultValue:@"Y" forKey:@"upgradeFlgCheck"];
-//		[ObjectiveCScripts showAlertPopupWithDelegate:@"Thankyou for your business!" message:@"Please check out the upgrade features" /delegate:self tag:1];
-//	}
 
 }
 
@@ -124,6 +117,12 @@
 
 -(IBAction)myPlanButtonClicked:(id)sender {
 	MyPlanVC *detailViewController = [[MyPlanVC alloc] initWithNibName:@"MyPlanVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
+
+-(IBAction)moneyTestButtonClicked:(id)sender {
+	MoneyTestVC *detailViewController = [[MoneyTestVC alloc] initWithNibName:@"MoneyTestVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }

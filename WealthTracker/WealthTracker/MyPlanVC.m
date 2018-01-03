@@ -28,14 +28,18 @@
 	self.bgView.layer.borderWidth = 2.0;
 	
 	self.stepView.layer.cornerRadius = 8.0;
-	self.stepView.layer.masksToBounds = YES;
-	self.stepView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.stepView.layer.borderWidth = 2.0;
+	self.stepView.layer.masksToBounds = NO;
+	self.stepView.layer.shadowOffset = CGSizeMake(10, 10);
+	self.stepView.layer.shadowRadius = 5;
+	self.stepView.layer.shadowOpacity = 0.8;
 	
 	self.tipsView.layer.cornerRadius = 8.0;
-	self.tipsView.layer.masksToBounds = YES;
 	self.tipsView.layer.borderColor = [UIColor blackColor].CGColor;
-	self.tipsView.layer.borderWidth = 2.0;
+	self.tipsView.layer.borderWidth = 1.0;
+	self.tipsView.layer.masksToBounds = NO;
+	self.tipsView.layer.shadowOffset = CGSizeMake(10, 10);
+	self.tipsView.layer.shadowRadius = 5;
+	self.tipsView.layer.shadowOpacity = 0.8;
 
 	self.tipsView.hidden=YES;
 
@@ -55,7 +59,7 @@
 	
 	[self displayButtons];
 	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Info" style:UIBarButtonItemStyleBordered target:self action:@selector(infoButtonPressed)];
 
 	
 	
@@ -111,7 +115,7 @@
 		float width = self.screenWidth;
 		float percent = currentAmount*100/total;
 		self.percentLabel.text = [NSString stringWithFormat:@"%d%% Remaining", (int)percent];
-		self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 22);
+		self.remainingDebtView.frame = CGRectMake(0, 0, width*percent/100, 40);
 	}
 }
 
@@ -207,10 +211,10 @@
 	}
 }
 
--(void)planButtonPressed {
+-(void)infoButtonPressed {
 	self.scrollView.text = @"Broke to Baron\n\nBroke to Baron is a proven, time-tested strategy for getting out of debt and achieving your financial goals.\n\nWhether you are living in poverty, or a millionaire, age 71 or 17 this plan will work for you!\n\nSimply follow the 10-steps and it will lead you to financial prosperity. Be sure to check out the tips for valuable strategy hints.\n\nGood luck and happy wealth building!";
 	[self.scrollView scrollRectToVisible:CGRectMake(0,0,1,1) animated:YES];
-	self.tipsView.hidden=NO;
+	self.tipsView.hidden=!self.tipsView.hidden;
 }
 
 -(void)displayButtons {

@@ -42,15 +42,10 @@
 	
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
 
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenuClicked)];
+	[self addHomeButton];
 
 
 }
-
--(void)mainMenuClicked {
-	[self.navigationController popToRootViewControllerAnimated:YES];
-}
-
 
 -(void)handleSwipeRight:(UISwipeGestureRecognizer *)gestureRecognizer {
 	[self.navigationController popViewControllerAnimated:YES];

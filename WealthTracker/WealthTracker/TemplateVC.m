@@ -45,8 +45,20 @@
 	self.monthLabel.backgroundColor = [ObjectiveCScripts mediumkColor];
 
 	[ObjectiveCScripts swipeBackRecognizerForTableView:self.mainTableView delegate:self selector:@selector(handleSwipeRight:)];
+	
+	self.navigationItem.leftBarButtonItem = [ObjectiveCScripts UIBarButtonItemWithIcon:[NSString fontAwesomeIconStringForEnum:FAArrowLeft] target:self action:@selector(handleSwipeRight:)];
+
 
 	self.popupView.hidden=YES;
+	self.popupView2.hidden=YES;
+}
+
+-(void)addHomeButton {
+	self.navigationItem.rightBarButtonItem = [ObjectiveCScripts UIBarButtonItemWithIcon:[NSString fontAwesomeIconStringForEnum:FAHome] target:self action:@selector(mainMenuButtonClicked:)];
+}
+
+-(void)mainMenuButtonClicked:(id)sender {
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -59,9 +71,6 @@
 	[super viewDidLayoutSubviews];
 	[self.mainTableView reloadData];
 }
-
-
-
 
 -(IBAction)popupButtonClicked:(id)sender {
 	self.popupView.hidden=NO;

@@ -1,25 +1,15 @@
 //
-//  CustomButton.m
+//  PtpButton.m
 //  PokerTracker
 //
-//  Created by Rick Medved on 6/26/15.
+//  Created by Rick Medved on 8/11/17.
 //
 //
 
-#import "CustomButton.h"
+#import "PtpButton.h"
 #import "ObjectiveCScripts.h"
 
-#define CORNER_RADIUS          7.0
-
-@implementation CustomButton
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+@implementation PtpButton
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -57,10 +47,10 @@
 -(void)newButtonLook:(int)mode {
 	int theme=0;
 	[self setTitleShadowColor:nil forState:UIControlStateNormal];
-	
+
 	[self setBackgroundImage:nil forState:UIControlStateNormal];
 	[self setBackgroundImage:[UIImage imageNamed:@"greenBar.png"]
-					forState:UIControlStateHighlighted];
+					  forState:UIControlStateHighlighted];
 	
 	if(theme==0) { // modern
 		self.layer.cornerRadius = 7;
@@ -111,19 +101,16 @@
 		
 	}
 	if(mode==4) { // dark gray
-		[self setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//		self.titleLabel.shadowColor = [UIColor whiteColor];
-//		self.titleLabel.shadowOffset = CGSizeMake(-1, -1);
-		[self setTitleColor:[UIColor colorWithRed:.5 green:.5 blue:.5 alpha:1] forState:UIControlStateNormal];
-		[self setBackgroundColor:[UIColor colorWithRed:.7 green:.7 blue:.7 alpha:1]];
-		self.layer.shadowOffset = CGSizeMake(0, 0);
+		[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[self setBackgroundColor:[UIColor colorWithRed:.6 green:.6 blue:.6 alpha:1]];
+		
 	}
 	if(mode==5) { // blue
 		[self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[self setBackgroundColor:[UIColor colorWithRed:0 green:.6 blue:1 alpha:1]];
 		
 	}
-	
+
 }
 
 -(void)setEnabled:(BOOL)enabled {
@@ -132,32 +119,10 @@
 		[self newButtonLook:self.mode];
 		self.alpha=1;
 	} else {
-		[self newButtonLook:4];
-		self.alpha=.9;
+		[self newButtonLook:self.mode];
+		self.alpha=.8;
 	}
 }
 
-- (UIImage *)imageFromColor:(UIColor *)color
-{
-	static NSMutableDictionary *colorImageCache = nil;
-	if (colorImageCache == nil) {
-		colorImageCache = [[NSMutableDictionary alloc] initWithCapacity:5];
-	}
-	
-	UIImage *img = [colorImageCache objectForKey:color];
-	
-	if (img == nil) {
-		CGRect rect = CGRectMake(0, 0, 1, 1);
-		UIGraphicsBeginImageContext(rect.size);
-		CGContextRef context = UIGraphicsGetCurrentContext();
-		CGContextSetFillColorWithColor(context, [color CGColor]);
-		CGContextFillRect(context, rect);
-		img = UIGraphicsGetImageFromCurrentImageContext();
-		UIGraphicsEndImageContext();
-		
-		[colorImageCache setObject:img forKey:color];
-	}
-	return img;
-}
 
 @end

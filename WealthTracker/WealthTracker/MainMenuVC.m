@@ -28,6 +28,7 @@
 #import "PortfolioVC.h"
 #import "AssetsDebtsVC.h"
 #import "UsersVC.h"
+#import "MoneyTestVC.h"
 
 @interface MainMenuVC ()
 
@@ -49,42 +50,16 @@
 	self.monthNameLabel.text = [[NSDate date] convertDateToStringWithFormat:@"MMM"];
 	self.monthDayLabel.text = [[NSDate date] convertDateToStringWithFormat:@"d"];
 	
-	self.portfolioButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.portfolioButton setTitle:[NSString stringWithFormat:@"%@ Portfolio", [NSString fontAwesomeIconStringForEnum:FAbank]] forState:UIControlStateNormal];
-	self.chartsButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.chartsButton setTitle:[NSString stringWithFormat:@"%@ Stats", [NSString fontAwesomeIconStringForEnum:FABarChartO]] forState:UIControlStateNormal];
-	self.myPlanButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.myPlanButton setTitle:@"" forState:UIControlStateNormal];
-	
-	self.budgetLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	self.budgetLabel.textColor = [UIColor colorWithRed:0 green:.2 blue:.5 alpha:1];
-	self.budgetLabel.text = [NSString stringWithFormat:@"%@ Budget", [NSString fontAwesomeIconStringForEnum:FAMoney]];
-	self.myPlanButton.titleLabel.frame = CGRectMake(0, 0, 100, 100);
-	self.analysisButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
-	[self.analysisButton setTitle:[NSString stringWithFormat:@"%@ Advisor", [NSString fontAwesomeIconStringForEnum:FAUser]] forState:UIControlStateNormal];
-	
-	self.b2bButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:20.f];
-	[self.b2bButton setTitle:[NSString stringWithFormat:@"%@ Broke to Baron", [NSString fontAwesomeIconStringForEnum:FAStar]] forState:UIControlStateNormal];
-	[self.b2bButton setBackgroundColor:[ObjectiveCScripts lightColor]];
-	[self.b2bButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	
-	self.usersButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:14.f];
-	[self.usersButton setTitle:[NSString stringWithFormat:@"%@ Users", [NSString fontAwesomeIconStringForEnum:FAUsers]] forState:UIControlStateNormal];
-	self.usersButton.backgroundColor = [UIColor orangeColor];
-	
-	
+	[self makeFAButton:self.portfolioButton icon:[NSString fontAwesomeIconStringForEnum:FAbank] text:@"Portfolio"];
+	[self makeFAButton:self.chartsButton icon:[NSString fontAwesomeIconStringForEnum:FABarChartO] text:@"Stats"];
+	[self makeFAButton:self.myPlanButton icon:[NSString fontAwesomeIconStringForEnum:FAMoney] text:@"Budget"];
+	[self makeFAButton:self.analysisButton icon:[NSString fontAwesomeIconStringForEnum:FAUser] text:@"Advisor"];
+
+	[self makeFAButton:self.b2bButton icon:[NSString fontAwesomeIconStringForEnum:FAStar] text:@"Broke to Baron"];
+	[self makeFAButton:self.moneyTestButton icon:[NSString fontAwesomeIconStringForEnum:FAMoney] text:@"Money Test!"];
 	self.expiredFlg = [self checkForExpiredFlg];
-	
-	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
-		self.navigationController.navigationBar.barTintColor = [ObjectiveCScripts darkColor];
-		self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-		self.navigationController.navigationBar.translucent = NO;
-		self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:.8 blue:0 alpha:1];
-	}
-	
 	self.netWorthView.backgroundColor=[ObjectiveCScripts mediumkColor];
 	self.botView.backgroundColor=[ObjectiveCScripts darkColor];
-	
 	
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
 	[self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:kFontAwesomeFamilyName size:20.f] forKey:UITextAttributeFont]];
@@ -92,12 +67,6 @@
 	self.chartSegmentControl.selectedSegmentIndex=1;
 	[self.chartSegmentControl changeSegment];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-	
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plan" style:UIBarButtonItemStyleBordered target:self action:@selector(planButtonPressed)];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Options" style:UIBarButtonItemStyleBordered target:self action:@selector(optionsButtonPressed)];
-	
 	self.itemCountLabel.layer.cornerRadius = 4.0;
 	self.itemCountLabel.layer.masksToBounds = YES;				// clips background images to rounded corners
 
@@ -112,17 +81,43 @@
 		UnLockAppVC *detailViewController = [[UnLockAppVC alloc] initWithNibName:@"UnLockAppVC" bundle:nil];
 		[self.navigationController pushViewController:detailViewController animated:YES];
 	}
+	[self setupNavBar];
+}
+
+-(void)makeFAButton:(UIButton *)button icon:(NSString *)icon text:(NSString *)text {
+	button.titleLabel.font = [UIFont fontWithName:kFontAwesomeFamilyName size:19.f];
+	[button setTitle:[NSString stringWithFormat:@"%@ %@", icon, text] forState:UIControlStateNormal];
+	[button.titleLabel sizeToFit];
+}
+
+-(void)setupNavBar {
+	[self tintNavigationBar:self.navigationController.navigationBar];
+	self.navigationItem.rightBarButtonItem = [ObjectiveCScripts UIBarButtonItemWithIcon:[NSString fontAwesomeIconStringForEnum:FACog] target:self action:@selector(optionsButtonPressed)];
 	
-	if([[UIScreen mainScreen] bounds].size.height == 480) {// iPhone 4
-		self.netWorthView.center = CGPointMake(self.self.botView.center.x, self.self.botView.center.y-60);
-		self.chartSegmentControl.hidden=YES;
+	self.navigationItem.leftBarButtonItem = [ObjectiveCScripts UIBarButtonItemWithIcon:[NSString fontAwesomeIconStringForEnum:FAgraduationCap] target:self action:@selector(planButtonPressed)];
+}
+
+-(void)tintNavigationBar:(UINavigationBar *)navigationBar {
+	[navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName,nil]];
+		navigationBar.tintColor = [UIColor colorWithRed:1 green:.8 blue:0 alpha:1]; // button colors
+		
+		[self applyBGToNavBar:navigationBar image:[UIImage imageNamed:@"blueGrad.jpg"]];
+		
+		if ([navigationBar respondsToSelector:@selector(setBarTintColor:)]) {
+			[navigationBar setBarTintColor:[ObjectiveCScripts darkColor]];
+		} else {
+			navigationBar.opaque=YES;
+			navigationBar.backgroundColor = [ObjectiveCScripts darkColor];
+		}
+}
+
+-(BOOL)applyBGToNavBar:(UINavigationBar *)navigationBar image:(UIImage *)image {
+	if ([navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+		[navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+		return YES;
+	} else {
+		return NO;
 	}
-	
-
-	self.graphImageView.layer.cornerRadius = 8.0;
-	self.graphImageView.layer.masksToBounds = YES;
-
-	
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -394,32 +389,43 @@
 	
 }
 
--(IBAction)budgetButtonClicked:(id)sender {
-	BudgetVC *detailViewController = [[BudgetVC alloc] initWithNibName:@"BudgetVC" bundle:nil];
-	detailViewController.managedObjectContext = self.managedObjectContext;
-	[self.navigationController pushViewController:detailViewController animated:YES];
-}
-
 -(IBAction)myPlanButtonClicked:(id)sender {
 	int yearBorn = [CoreDataLib getNumberFromProfile:@"yearBorn" mOC:self.managedObjectContext];
 	if(yearBorn==0) {
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your age on the 'Advisor' page before checking this feature."];
 		return;
 	}
-
+	[self performSelector:@selector(gotoPlanPage) withObject:nil afterDelay:.01];
+}
+-(void)gotoPlanPage {
 	MyPlanVC *detailViewController = [[MyPlanVC alloc] initWithNibName:@"MyPlanVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 -(IBAction)portfolioButtonClicked:(id)sender {
+	[self performSelector:@selector(gotoPortfolioPage) withObject:nil afterDelay:.01];
+}
+-(void)gotoPortfolioPage {
 	AssetsDebtsVC *detailViewController = [[AssetsDebtsVC alloc] initWithNibName:@"AssetsDebtsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	detailViewController.expiredFlg=self.expiredFlg;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
+-(IBAction)budgetButtonClicked:(id)sender {
+	[self performSelector:@selector(gotoBudgetPage) withObject:nil afterDelay:.01];
+}
+
+-(void)gotoBudgetPage {
+	BudgetVC *detailViewController = [[BudgetVC alloc] initWithNibName:@"BudgetVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
 
 -(IBAction)chartsButtonClicked:(id)sender {
+	[self performSelector:@selector(gotoStatsPage) withObject:nil afterDelay:.01];
+}
+-(void)gotoStatsPage {
 	StatsVC *detailViewController = [[StatsVC alloc] initWithNibName:@"StatsVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -431,7 +437,9 @@
 		[ObjectiveCScripts showAlertPopup:@"Notice" message:@"Update your income on the 'Budget' page before checking analysis."];
 		return;
 	}
-
+	[self performSelector:@selector(gotoAnalysisPage) withObject:nil afterDelay:.01];
+}
+-(void)gotoAnalysisPage {
 	AnalysisVC *detailViewController = [[AnalysisVC alloc] initWithNibName:@"AnalysisVC" bundle:nil];
 	detailViewController.managedObjectContext = self.managedObjectContext;
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -443,11 +451,16 @@
 	[self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+-(IBAction)moneyTestButtonClicked:(id)sender {
+	[self performSelector:@selector(gotoTestPage) withObject:nil afterDelay:.01];
+}
+-(void)gotoTestPage {
+	MoneyTestVC *detailViewController = [[MoneyTestVC alloc] initWithNibName:@"MoneyTestVC" bundle:nil];
+	detailViewController.managedObjectContext = self.managedObjectContext;
+	[self.navigationController pushViewController:detailViewController animated:YES];
+}
 
 -(IBAction)okButtonClicked:(id)sender {
-	
-	
-	
 	self.initStep++;
 	switch (self.initStep) {
   case 1:
